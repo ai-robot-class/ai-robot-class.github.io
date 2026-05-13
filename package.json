@@ -1,5 +1,10 @@
 {
+  "name": "areal2025.github.io",
+  "private": true,
+  "scripts": {
+    "build": "honkit build . _book"
+  },
   "dependencies": {
-    "gitbook": "^3.2.3"
+    "honkit": "^6.1.7"
   }
 }

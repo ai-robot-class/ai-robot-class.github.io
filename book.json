@@ -1,7 +1,7 @@
 {
   "root": ".",
-  "title": "AI机器人课程",
-  "description": "15周ROS2机器人编程入门课程",
-  "author": "Your Name",
+  "title": "AI 机器人课程",
+  "description": "面向初学者的 ROS2、Linux、Git、仿真与机器人感知入门课程",
+  "author": "AI Robot Class",
   "language": "zh-hans"
 }
