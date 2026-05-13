@@ -1,247 +1,224 @@
-# 第10周：物体检测与识别
+# Week 10：Docker 概念与 OpenCV 实验
 
-**课时**: 6小时（第一次课3小时 + 第二次课3小时）
+本周学习 Docker 的核心概念和基础操作，并进行 OpenCV 图像处理实验。
 
----
+## 课堂内容
 
-## 📋 本周课程表
+1. Docker 是什么？
+2. Docker 基础概念。
+3. Docker 基础指令。
+4. 容器与本地文件交互。
+5. OpenCV 介绍与安装实验。
 
-| 次序 | 时间 | 主题 | 内容 |
-|------|------|------|------|
-| 第1次 | 3小时 | YOLO目标检测 | 预训练模型使用 |
-| 第2次 | 3小时 | ROS2集成 | 检测结果发布 |
+## Docker 是什么？
 
----
+"Docker" 一词指代了多个概念：
 
-## 第一次课：YOLO目标检测（3小时）
+- 开源社区项目
+- 开源项目使用的工具
+- 主导支持此类项目的公司 Docker Inc.
+- 该公司官方支持的工具
 
-### ⏱️ 时间分配
+**简单理解**：Docker 是支持创建和使用 Linux 容器的容器化技术。
 
-| 环节 | 时间 | 内容 |
-|------|------|------|
-| 复习 | 20分钟 | OpenCV回顾 |
-| 讲解 | 60分钟 | YOLO简介 |
-| 讲解 | 60分钟 | 预训练模型使用 |
-| 茶歇 | 10分钟 | 休息 |
-| 实践 | 60分钟 | 实验练习 |
+- 开源 Docker 社区致力于改进这类技术，并免费提供给所有用户。
+- Docker Inc. 公司凭借 Docker 社区产品起步，主要负责提升社区版本的安全性，并将技术进步与广大技术社区分享。
+- 它还专门对这些技术产品进行完善和安全固化，以服务于企业客户。
 
----
+参考资料：
 
-## 3.2.1 YOLO简介
-
-> **YOLO** = You Only Look Once  
-> 只需看一次图像就能检测出所有物体！
-
-```
-YOLO检测示例：
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│    ┌─────┐                                                   │
-│    │ 人 │     ┌────┐                                         │
-│    └─────┘     │ 狗 │   ┌──┐                                 │
-│                 └────┘   │车│                                 │
-│                                                             │
-│  输出: 物体类别 + 位置 + 置信度                            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+```text
+https://www.redhat.com/zh-cn/topics/containers/what-is-docker
 ```
 
-### YOLO版本
+## Docker 基础概念
 
-| 版本 | 速度 | 准确率 | 推荐 |
-|------|------|--------|------|
-| YOLOv8n | 最快 | 较低 | 学习用 |
-| YOLOv8s | 快 | 中等 | 平衡 |
-| YOLOv8m | 中等 | 较高 | 进阶 |
+### Image 镜像
 
----
+只读的模板，包含了运行应用程序所需的所有文件、依赖项、配置、库和运行环境。可以将其理解为轻量级的、可执行的"安装包"，用于在 Docker 容器中运行代码，确保应用程序在不同环境中保持一致性。
 
-## 3.2.2 安装YOLO
+**核心特性**：
+
+- **只读模板**：镜像在运行后不会被改变。
+- **分层结构**：基于联合文件系统（UnionFS），通过分层叠加生成最终的文件系统。
+- **可移植性**："一次构建，随处运行"，可在任意安装了 Docker 的服务器上启动。
+
+**形象类比**：
+
+- 镜像 (Image) 就像是面向对象编程中的 **类（Class）** 或软件安装光盘（ISO 文件）。
+- 容器 (Container) 则是类的 **实例（Instance）** 或运行中的安装程序。
+
+### Container 容器
+
+软件运行环境，一个基于沙盒隔离的可执行进程，运行在宿主机上，但不依赖独立操作系统。
+
+**与镜像关系**：
+
+- 容器是镜像的运行实例。
+- 镜像是只读的，容器是在镜像基础上增加了一个可读可写层。
+
+## Docker 基础指令
 
 ```bash
-# 安装Ultralytics库
-pip install ultralytics
+# 拉取镜像
+docker pull <镜像名>
 
-# 验证安装
-python3 -c "from ultralytics import YOLO; print('OK')"
+# 运行容器
+docker run <镜像名>
+
+# 查看运行中的容器
+docker ps
+
+# 查看所有容器（包括已停止的）
+docker ps -a
+
+# 停止容器
+docker stop <容器ID>
+
+# 删除容器/其他资源
+docker rm <容器ID>
+
+# 删除镜像
+docker rmi <镜像ID>
+
+# 构建镜像
+docker build .
+
+# 保存容器为新镜像
+docker commit <容器ID> <新镜像名>
 ```
 
----
+## 容器与本地文件交互
 
-## 3.2.3 YOLO快速使用
+### 使用 -v 进行本地目录挂载
 
-```python
-from ultralytics import YOLO
+`docker run` 命令首先在指定的镜像上创建一个可写的容器层，然后使用指定的命令启动。
 
-# 加载预训练模型（自动下载）
-model = YOLO('yolov8n.pt')
+使用参数 `-v` 允许你绑定一个本地目录：
 
-# 检测图像
-results = model('street.jpg')
-
-# 显示结果
-for r in results:
-    print(f"检测到 {len(r.boxes)} 个物体")
-    for box in r.boxes:
-        cls = model.names[int(box.cls[0])]
-        conf = float(box.conf[0])
-        print(f"  - {cls}: {conf:.2%}")
+```bash
+docker run -p 6080:80 --security-opt seccomp=unconfined --shm-size=512m \
+  -v "$(pwd)/:/home/ws" \
+  ghcr.io/tiryoh/ros2-desktop-vnc:humble
 ```
 
-### 检测摄像头
+**说明**：
 
-```python
-# 检测摄像头
-results = model(0)  # 0 = 默认摄像头
+- `-v "$(pwd)/:/home/ws"`：将当前目录挂载到容器内的 `/home/ws` 目录
+- 容器内对 `/home/ws` 的修改会反映到本地当前目录
 
-# 检测视频文件
-results = model('video.mp4', save=True)
+### VNC 是什么？
+
+VNC 是开源远程桌面控制技术。它允许用户通过网络远程操作另一台计算机的桌面环境，实现像在本地操作一样的图形化界面交互。
+
+某种意义上：免费的向日葵远程控制。
+
+**端口映射**：
+
+- `-p 6080:80`：将容器的 80 端口映射到本地的 6080 端口
+- 本地的 6080 端口在浏览器打开：`http://127.0.0.1:6080/`
+
+### 在 Docker 环境中使用本地目录运行程序
+
+```bash
+# 进入要使用的目录
+cd C:\具体要使用的目录
+
+# 运行 Docker 容器，挂载当前目录
+docker run -p 6080:80 --security-opt seccomp=unconfined --shm-size=512m \
+  -v "$(pwd)/:/home/ws" \
+  ghcr.io/tiryoh/ros2-desktop-vnc:humble
 ```
 
----
+### 参考资料
 
-## 第二次课：ROS2集成（3小时）
+```text
+https://zhuanlan.zhihu.com/p/1896525993486812302
+好玩的 docker 项目合集
 
-### ⏱️ 时间分配
+https://www.freecodecamp.org/chinese/news/docker-mount-volume-guide-how-to-mount-a-local-directory/
+Docker 挂载卷——如何挂载一个本地目录
+```
 
-| 环节 | 时间 | 内容 |
-|------|------|------|
-| 复习 | 20分钟 | YOLO使用回顾 |
-| 讲解 | 60分钟 | ROS2话题发布 |
-| 讲解 | 60分钟 | 可视化显示 |
-| 茶歇 | 10分钟 | 休息 |
-| 实践 | 60分钟 | 实验练习 |
+## OpenCV
 
----
+### OpenCV 是什么？
 
-## 3.2.4 ROS2目标检测节点
+OpenCV (Open Source Computer Vision Library) 是一个开源的跨平台计算机视觉和机器学习软件库，致力于提供通用的计算机视觉基础架构，加速机器感知在商业产品中的应用。
+
+它由英特尔公司发起并参与开发，以 BSD 许可证授权发行，因此可以在学术和商业领域中免费使用。
+
+**支持语言**：
+
+- C++ 调用
+- Python 调用
+
+### 安装 OpenCV
+
+```bash
+# 基础安装
+pip install opencv-python opencv-contrib-python
+
+# Ubuntu 24 安装
+pip3 install opencv-python opencv-contrib-python --break-system-packages
+
+# 如果出现 numpy 版本问题
+pip install "numpy<2"
+```
+
+### OpenCV 基本使用
 
 ```python
-#!/usr/bin/env python3
-"""
-YOLO目标检测ROS2节点
-"""
-
-import rclpy
-from rclpy.node import Node
-from sensor_msgs.msg import Image
-from std_msgs.msg import String
-from cv_bridge import CvBridge
-from ultralytics import YOLO
 import cv2
+import matplotlib.pyplot as plt
 
+# 读取图像（彩色）
+img_basic = cv2.imread('cat.jpg', cv2.IMREAD_COLOR)
 
-class YOLODetector(Node):
-    """YOLO目标检测节点"""
-    
-    def __init__(self):
-        super().__init__('yolo_detector')
-        
-        # 加载YOLO模型
-        self.model = YOLO('yolov8n.pt')
-        self.get_logger().info('YOLO模型已加载')
-        
-        # 订阅图像话题
-        self.subscription = self.create_subscription(
-            Image,
-            '/camera/image_raw',
-            self.image_callback,
-            10
-        )
-        
-        # 发布检测结果（简单版：发布检测到的类别）
-        self.publisher = self.create_publisher(String, '/detected_objects', 10)
-        
-        self.bridge = CvBridge()
-        self.get_logger().info('YOLO检测节点已启动')
-    
-    def image_callback(self, msg):
-        """图像回调"""
-        try:
-            # ROS图像转OpenCV
-            cv_image = self.bridge.imgmsg_to_cv2(msg, 'bgr8')
-            
-            # YOLO检测
-            results = self.model(cv_image, verbose=False)
-            
-            # 提取检测结果
-            detected = []
-            for r in results:
-                for box in r.boxes:
-                    if float(box.conf[0]) > 0.5:  # 置信度阈值
-                        cls = self.model.names[int(box.cls[0])]
-                        detected.append(cls)
-            
-            # 发布结果
-            if detected:
-                msg_out = String()
-                msg_out.data = ', '.join(set(detected))
-                self.publisher.publish(msg_out)
-            
-        except Exception as e:
-            self.get_logger().error(f'检测失败: {e}')
+# 显示图像（注意 OpenCV 使用 BGR，需要转换为 RGB）
+plt.imshow(cv2.cvtColor(img_basic, cv2.COLOR_BGR2RGB))
+plt.show()
 
+# 转换为灰度图像
+img_basic = cv2.cvtColor(img_basic, cv2.COLOR_BGR2GRAY)
 
-def main(args=None):
-    rclpy.init(args=args)
-    node = YOLODetector()
-    
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
+# 显示灰度图像
+plt.imshow(cv2.cvtColor(img_basic, cv2.COLOR_GRAY2RGB))
+plt.show()
 ```
 
-### 启动命令
+### 参考教程
 
-```bash
-# 1. 启动摄像头
-ros2 launch usb_cam usb_cam.launch.py
-
-# 2. 启动YOLO检测
-ros2 run your_package yolo_detector
-
-# 3. 查看检测结果
-ros2 topic echo /detected_objects
+```text
+https://github.com/ndb796/Python-Data-Analysis-and-Image-Processing-Tutorial/blob/master/06.%20OpenCV%20소개%20및%20기본%20사용법/OpenCV%20소개%20및%20기본%20사용법.ipynb
+OpenCV 介绍及基本使用方法
 ```
 
----
+## 扩展学习
 
-## 本周实验报告
+### ArUco 空间定位
 
-### ✅ 验收清单
+ArUco 标记可以用于空间定位（需要摄像头）。
 
-| 序号 | 实验 | 要求 | 完成 |
-|------|------|------|------|
-| 1 | 安装YOLO | 能import | ☐ |
-| 2 | 检测图片 | 运行检测 | ☐ |
-| 3 | 检测摄像头 | 实时检测 | ☐ |
-| 4 | ROS2节点 | 发布话题 | ☐ |
+参考资料：
 
----
+```text
+https://www.guyuehome.com/wap/detail?id=1825476719146790913
+```
 
-## 参考文献
+## 常见问题
 
-[1] Ultralytics. (2024). *YOLOv8 Documentation*. Available: https://docs.ultralytics.com/
+**Docker 容器无法启动？**
 
-[2] Redmon, J., et al. (2016). You Only Look Once. *CVPR*.
+- 检查 Docker Desktop 是否正在运行
+- 确认端口 6080 没有被其他程序占用
 
----
+**OpenCV 导入失败？**
 
-## 下周预告
+- 确认已正确安装：`pip list | grep opencv`
+- 尝试重新安装：`pip install --upgrade opencv-python`
 
-> **第11周：目标追踪**
-> - 简单追踪方法
-> - ROS2集成
+**图像颜色显示不正确？**
 
----
-
-*第10周结束！*
+- OpenCV 默认使用 BGR 格式，显示时需要转换为 RGB
+- 使用 `cv2.cvtColor(img, cv2.COLOR_BGR2RGB)`

@@ -1,0 +1,32 @@
+node_modules/
+_book/
+
+# 临时文件
+*.tmp
+*.temp
+*_content.txt
+*_temp.txt
+extract_ppt.py
+ppt_content.txt
+
+# PPT 文件（文件过大）
+*.pptx
+*.ppt
+
+# Python 相关
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 编辑器相关
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db

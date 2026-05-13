@@ -2,38 +2,14 @@
 
 - [课程简介](README.md)
 
-## 第一阶段：基础与环境搭建
+## 实际教学内容
 
-- [第1周：课程介绍与仿真环境搭建](content/week1.md)
-- [第2周：ROS2通信机制基础](content/week2.md)
-- [第3周：Python编程与机器人控制入门](content/week3.md)
-
----
-
-## 第二阶段：运动学与空间感知
-
-- [第4周：机器人运动学基础（二维）](content/week4.md)
-- [第5周：传感器与感知基础](content/week5.md)
-- [第6周：闭环控制初探](content/week6.md)
-- [第7周：复习与实操演练](content/week7.md)
-
----
-
-## 第三阶段：AI应用与Sim2Real
-
-- [第9周：机器视觉与AI工具入门](content/week9.md)
-- [第10周：物体检测与识别](content/week10.md)
-- [第11周：视觉追踪与光流法](content/week11.md)
-- [第12周：Sim2Real仿真到现实](content/week12.md)
-
----
-
-## 第四阶段：综合项目
-
-- [第13周：期末项目设计与开发(1)](content/week13.md)
-- [第14周：期末项目设计与开发(2)](content/week14.md)
-- [第15周：期末项目展示](content/week15.md)
-
----
-
-*注：第8周为期中考试，不包含课堂内容*
+- [Week 2：WSL、Ubuntu 与 ROS2 环境配置](content/week2.md)
+- [Week 3：GitHub SSH、VS Code 与 ROS2 命令行交互](content/week3.md)
+- [Week 4：命令行、机器人基础概念与 Python 仿真](content/week4.md)
+- [Week 5：Linux 目录操作与机器人运动学](content/week5.md)
+- [Week 6：传感器介绍与 ROS2 KITTI 实验](content/week6.md)
+- [Week 7：Markdown 与 GitHub 作业整理](content/week7.md)
+- [Week 8：Docker 安装与 ROS2 桌面容器](content/week8.md)
+- [Week 10：Docker 概念与 OpenCV 实验](content/week10.md)
+- [Week 11：Docker 进阶与 GitHub Pages 网页部署](content/week11.md)
