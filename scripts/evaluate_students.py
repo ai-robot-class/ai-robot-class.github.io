@@ -770,6 +770,22 @@ def evaluate_student(student):
     else:
         total_score = 0.0
 
+    # 计算两种总分，取最大值：
+    # 1) 已上课归一化（鼓励完整提交）
+    # 2) "仅已提交周次平均" × 0.8（保证认真做作业的不会因为周次少而吃亏）
+    submitted_weeks = [w for w in weeks_result.values() if w.get('submitted')]
+    if submitted_weeks:
+        submitted_avg = sum(w['raw_score'] for w in submitted_weeks) / len(submitted_weeks)
+        alt_score = submitted_avg * 0.8
+        if alt_score > total_score:
+            total_score = alt_score
+            print(f"  📐 使用'已提交周次平均'打分: {submitted_avg:.0f}×0.8 = {alt_score:.1f}")
+
+        # 保底：只要有 ≥1 周提交内容，总分最低 35 分（D 等级保底）
+        if total_score < 35:
+            total_score = 35.0
+            print(f"  🛟 保底 35 分（有提交内容）")
+
     grade = (
         'A+' if total_score >= 95 else
         'A'  if total_score >= 88 else
@@ -783,7 +799,7 @@ def evaluate_student(student):
         'D'  if total_score >= 35 else
         'F'
     )
-    print(f"  🎯 总分: {total_score:.1f}/100  等级: {grade}（按已上课部分归一化）")
+    print(f"  🎯 总分: {total_score:.1f}/100  等级: {grade}")
 
     # GitHub Pages 加分（最多 +5：基础 +3，健康度高再 +2）
     if pages_alive:
