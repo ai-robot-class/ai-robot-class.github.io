@@ -4,12 +4,23 @@ on:
   schedule:
     # 每24小时运行一次（北京时间每天22:00，UTC 14:00）
     - cron: '0 14 * * *'
-  workflow_dispatch:  # 允许手动触发
+  push:
+    branches:
+      - main
+    paths:
+      - 'students/roster.json'
+      - 'scripts/evaluate_students.py'
+      - 'scripts/generate_report.py'
+      - '.github/workflows/evaluate-students.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  evaluate-student-repos:
+  evaluate:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 检查运行日期
         id: check_date
@@ -19,43 +30,47 @@ jobs:
           if [[ "$CURRENT_DATE" > "$END_DATE" ]]; then
             echo "⏰ 评价已结束（截止日期：$END_DATE）"
             echo "should_run=false" >> $GITHUB_OUTPUT
-            exit 0
           else
             echo "✅ 继续运行评价（当前：$CURRENT_DATE，截止：$END_DATE）"
             echo "should_run=true" >> $GITHUB_OUTPUT
           fi
-      
-      - name: Checkout课程仓库
+
+      - name: Checkout
         if: steps.check_date.outputs.should_run == 'true'
         uses: actions/checkout@v4
-        
-      - name: 设置Python环境
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
         if: steps.check_date.outputs.should_run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
+
       - name: 安装依赖
         if: steps.check_date.outputs.should_run == 'true'
         run: |
-          pip install requests PyGithub pandas markdown2
-          
+          pip install requests
+
       - name: 运行评价脚本
         if: steps.check_date.outputs.should_run == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/evaluate_students.py
-        
-      - name: 生成评价报告
+
+      - name: 生成展示页面
         if: steps.check_date.outputs.should_run == 'true'
-        run: |
-          python scripts/generate_report.py
-          
+        run: python scripts/generate_report.py
+
       - name: 提交更新
         if: steps.check_date.outputs.should_run == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add students/
-          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 自动更新学生作业评价 $(date +'%Y-%m-%d %H:%M')"
-          git push
+          if git diff --staged --quiet; then
+            echo "无变更，跳过提交"
+          else
+            git commit -m "🤖 自动更新学生作业评价 $(date +'%Y-%m-%d %H:%M')"
+            git push
+          fi

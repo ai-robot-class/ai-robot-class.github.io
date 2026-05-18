@@ -1,81 +1,121 @@
-# 学生作业展示
+# 👥 学生作业实时展示
 
-> 🤖 本页面自动展示所有学生的GitHub作业仓库和完成情况
+> 🤖 本页面通过 GitHub Actions 每24小时自动更新学生作业完成情况
 
-## 📊 在线查看
+## 🌐 在线展示页面
 
-访问 [学生作业展示页面](https://areal2025.github.io/students/) 查看实时统计和所有学生的作业情况。
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; text-align: center; margin: 20px 0;">
+
+### 📊 [→ 点击查看学生作业实时展示面板 ←](./index.html)
+
+<br>
+
+**或访问**：[https://ai-robot-class.github.io/students/](https://ai-robot-class.github.io/students/)
+
+</div>
+
+展示面板包含：
+- 📈 **实时统计**：总人数、可访问仓库数、平均分
+- 🎯 **学生卡片**：每位学生的 GitHub 头像、ID、得分、等级
+- 📊 **详情表格**：每周作业完成情况一览
+- 🏆 **自动排名**：按总分排序，激励学生进步
+
+## 🎯 评价系统说明
+
+### 评分制度（总分100分制）
+
+| 维度 | 占比 | 评价标准 |
+|-----|------|---------|
+| **内容完成度** | 70% | README质量、代码、图片、文档等 |
+| **学习态度** | 30% | 提交频率、及时性 |
+
+### 每周权重分配
+
+| 周次 | 权重 | 主题 |
+|------|------|------|
+| Week 2 | 5分 | ROS2环境配置 |
+| Week 3 | 5分 | GitHub与命令行 |
+| Week 4 | 8分 | Python仿真 |
+| Week 5 | 8分 | 机器人运动学 |
+| Week 6 | 8分 | KITTI实验 |
+| Week 7 | 5分 | Markdown整理 |
+| Week 8 | 8分 | Docker容器 |
+| Week 9 | 8分 | 数学基础（网课）|
+| Week 10 | 10分 | YOLO检测 |
+| Week 11 | 10分 | 目标追踪 |
+| Week 12 | 10分 | 视觉与语音 |
+| Week 13 | 15分 | **期末项目** |
+| **总计** | **100分** | |
+
+### 等级评定
+
+| 总分 | 等级 |
+|------|------|
+| 90-100 | A+ |
+| 85-89 | A |
+| 80-84 | A- |
+| 75-79 | B+ |
+| 70-74 | B |
+| 65-69 | B- |
+| 60-64 | C+ |
+| 55-59 | C |
+| 50-54 | C- |
+| <50 | D |
 
 ## 📋 学生名单管理
 
 ### 添加学生
 
-编辑 `students/roster.json` 文件，添加学生的GitHub仓库URL：
+只需要编辑 `students/roster.json`，添加 GitHub 仓库 URL：
 
 ```json
 [
   "https://github.com/zhangsan/ai-robot-homework",
-  "https://github.com/lisi/ai-robotics-course",
-  "https://github.com/wangwu/robot-homework"
+  "https://github.com/lisi/ai-robotics-course"
 ]
 ```
 
-> 💡 **隐私保护**：系统只存储GitHub仓库URL，不存储学生姓名和学号等敏感信息。GitHub ID从URL中自动提取。
+> 🔒 **隐私保护**：系统仅存储 GitHub 仓库 URL。GitHub ID 从 URL 自动提取。不存储学生姓名、学号等敏感信息。
 
 ## 🤖 自动评价系统
 
-### 工作原理
+### 工作流程
 
-系统每天自动运行，检查所有学生的GitHub仓库：
+```
+GitHub Actions（每24小时）
+       ↓
+读取 roster.json
+       ↓
+调用 GitHub API 分析每个仓库
+       ↓
+评分（内容 + 态度）
+       ↓
+生成 latest.json
+       ↓
+生成 index.html
+       ↓
+自动提交并部署到 GitHub Pages
+```
 
-1. **检查仓库结构**
-   - 每周作业是否有对应的文件夹（week2, week3, ...）
-   - README.md是否存在且内容详细
-   - 是否包含代码文件和截图
+### 运行计划
 
-2. **评分标准**（每周100分）
-   ```
-   ✅ 提交作业文件夹: 基础分
-   ✅ README.md存在: +30分
-   ✅ README内容详细(>500字): +10分
-   ✅ 包含图片/截图: +20分
-   ✅ 包含代码文件: +20分
-   ✅ 有提交记录: +10分
-   ✅ 按时提交: +10分
-   ```
-
-3. **生成报告**
-   - 每周得分
-   - 总分和平均分
-   - 作业完成进度
-   - 排名情况
-
-### 手动触发评价
-
-访问Actions页面，手动运行"学生作业自动评价"工作流。
-
-## 📈 评价结果文件
-
-评价结果保存在以下位置：
-
-- `students/evaluations/latest.json` - 最新评价结果
-- `students/evaluations/evaluation_YYYYMMDD_HHMMSS.json` - 历史记录
-- `students/index.html` - 可视化展示页面
+- **触发时机**：每天北京时间 22:00（UTC 14:00）
+- **运行周期**：2026年5月18日 ～ 2026年6月22日
+- **手动触发**：在 Actions 页面手动运行 workflow
 
 ## 🎯 作业要求
 
-### 仓库结构
+### 推荐仓库结构
 
 ```
 ai-robot-homework/
-├── README.md          # 总说明
+├── README.md          # 项目总说明
 ├── week2/
 │   ├── README.md      # 本周作业说明
 │   └── screenshots/   # 截图
 ├── week3/
 │   ├── README.md
-│   ├── code/          # 代码文件
-│   └── images/
+│   └── ...
 ├── week4/
 │   ├── README.md
 │   ├── *.py          # Python代码
@@ -84,93 +124,62 @@ ai-robot-homework/
 └── week13/
     ├── README.md
     ├── code/
-    ├── demo.mp4      # 演示视频
+    ├── demo.mp4       # 期末项目演示
     └── docs/
 ```
 
-### 每周README要求
+### 每周 README 应包含
 
-每个week文件夹的README.md应包含：
+1. **作业内容**：本周学习内容
+2. **完成情况**：完成的任务清单
+3. **运行截图**：效果展示
+4. **遇到的问题**：问题与解决方案（加分项！）
+5. **收获总结**：学习心得（加分项！）
 
-1. **作业内容**：简要说明本周学习内容
-2. **完成情况**：列出完成的任务
-3. **运行截图**：展示运行效果
-4. **遇到的问题**：记录问题和解决方案
-5. **收获总结**：学习心得
-
-### 示例README
+### README 示例
 
 ```markdown
 # Week 2: ROS2环境配置
 
 ## 作业内容
-
 完成ROS2 Humble环境搭建和turtlesim测试。
 
 ## 完成情况
-
 - [x] 安装WSL2 Ubuntu 22.04
 - [x] 安装ROS2 Humble
 - [x] 运行turtlesim节点
 - [x] 使用命令行控制小乌龟
 
 ## 运行截图
-
 ![Turtlesim](screenshots/turtlesim.png)
-![Terminal](screenshots/terminal.png)
 
 ## 遇到的问题
-
 ### 问题1: ROS2命令不识别
-**解决方案**: 执行`source /opt/ros/humble/setup.bash`
-
-### 问题2: turtlesim窗口不显示
-**解决方案**: 安装VcXsrv，配置DISPLAY变量
+**解决方案**: 执行 `source /opt/ros/humble/setup.bash`
 
 ## 收获总结
-
-通过本周学习，掌握了WSL2的使用，成功搭建了ROS2环境...
+通过本周学习，掌握了WSL2的使用...
 ```
 
-## 🏆 排名规则
+## 💡 高分建议
 
-- 按总分排序
-- 总分 = 所有周次得分之和
-- 平均分 = 总分 / 周次数量
-- 考虑提交及时性
+1. **及时提交**：每周作业按时完成，避免延迟扣分
+2. **详细文档**：README 越详细，得分越高（>1500字符可得满分）
+3. **包含问题思考**：在 README 中讨论遇到的问题、解决方案
+4. **加学习总结**：记录心得体会
+5. **多张截图**：包含运行效果图、关键步骤截图
+6. **代码注释**：代码文件包含详细注释
+7. **多次迭代**：通过多次 commit 改进作业
 
-## 📱 查看个人成绩
+## 🔒 隐私说明
 
-访问展示页面，找到自己的卡片（通过GitHub ID识别）查看：
-- ✅ 已完成的周次
-- 📊 每周得分
-- 📈 总分和平均分
-- 🏅 当前排名
+- ✅ 仅展示 GitHub ID 和头像
+- ❌ 不公开学生真实姓名
+- ❌ 不公开学生学号
+- ❌ 不公开任何个人隐私信息
 
-> 🔒 **隐私说明**：系统仅展示GitHub ID和头像，不公开学生真实姓名和学号。
-
-## 🔧 技术栈
-
-- **GitHub Actions**: 自动化评价
-- **PyGithub**: GitHub API交互
-- **Python**: 评价脚本
-- **HTML/CSS**: 展示页面
-
-## 💡 提示
-
-1. **及时提交**：每周作业建议在截止日期前完成
-2. **规范命名**：使用week2, week3等标准命名
-3. **详细文档**：README内容越详细，得分越高
-4. **展示效果**：多加截图和代码注释
-5. **持续改进**：参考高分同学的仓库结构
-
-## 📞 联系方式
-
-如有问题，请：
-1. 在课程GitHub仓库提Issue
-2. 微信群内提问
-3. 课堂答疑时间询问
+详见 [隐私保护说明](../PRIVACY.md)
 
 ---
 
-*自动更新 · Powered by GitHub Actions*
+*🤖 自动化评价 · Powered by GitHub Actions*

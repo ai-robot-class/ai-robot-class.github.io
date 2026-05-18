@@ -35,6 +35,11 @@ jobs:
         run: |
           npm run build
           touch _book/.nojekyll
+          # 复制学生作业展示页面（GitBook不会自动处理.html和.json文件）
+          mkdir -p _book/students/evaluations
+          cp -r students/index.html _book/students/index.html
+          cp -r students/roster.json _book/students/roster.json
+          cp -r students/evaluations/* _book/students/evaluations/ 2>/dev/null || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

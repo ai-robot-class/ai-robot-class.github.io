@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-生成学生作业展示页面
+生成学生作业展示页面（适配新评价数据格式）
 """
 
 import json
@@ -9,209 +9,236 @@ from datetime import datetime
 
 
 def load_evaluation_results():
-    """加载最新评价结果"""
     results_file = Path('students/evaluations/latest.json')
     if not results_file.exists():
         return None
-    
     with open(results_file, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
-def generate_student_card(student):
-    """生成单个学生的卡片HTML"""
-    repo_exists = student['repo_exists']
+GRADE_COLORS = {
+    'A+': '#10b981', 'A': '#10b981', 'A-': '#22c55e',
+    'B+': '#3b82f6', 'B': '#3b82f6', 'B-': '#60a5fa',
+    'C+': '#f59e0b', 'C': '#f59e0b', 'C-': '#fbbf24',
+    'D': '#f97316', 'F': '#ef4444', 'N/A': '#9ca3af',
+}
+
+
+def grade_color(grade):
+    return GRADE_COLORS.get(grade, '#9ca3af')
+
+
+def generate_student_card(student, week_keys):
     github_id = student['github_id']
     repo_url = student['repo_url']
-    
+    repo_exists = student.get('repo_exists', False)
+
     if not repo_exists:
-        status_badge = "🔴 仓库未创建"
-        progress_html = ""
-        score_html = "<p class='score error'>N/A</p>"
-    else:
-        total_score = student['total_score']
-        avg_score = student['average_score']
-        weeks = student['weeks']
-        completed = sum(1 for w in weeks.values() if w['score'] > 50)
-        total_weeks = len(weeks)
-        
-        status_badge = "🟢 进行中" if completed < total_weeks else "🎉 已完成"
-        
-        # 进度条
-        progress_pct = (completed / total_weeks * 100) if total_weeks > 0 else 0
-        progress_html = f"""
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: {progress_pct}%"></div>
+        return f"""
+        <div class="student-card">
+            <div class="card-header" style="background: linear-gradient(135deg, #9ca3af, #6b7280);">
+                <img src="https://github.com/{github_id}.png" alt="@{github_id}" class="avatar" onerror="this.src='https://github.com/identicons/{github_id}.png'">
+                <div class="header-info">
+                    <h3>@{github_id}</h3>
+                    <span class="status-badge">⚠️ 仓库不可访问</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <p style="text-align:center; color:#999; padding:20px 0;">{student.get('error', '仓库未创建或为私有')}</p>
+                <a href="{repo_url}" target="_blank" class="repo-link">📂 查看仓库</a>
+            </div>
         </div>
-        <p class="progress-text">{completed}/{total_weeks} 周完成</p>
         """
-        
-        score_html = f"<p class='score'>{avg_score:.1f}/100</p>"
-    
+
+    total_score = student['total_score']
+    grade = student.get('grade', 'N/A')
+    color = grade_color(grade)
+    weeks = student['weeks']
+    submitted_count = sum(1 for w in weeks.values() if w.get('submitted'))
+    total_weeks = len(weeks)
+    repo_name = student.get('repo_name', '')
+    repo_desc = student.get('repo_description', '')
+
+    week_cells = []
+    for wk in week_keys:
+        wkd = weeks.get(wk, {})
+        if wkd.get('submitted'):
+            raw = wkd.get('raw_score', 0)
+            if raw >= 75:
+                cls = 'excellent'
+            elif raw >= 55:
+                cls = 'good'
+            elif raw >= 30:
+                cls = 'pass'
+            else:
+                cls = 'weak'
+            week_cells.append(f'<span class="week-pill {cls}" title="{wk}: 原始分{raw}/100, 加权{wkd.get("final_score",0):.1f}">{wk[4:]}</span>')
+        else:
+            week_cells.append(f'<span class="week-pill empty" title="{wk}: 未提交">{wk[4:]}</span>')
+
     return f"""
     <div class="student-card">
-        <div class="student-header">
-            <img src="https://github.com/{github_id}.png" alt="@{github_id}" class="avatar">
-            <div class="student-info">
+        <div class="card-header" style="background: linear-gradient(135deg, {color}, {color}cc);">
+            <img src="https://github.com/{github_id}.png" alt="@{github_id}" class="avatar" onerror="this.src='https://github.com/identicons/{github_id}.png'">
+            <div class="header-info">
                 <h3>@{github_id}</h3>
-                <span class="status-badge">{status_badge}</span>
+                <span class="status-badge">📦 {repo_name}</span>
             </div>
+            <div class="grade-badge" style="background:{color}">{grade}</div>
         </div>
-        <div class="student-body">
-            {progress_html}
-            <div class="score-section">
-                <label>平均分</label>
-                {score_html}
+        <div class="card-body">
+            <div class="score-row">
+                <div class="score-main">
+                    <div class="score-value">{total_score}</div>
+                    <div class="score-label">总分 / 100</div>
+                </div>
+                <div class="score-detail">
+                    <div>已提交 <strong>{submitted_count}/{total_weeks}</strong> 周</div>
+                    <div>提交数: <strong>{student.get('total_commits', 0)}</strong></div>
+                    <div>文件数: <strong>{student.get('total_files', 0)}</strong></div>
+                </div>
             </div>
-            <a href="{repo_url}" target="_blank" class="repo-link">
-                📂 查看仓库 →
-            </a>
+            <div class="week-pills">{''.join(week_cells)}</div>
+            <a href="{repo_url}" target="_blank" class="repo-link">📂 查看仓库 →</a>
         </div>
     </div>
     """
 
 
-def generate_week_details_table(students):
-    """生成各周详情表格"""
-    weeks = ['week2', 'week3', 'week4', 'week5', 'week6', 'week7', 'week8', 
-             'week9', 'week10', 'week11', 'week12', 'week13']
-    
-    html = """
-    <div class="week-details">
-        <h2>📊 各周作业完成情况</h2>
-        <div class="table-responsive">
-            <table class="details-table">
-                <thead>
-                    <tr>
-                        <th>学生</th>
-    """
-    
-    for week in weeks:
-        html += f"<th>{week.replace('week', 'W')}</th>"
-    
-    html += "<th>平均分</th></tr></thead><tbody>"
-    
-    for student in students:
-        if not student['repo_exists']:
+def generate_week_table(students, week_keys, week_info):
+    rows = []
+    for s in students:
+        if not s.get('repo_exists'):
             continue
-        
-        html += f"""
-        <tr>
-            <td><a href="{student['repo_url']}" target="_blank">@{student['github_id']}</a></td>
-        """
-        
-        for week in weeks:
-            week_data = student['weeks'].get(week, {})
-            score = week_data.get('score', 0)
-            
-            # 颜色编码
-            if score >= 80:
-                color_class = "excellent"
-            elif score >= 60:
-                color_class = "good"
-            elif score > 0:
-                color_class = "pass"
+        github_id = s['github_id']
+        cells = [f'<td class="name-col"><a href="{s["repo_url"]}" target="_blank">@{github_id}</a></td>']
+        for wk in week_keys:
+            wkd = s['weeks'].get(wk, {})
+            if wkd.get('submitted'):
+                raw = wkd.get('raw_score', 0)
+                final = wkd.get('final_score', 0)
+                if raw >= 75:
+                    cls = 'cell-excellent'
+                elif raw >= 55:
+                    cls = 'cell-good'
+                elif raw >= 30:
+                    cls = 'cell-pass'
+                else:
+                    cls = 'cell-weak'
+                cells.append(f'<td class="{cls}" title="原始{raw}/100">{final:.1f}</td>')
             else:
-                color_class = "not-submitted"
-            
-            html += f'<td class="{color_class}">{score}</td>'
-        
-        avg = student['average_score']
-        avg_class = "excellent" if avg >= 80 else "good" if avg >= 60 else "pass"
-        html += f'<td class="{avg_class}"><strong>{avg:.0f}</strong></td>'
-        html += "</tr>"
-    
-    html += """
-            </tbody>
-        </table>
+                cells.append('<td class="cell-empty">—</td>')
+        cells.append(f'<td class="total-col"><strong>{s["total_score"]}</strong></td>')
+        cells.append(f'<td class="grade-col" style="color:{grade_color(s["grade"])}"><strong>{s["grade"]}</strong></td>')
+        rows.append(f'<tr>{"".join(cells)}</tr>')
+
+    headers = ['<th>学生</th>']
+    for wk in week_keys:
+        info = week_info.get(wk, {})
+        title = info.get('title', wk)
+        weight = info.get('weight', 0)
+        headers.append(f'<th title="{title}（{weight}分）">W{wk[4:]}<br><small>{weight}</small></th>')
+    headers.append('<th>总分</th>')
+    headers.append('<th>等级</th>')
+
+    return f"""
+    <div class="week-table-wrapper">
+        <h2>📊 各周作业详情（按学生）</h2>
+        <p style="text-align:center; color:#666; margin-bottom: 20px;">表格中显示加权得分（已乘以权重）。原始分见单元格 tooltip。</p>
+        <div class="table-scroll">
+            <table class="week-table">
+                <thead><tr>{''.join(headers)}</tr></thead>
+                <tbody>{''.join(rows)}</tbody>
+            </table>
         </div>
         <div class="legend">
-            <span class="legend-item excellent">■ 优秀 (80+)</span>
-            <span class="legend-item good">■ 良好 (60-79)</span>
-            <span class="legend-item pass">■ 及格 (1-59)</span>
-            <span class="legend-item not-submitted">■ 未提交 (0)</span>
+            <span class="legend-item legend-excellent">■ 优秀 (≥75)</span>
+            <span class="legend-item legend-good">■ 良好 (55-74)</span>
+            <span class="legend-item legend-pass">■ 及格 (30-54)</span>
+            <span class="legend-item legend-weak">■ 较弱 (1-29)</span>
+            <span class="legend-item legend-empty">■ 未提交</span>
         </div>
     </div>
     """
-    
-    return html
 
 
-def generate_stats_summary(students):
-    """生成统计摘要"""
+def generate_stats(students):
     total = len(students)
-    active = sum(1 for s in students if s['repo_exists'])
-    
-    if active == 0:
-        return "<div class='stats-summary'><p>暂无学生提交作业</p></div>"
-    
-    active_students = [s for s in students if s['repo_exists']]
-    avg_score = sum(s['average_score'] for s in active_students) / len(active_students)
-    
-    # 最高分学生
-    top_student = max(active_students, key=lambda x: x['total_score'])
-    
-    html = f"""
-    <div class="stats-summary">
+    active = [s for s in students if s.get('repo_exists')]
+    submitted = [s for s in active if s['total_score'] > 0]
+
+    if not active:
+        return "<div class='stats-grid'><p>暂无可访问的学生仓库</p></div>"
+
+    avg_all = sum(s['total_score'] for s in active) / len(active)
+    avg_sub = sum(s['total_score'] for s in submitted) / max(len(submitted), 1)
+    top = max(active, key=lambda x: x['total_score'])
+    max_score = top['total_score']
+
+    return f"""
+    <div class="stats-grid">
         <div class="stat-card">
+            <div class="stat-icon">👥</div>
             <div class="stat-value">{total}</div>
             <div class="stat-label">总学生数</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">{active}</div>
-            <div class="stat-label">已提交</div>
+            <div class="stat-icon">✅</div>
+            <div class="stat-value">{len(active)}</div>
+            <div class="stat-label">仓库可访问</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">{avg_score:.1f}</div>
-            <div class="stat-label">平均分</div>
+            <div class="stat-icon">📝</div>
+            <div class="stat-value">{len(submitted)}</div>
+            <div class="stat-label">已开始作业</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value">{avg_sub:.1f}</div>
+            <div class="stat-label">平均分（已提交）</div>
         </div>
         <div class="stat-card highlight">
-            <div class="stat-value">🏆 @{top_student['github_id']}</div>
-            <div class="stat-label">第一名 ({top_student['total_score']:.0f}分)</div>
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value">{max_score:.1f}</div>
+            <div class="stat-label">最高分 @{top['github_id']}</div>
         </div>
     </div>
     """
-    
-    return html
 
 
-def generate_html_page(data):
-    """生成完整HTML页面"""
+def generate_html(data):
     students = data['students']
     eval_date = data['evaluation_date']
-    eval_time = datetime.fromisoformat(eval_date).strftime('%Y年%m月%d日 %H:%M')
-    
-    # 按总分排序
-    students_sorted = sorted(
-        students, 
-        key=lambda x: x.get('total_score', 0) if x['repo_exists'] else -1, 
-        reverse=True
-    )
-    
-    stats_html = generate_stats_summary(students_sorted)
-    cards_html = "\n".join(generate_student_card(s) for s in students_sorted)
-    table_html = generate_week_details_table(students_sorted)
-    
-    html = f"""<!DOCTYPE html>
+    eval_time = datetime.fromisoformat(eval_date).strftime('%Y-%m-%d %H:%M')
+    week_info = data.get('weeks', {})
+    week_keys = list(week_info.keys()) or [f'week{i}' for i in range(2, 14)]
+
+    students_sorted = sorted(students,
+                             key=lambda x: x['total_score'] if x.get('repo_exists') else -1,
+                             reverse=True)
+
+    stats_html = generate_stats(students_sorted)
+    cards_html = "\n".join(generate_student_card(s, week_keys) for s in students_sorted)
+    table_html = generate_week_table(students_sorted, week_keys, week_info)
+
+    return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>学生作业展示 - AI机器人课程</title>
     <style>
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-        
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
             line-height: 1.6;
+            min-height: 100vh;
+            color: #1f2937;
         }}
-        
+
         .container {{
             max-width: 1400px;
             margin: 0 auto;
@@ -220,266 +247,271 @@ def generate_html_page(data):
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             padding: 40px;
         }}
-        
+
         header {{
             text-align: center;
             margin-bottom: 40px;
-            padding-bottom: 20px;
+            padding-bottom: 24px;
             border-bottom: 3px solid #667eea;
         }}
-        
-        h1 {{
-            color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }}
-        
-        .update-time {{
-            color: #666;
-            font-size: 0.9em;
-        }}
-        
-        .stats-summary {{
+
+        h1 {{ color: #1f2937; font-size: 2.2em; margin-bottom: 10px; }}
+        .subtitle {{ color: #6b7280; font-size: 1em; }}
+        .update-time {{ color: #9ca3af; font-size: 0.85em; margin-top: 8px; }}
+
+        .stats-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
             margin-bottom: 40px;
         }}
-        
+
         .stat-card {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            border-radius: 14px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
         }}
-        
+        .stat-card:hover {{ transform: translateY(-3px); }}
         .stat-card.highlight {{
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            border: none;
         }}
-        
-        .stat-value {{
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .stat-icon {{ font-size: 1.8em; margin-bottom: 6px; }}
+        .stat-value {{ font-size: 1.8em; font-weight: 700; }}
+        .stat-label {{ font-size: 0.85em; color: inherit; opacity: 0.85; margin-top: 4px; }}
+
+        .scoring-info {{
+            background: #f3f4f6;
+            border-left: 4px solid #667eea;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
         }}
-        
-        .stat-label {{
-            font-size: 1em;
-            opacity: 0.9;
+        .scoring-info p {{ font-size: 0.9em; color: #4b5563; margin: 2px 0; }}
+        .scoring-info strong {{ color: #1f2937; }}
+
+        h2 {{
+            text-align: center;
+            color: #1f2937;
+            margin: 30px 0 20px;
+            font-size: 1.5em;
         }}
-        
+
         .students-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
             margin-bottom: 50px;
         }}
-        
+
         .student-card {{
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
             overflow: hidden;
+            border: 1px solid #e5e7eb;
         }}
-        
         .student-card:hover {{
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
         }}
-        
-        .student-header {{
+
+        .card-header {{
             display: flex;
             align-items: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 18px;
             color: white;
+            position: relative;
         }}
-        
+
         .avatar {{
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             border: 3px solid white;
-            margin-right: 15px;
+            margin-right: 14px;
+            background: white;
         }}
-        
-        .student-info h3 {{
-            font-size: 1.2em;
-            margin-bottom: 5px;
+
+        .header-info {{ flex: 1; min-width: 0; }}
+        .header-info h3 {{
+            font-size: 1.1em;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }}
-        
-        .github-id {{
-            font-size: 0.9em;
-            opacity: 0.9;
-        }}
-        
+
         .status-badge {{
             display: inline-block;
-            padding: 4px 12px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-top: 5px;
-        }}
-        
-        .student-body {{
-            padding: 20px;
-        }}
-        
-        .progress-bar {{
-            width: 100%;
-            height: 10px;
-            background: #e0e0e0;
-            border-radius: 10px;
+            padding: 3px 10px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 12px;
+            font-size: 0.78em;
+            max-width: 100%;
             overflow: hidden;
-            margin-bottom: 10px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }}
-        
-        .progress-fill {{
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.5s;
+
+        .grade-badge {{
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.05em;
+            border: 3px solid white;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }}
-        
-        .progress-text {{
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 15px;
+
+        .card-body {{ padding: 18px; }}
+
+        .score-row {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px dashed #e5e7eb;
         }}
-        
-        .score-section {{
-            text-align: center;
-            margin: 15px 0;
+        .score-main {{ text-align: left; }}
+        .score-value {{ font-size: 2.2em; font-weight: 700; color: #1f2937; line-height: 1; }}
+        .score-label {{ font-size: 0.8em; color: #6b7280; margin-top: 2px; }}
+        .score-detail {{ text-align: right; font-size: 0.82em; color: #6b7280; }}
+        .score-detail strong {{ color: #1f2937; }}
+
+        .week-pills {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 14px;
         }}
-        
-        .score-section label {{
-            display: block;
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 5px;
+        .week-pill {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 26px;
+            height: 26px;
+            padding: 0 6px;
+            font-size: 0.75em;
+            font-weight: 600;
+            border-radius: 6px;
+            color: white;
         }}
-        
-        .score {{
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-        }}
-        
-        .score.error {{
-            color: #999;
-        }}
-        
+        .week-pill.excellent {{ background: #10b981; }}
+        .week-pill.good {{ background: #3b82f6; }}
+        .week-pill.pass {{ background: #f59e0b; }}
+        .week-pill.weak {{ background: #f97316; }}
+        .week-pill.empty {{ background: #e5e7eb; color: #9ca3af; }}
+
         .repo-link {{
             display: block;
             text-align: center;
-            padding: 12px;
-            background: #667eea;
-            color: white;
+            padding: 10px;
+            background: #f3f4f6;
+            color: #4b5563;
             text-decoration: none;
             border-radius: 8px;
-            transition: background 0.3s;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: background 0.2s;
         }}
-        
         .repo-link:hover {{
-            background: #764ba2;
-        }}
-        
-        .week-details {{
-            margin-top: 50px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-        }}
-        
-        .week-details h2 {{
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }}
-        
-        .table-responsive {{
-            overflow-x: auto;
-        }}
-        
-        .details-table {{
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }}
-        
-        .details-table th,
-        .details-table td {{
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #e0e0e0;
-        }}
-        
-        .details-table th {{
             background: #667eea;
             color: white;
-            font-weight: bold;
+        }}
+
+        .week-table-wrapper {{
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+        }}
+
+        .table-scroll {{
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }}
+
+        .week-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }}
+
+        .week-table th {{
+            background: #667eea;
+            color: white;
+            padding: 12px 6px;
+            text-align: center;
+            font-weight: 600;
             position: sticky;
             top: 0;
         }}
-        
-        .details-table td {{
-            font-weight: 500;
+        .week-table th small {{ display: block; font-weight: 400; opacity: 0.85; font-size: 0.85em; }}
+
+        .week-table td {{
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #f3f4f6;
         }}
-        
-        .details-table tr:nth-child(even) {{
-            background: #f9f9f9;
-        }}
-        
-        .details-table tr:hover {{
-            background: #f0f0f0;
-        }}
-        
-        .excellent {{ background: #4caf50 !important; color: white; }}
-        .good {{ background: #8bc34a !important; color: white; }}
-        .pass {{ background: #ffc107 !important; color: #333; }}
-        .not-submitted {{ background: #f5f5f5 !important; color: #999; }}
-        
+        .week-table tr:hover td {{ background: #f9fafb; }}
+        .name-col {{ text-align: left !important; padding-left: 14px !important; font-weight: 500; }}
+        .name-col a {{ color: #4b5563; text-decoration: none; }}
+        .name-col a:hover {{ color: #667eea; }}
+
+        .cell-excellent {{ background: rgba(16, 185, 129, 0.15); color: #047857; font-weight: 600; }}
+        .cell-good {{ background: rgba(59, 130, 246, 0.12); color: #1d4ed8; font-weight: 600; }}
+        .cell-pass {{ background: rgba(245, 158, 11, 0.15); color: #b45309; font-weight: 600; }}
+        .cell-weak {{ background: rgba(249, 115, 22, 0.15); color: #c2410c; font-weight: 600; }}
+        .cell-empty {{ color: #d1d5db; }}
+
+        .total-col {{ background: #f3f4f6; font-size: 1.05em; }}
+        .grade-col {{ background: #f3f4f6; font-size: 1.1em; }}
+
         .legend {{
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 12px;
             flex-wrap: wrap;
             margin-top: 20px;
         }}
-        
         .legend-item {{
-            font-size: 0.9em;
-            padding: 5px 10px;
-            border-radius: 5px;
+            font-size: 0.85em;
+            padding: 4px 10px;
+            border-radius: 6px;
         }}
-        
+        .legend-excellent {{ background: rgba(16, 185, 129, 0.15); color: #047857; }}
+        .legend-good {{ background: rgba(59, 130, 246, 0.12); color: #1d4ed8; }}
+        .legend-pass {{ background: rgba(245, 158, 11, 0.15); color: #b45309; }}
+        .legend-weak {{ background: rgba(249, 115, 22, 0.15); color: #c2410c; }}
+        .legend-empty {{ background: #f3f4f6; color: #6b7280; }}
+
         footer {{
             text-align: center;
             margin-top: 50px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-            color: #666;
+            padding-top: 24px;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 0.9em;
         }}
-        
+        footer a {{ color: #667eea; text-decoration: none; margin: 0 6px; }}
+        footer a:hover {{ text-decoration: underline; }}
+
         @media (max-width: 768px) {{
-            .container {{
-                padding: 20px;
-            }}
-            
-            h1 {{
-                font-size: 1.8em;
-            }}
-            
-            .students-grid {{
-                grid-template-columns: 1fr;
-            }}
-            
-            .stats-summary {{
-                grid-template-columns: 1fr;
-            }}
+            .container {{ padding: 20px; }}
+            h1 {{ font-size: 1.6em; }}
+            .students-grid {{ grid-template-columns: 1fr; }}
         }}
     </style>
 </head>
@@ -487,55 +519,55 @@ def generate_html_page(data):
     <div class="container">
         <header>
             <h1>🎓 学生作业展示</h1>
-            <p class="update-time">最后更新: {eval_time} | 自动评价系统</p>
+            <p class="subtitle">AI机器人课程 · 自动化评价系统</p>
+            <p class="update-time">最后更新: {eval_time} · 每24小时自动更新</p>
         </header>
-        
+
         {stats_html}
-        
-        <h2 style="text-align: center; margin-bottom: 30px; color: #333;">📚 学生列表</h2>
+
+        <div class="scoring-info">
+            <p><strong>📊 评分制度</strong>：{data.get('scoring_system', '总分100分（内容70% + 态度30%）')}</p>
+            <p><strong>🔒 隐私保护</strong>：仅显示 GitHub ID 与头像，不公开学生姓名、学号等敏感信息。</p>
+            <p><strong>ℹ️ 说明</strong>：每周得分按权重加权后计入总分。点击学生卡片可跳转 GitHub 仓库查看详情。</p>
+        </div>
+
+        <h2>📚 学生排名（按总分）</h2>
         <div class="students-grid">
             {cards_html}
         </div>
-        
+
         {table_html}
-        
+
         <footer>
             <p>AI机器人课程 · 神韩大学校 · 2026</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">
-                <a href="https://course.a-real.me" style="color: #667eea; text-decoration: none;">课程主页</a> | 
-                <a href="https://github.com/ai-robot-class" style="color: #667eea; text-decoration: none;">GitHub</a>
+            <p style="margin-top: 8px;">
+                <a href="https://ai-robot-class.github.io/">课程主页</a> |
+                <a href="https://github.com/ai-robot-class">GitHub组织</a> |
+                <a href="../PRIVACY.html">隐私保护</a>
             </p>
         </footer>
     </div>
 </body>
 </html>
 """
-    
-    return html
 
 
 def main():
-    """主函数"""
     print("📄 生成学生作业展示页面...")
-    
-    # 加载评价结果
     data = load_evaluation_results()
     if not data:
         print("❌ 未找到评价结果文件")
         return
-    
-    # 生成HTML
-    html = generate_html_page(data)
-    
-    # 保存文件
-    output_file = Path('students/index.html')
-    output_file.parent.mkdir(parents=True, exist_ok=True)
-    
-    with open(output_file, 'w', encoding='utf-8') as f:
+
+    html = generate_html(data)
+
+    output = Path('students/index.html')
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with open(output, 'w', encoding='utf-8') as f:
         f.write(html)
-    
-    print(f"✅ 展示页面已生成: {output_file}")
-    print(f"🌐 可通过GitHub Pages访问: https://your-username.github.io/your-repo/students/")
+
+    print(f"✅ 展示页面已生成: {output}")
+    print(f"📊 共展示 {len(data['students'])} 名学生")
 
 
 if __name__ == '__main__':
