@@ -1,324 +1,647 @@
-# 第12周：Sim2Real - 从仿真到现实
+# 第12周：视觉与语音入门 + 期末项目启动
 
-**课时**: 6小时（第一次课3小时 + 第二次课3小时）
+**课时**: 3小时（一次课）
 
 ---
 
-## 📋 本周课程表
+## 📋 本周课程大纲
 
-| 次序 | 时间 | 主题 | 内容 |
+| 模块 | 时间 | 主题 | 内容 |
 |------|------|------|------|
-| 第1次 | 3小时 | 仿真环境 | Gazebo仿真环境 |
-| 第2次 | 3小时 | 真机连接 | ROS2网络配置与真机控制 |
+| 模块1 | 60分钟 | OpenCV视觉处理 | 图像处理+颜色检测 |
+| 模块2 | 40分钟 | 语音技术入门 | 识别与合成 |
+| 茶歇 | 10分钟 | 休息 | - |
+| 模块3 | 70分钟 | 期末项目启动 | 分组选题+计划 |
 
 ---
 
-## 第一次课：仿真环境（3小时）
+## 第一模块：OpenCV视觉处理（60分钟）
 
 ### ⏱️ 时间分配
 
 | 环节 | 时间 | 内容 |
 |------|------|------|
-| 复习 | 20分钟 | 视觉追踪回顾 |
-| 讲解 | 60分钟 | Gazebo仿真 |
-| 讲解 | 60分钟 | TurtleBot3仿真 |
-| 茶歇 | 10分钟 | 休息 |
-| 实践 | 60分钟 | 实验练习 |
+| 讲解+演示 | 30分钟 | OpenCV基础快速入门 |
+| 实践 | 30分钟 | 颜色检测与追踪实战 |
 
 ---
 
-## 3.4.1 Gazebo仿真环境
+## 12.1 OpenCV快速入门
 
-> **Gazebo** = 开源机器人仿真器 [1]。
+> OpenCV是最流行的计算机视觉库，简单易用！
 
-```
-Gazebo特点：
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  ✓ 物理引擎支持（ODE, Bullet, Dart, Simbody）            │
-│  ✓ 3D渲染引擎（OGRE）                                  │
-│  ✓ 传感器仿真（相机, 激光雷达, IMU）                  │
-│  ✓ 丰富的机器人模型库                                  │
-│  ✓ 与ROS完美集成                                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 安装Gazebo
+### 12.1.1 安装与验证
 
 ```bash
-# 安装Gazebo
-sudo apt update
-sudo apt install ros-humble-gazebo-ros-pkgs
+# 安装OpenCV
+pip install opencv-python opencv-contrib-python
 
-# 验证安装
-gz --version
-
-# 启动仿真世界
-ros2 launch gazebo_ros gazebo.launch.py world:=empty.world
+# 验证
+python3 -c "import cv2; print(f'OpenCV版本: {cv2.__version__}')"
 ```
 
-### 常用仿真世界
-
-| 世界 | 命令 | 说明 |
-|------|------|------|
-| 空世界 | empty.world | 基础测试 |
-| 小屋 | house.world | 室内导航 |
-| 机器人竞赛 | roboticschool.world | 竞赛环境 |
-
----
-
-## 3.4.2 TurtleBot3仿真
-
-> **TurtleBot3** = 小型移动机器人平台 [2]。
-
-### 安装TurtleBot3
-
-```bash
-# 安装TurtleBot3包
-sudo apt update
-sudo apt install ros-humble-turtlebot3
-sudo apt install ros-humble-turtlebot3-simulations
-
-# 设置环境变量
-export TURTLEBOT3_MODEL=burger
-source /opt/ros/humble/setup.bash
-```
-
-### 启动TurtleBot3仿真
-
-```bash
-# 启动TurtleBot3 Gazebo世界
-ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
-
-# 或启动空世界
-ros2 launch turtlebot3_gazebo empty_world.launch.py
-```
-
-### 控制TurtleBot3
-
-```bash
-# 键盘控制
-ros2 run turtlebot3_teleop teleop_keyboard
-
-# 自主导航
-ros2 launch turtlebot3_navigation2 navigation.launch.py map:=/map.yaml
-```
-
----
-
-## 第二次课：真机连接（3小时）
-
-### ⏱️ 时间分配
-
-| 环节 | 时间 | 内容 |
-|------|------|------|
-| 复习 | 20分钟 | 仿真回顾 |
-| 讲解 | 60分钟 | 网络配置 |
-| 讲解 | 60分钟 | 真机控制 |
-| 茶歇 | 10分钟 | 休息 |
-| 实践 | 60分钟 | 实验练习 |
-
----
-
-## 3.4.3 ROS2网络配置
-
-### 多机通信架构
-
-```
-ROS2多机通信：
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   开发电脑 (192.168.1.100)          机器人 (192.168.1.200)  │
-│   ┌─────────────────┐              ┌─────────────────┐        │
-│   │  RViz可视化    │ ◄───────► │  传感器节点     │        │
-│   │  规划节点     │   网络    │  运动控制     │        │
-│   │  决策节点     │              │  底盘驱动     │        │
-│   └─────────────────┘              └─────────────────┘        │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 网络配置步骤
-
-```bash
-# 1. 确保在同一网络
-ping 192.168.1.200
-
-# 2. 设置ROS_DOMAIN_ID（可选）
-export ROS_DOMAIN_ID=42
-
-# 3. 配置主机名
-sudo nano /etc/hosts
-
-# 添加：
-# 192.168.1.200 robot
-
-# 4. 测试话题通信
-ros2 topic list  # 在开发电脑上查看机器人话题
-
-# 5. 转发话题
-ros2 topic echo /scan  # 确认能收到激光数据
-```
-
----
-
-## 3.4.4 机器人控制节点
+### 12.1.2 图像基本操作（15分钟掌握）
 
 ```python
-#!/usr/bin/env python3
-"""
-机器人控制节点
-"""
+import cv2
+import numpy as np
 
-import rclpy
-from rclpy.node import Node
-from geometry_msgs.msg import Twist
+# 1. 读取图像
+img = cv2.imread('robot.jpg')
+print(f"图像形状: {img.shape}")  # (高, 宽, 通道)
 
+# 2. 显示图像
+cv2.imshow('Original', img)
+cv2.waitKey(0)  # 按任意键关闭
+cv2.destroyAllWindows()
 
-class RobotController(Node):
-    """机器人控制器"""
+# 3. 颜色空间转换
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 灰度图
+hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)    # HSV颜色空间
+
+# 4. 图像缩放
+resized = cv2.resize(img, (640, 480))
+
+# 5. 图像裁剪（数组切片）
+cropped = img[100:300, 200:400]
+
+# 6. 绘制图形
+cv2.rectangle(img, (50, 50), (200, 200), (0, 255, 0), 2)  # 绿色矩形
+cv2.circle(img, (320, 240), 50, (0, 0, 255), -1)         # 红色实心圆
+cv2.putText(img, 'Robot', (100, 100), 
+            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+
+# 7. 保存图像
+cv2.imwrite('output.jpg', img)
+```
+
+### 12.1.3 边缘检测（5分钟掌握）
+
+```python
+# Canny边缘检测
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+edges = cv2.Canny(gray, 50, 150)
+
+cv2.imshow('Edges', edges)
+cv2.waitKey(0)
+```
+
+---
+
+## 12.2 颜色检测与追踪
+
+> 最实用的入门技术：通过颜色追踪物体！
+
+### 12.2.1 HSV颜色空间
+
+```
+为什么用HSV而不是RGB？
+
+RGB: 受光照影响大
+HSV: 颜色、亮度分离
+     H (Hue): 色调 (0-180)
+     S (Saturation): 饱和度 (0-255)
+     V (Value): 明度 (0-255)
+
+常见颜色HSV范围：
+• 红色: [0, 120, 70] ~ [10, 255, 255]
+• 绿色: [40, 40, 40] ~ [80, 255, 255]
+• 蓝色: [100, 43, 46] ~ [124, 255, 255]
+```
+
+### 12.2.2 颜色检测实战
+
+```python
+import cv2
+import numpy as np
+
+# 打开摄像头
+cap = cv2.VideoCapture(0)
+
+# 定义红色范围（HSV）
+lower_red = np.array([0, 120, 70])
+upper_red = np.array([10, 255, 255])
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
     
-    def __init__(self):
-        super().__init__('robot_controller')
+    # 转HSV
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    
+    # 颜色过滤（创建mask）
+    mask = cv2.inRange(hsv, lower_red, upper_red)
+    
+    # 形态学操作（去噪）
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
+    
+    # 找轮廓
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, 
+                                    cv2.CHAIN_APPROX_SIMPLE)
+    
+    # 处理最大轮廓（追踪最大红色物体）
+    if contours:
+        largest = max(contours, key=cv2.contourArea)
         
-        # 订阅目标位置
-        self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        # 计算外接矩形
+        x, y, w, h = cv2.boundingRect(largest)
         
-        self.get_logger().info('机器人控制器已启动')
+        # 计算中心点
+        cx, cy = x + w//2, y + h//2
+        
+        # 绘制结果
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
+        cv2.putText(frame, f'Red Object ({cx}, {cy})', (x, y-10),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     
-    def move(self, linear, angular):
-        """移动机器人"""
-        msg = Twist()
-        msg.linear.x = linear
-        msg.angular.z = angular
-        self.cmd_pub.publish(msg)
+    # 显示
+    cv2.imshow('Original', frame)
+    cv2.imshow('Mask', mask)
     
-    def stop(self):
-        """停止"""
-        self.move(0.0, 0.0)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
+cap.release()
+cv2.destroyAllWindows()
+```
 
-def main(args=None):
-    rclpy.init(args=args)
-    controller = RobotController()
+### 12.2.3 实践练习：颜色调节工具
+
+```python
+def nothing(x):
+    pass
+
+# 创建窗口和滑块
+cv2.namedWindow('HSV Tuner')
+cv2.createTrackbar('H_min', 'HSV Tuner', 0, 180, nothing)
+cv2.createTrackbar('H_max', 'HSV Tuner', 180, 180, nothing)
+cv2.createTrackbar('S_min', 'HSV Tuner', 0, 255, nothing)
+cv2.createTrackbar('S_max', 'HSV Tuner', 255, 255, nothing)
+cv2.createTrackbar('V_min', 'HSV Tuner', 0, 255, nothing)
+cv2.createTrackbar('V_max', 'HSV Tuner', 255, 255, nothing)
+
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    
+    # 读取滑块值
+    h_min = cv2.getTrackbarPos('H_min', 'HSV Tuner')
+    h_max = cv2.getTrackbarPos('H_max', 'HSV Tuner')
+    s_min = cv2.getTrackbarPos('S_min', 'HSV Tuner')
+    s_max = cv2.getTrackbarPos('S_max', 'HSV Tuner')
+    v_min = cv2.getTrackbarPos('V_min', 'HSV Tuner')
+    v_max = cv2.getTrackbarPos('V_max', 'HSV Tuner')
+    
+    # 创建mask
+    lower = np.array([h_min, s_min, v_min])
+    upper = np.array([h_max, s_max, v_max])
+    mask = cv2.inRange(hsv, lower, upper)
+    
+    # 应用mask
+    result = cv2.bitwise_and(frame, frame, mask=mask)
+    
+    cv2.imshow('Original', frame)
+    cv2.imshow('Mask', mask)
+    cv2.imshow('Result', result)
+    
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+```
+
+---
+
+## 第二模块：语音技术入门（40分钟）
+
+### ⏱️ 时间分配
+
+| 环节 | 时间 | 内容 |
+|------|------|------|
+| 讲解+演示 | 20分钟 | 语音识别入门 |
+| 讲解+演示 | 20分钟 | 语音合成入门 |
+
+---
+
+## 12.3 语音识别入门
+
+> 让机器人"听懂"人话
+
+### 12.3.1 安装语音库
+
+```bash
+# 语音识别
+pip install SpeechRecognition pyaudio
+
+# 中文语音识别（可选）
+pip install paddlespeech
+
+# 文字转语音
+pip install pyttsx3 gTTS
+```
+
+### 12.3.2 简单语音识别
+
+```python
+import speech_recognition as sr
+
+# 创建识别器
+recognizer = sr.Recognizer()
+
+# 使用麦克风
+with sr.Microphone() as source:
+    print("请说话...")
+    
+    # 调整环境噪音
+    recognizer.adjust_for_ambient_noise(source)
+    
+    # 录音
+    audio = recognizer.listen(source)
+    
+    print("识别中...")
     
     try:
-        # 前进
-        controller.move(0.2, 0.0)
-        rclpy.sleep(5)
+        # 使用Google语音识别（需要网络）
+        text = recognizer.recognize_google(audio, language='zh-CN')
+        print(f"你说的是: {text}")
         
-        # 停止
-        controller.stop()
-        
-    except KeyboardInterrupt:
-        pass
-    finally:
-        controller.destroy_node()
-        rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
+    except sr.UnknownValueError:
+        print("听不清楚")
+    except sr.RequestError:
+        print("识别服务出错")
 ```
 
----
-
-## 3.4.5 从仿真到真机
-
-### 代码适配
-
-| 仿真 | 真机 | 说明 |
-|------|------|------|
-| `/cmd_vel` | `/cmd_vel` | 相同 |
-| `/scan` | `/scan` | 可能不同话题名 |
-| 仿真时间 | 系统时间 | 使用真机时间 |
-| 无延迟 | 网络延迟 | 考虑延迟补偿 |
-
-### 常用转换
+### 12.3.3 语音命令识别
 
 ```python
-# 仿真参数
-SIM_PARAMS = {
-    'wheel_radius': 0.033,      # 轮子半径
-    'wheel_base': 0.16,         # 轮间距
-    'max_linear': 0.22,         # 最大线速度
-    'max_angular': 2.84,       # 最大角速度
-}
+import speech_recognition as sr
 
-# 真机参数
-REAL_PARAMS = {
-    'wheel_radius': 0.033,
-    'wheel_base': 0.16,
-    'max_linear': 0.26,
-    'max_angular': 1.82,
-}
+def recognize_command():
+    """识别语音命令"""
+    recognizer = sr.Recognizer()
+    
+    # 定义命令词
+    commands = {
+        '前进': 'forward',
+        '后退': 'backward',
+        '左转': 'left',
+        '右转': 'right',
+        '停止': 'stop'
+    }
+    
+    with sr.Microphone() as source:
+        print("等待命令...")
+        recognizer.adjust_for_ambient_noise(source)
+        audio = recognizer.listen(source)
+        
+        try:
+            text = recognizer.recognize_google(audio, language='zh-CN')
+            print(f"识别到: {text}")
+            
+            # 匹配命令
+            for cmd, action in commands.items():
+                if cmd in text:
+                    print(f"执行: {action}")
+                    return action
+            
+            print("未识别到有效命令")
+            return None
+            
+        except:
+            print("识别失败")
+            return None
+
+# 测试
+while True:
+    cmd = recognize_command()
+    if cmd == 'stop':
+        break
 ```
 
 ---
 
-## 3.4.6 常用机器人平台
+## 12.4 语音合成入门
 
-### 室内移动机器人
+> 让机器人"说话"
 
-| 平台 | 特点 | 价格 |
+### 12.4.1 离线语音合成（pyttsx3）
+
+```python
+import pyttsx3
+
+# 创建引擎
+engine = pyttsx3.init()
+
+# 设置属性
+engine.setProperty('rate', 150)     # 语速
+engine.setProperty('volume', 0.9)   # 音量
+
+# 朗读文本
+engine.say("你好，我是机器人")
+engine.say("Hello, I am a robot")
+
+# 等待完成
+engine.runAndWait()
+```
+
+### 12.4.2 在线语音合成（gTTS）
+
+```python
+from gtts import gTTS
+import os
+
+# 中文
+text_zh = "欢迎来到机器人课程"
+tts = gTTS(text=text_zh, lang='zh-cn')
+tts.save("welcome_zh.mp3")
+
+# 英文
+text_en = "Welcome to robotics course"
+tts = gTTS(text=text_en, lang='en')
+tts.save("welcome_en.mp3")
+
+# 播放
+os.system("mpg123 welcome_zh.mp3")  # Linux
+# os.system("start welcome_zh.mp3")  # Windows
+```
+
+### 12.4.3 简单对话机器人
+
+```python
+import speech_recognition as sr
+import pyttsx3
+
+class VoiceBot:
+    """简单语音机器人"""
+    
+    def __init__(self):
+        self.recognizer = sr.Recognizer()
+        self.engine = pyttsx3.init()
+        self.engine.setProperty('rate', 150)
+    
+    def listen(self):
+        """听"""
+        with sr.Microphone() as source:
+            print("机器人在听...")
+            self.recognizer.adjust_for_ambient_noise(source)
+            audio = self.recognizer.listen(source, timeout=5)
+            
+            try:
+                text = self.recognizer.recognize_google(audio, language='zh-CN')
+                print(f"用户: {text}")
+                return text
+            except:
+                return None
+    
+    def speak(self, text):
+        """说"""
+        print(f"机器人: {text}")
+        self.engine.say(text)
+        self.engine.runAndWait()
+    
+    def respond(self, user_input):
+        """简单回应"""
+        if '你好' in user_input:
+            return "你好，我是机器人"
+        elif '名字' in user_input:
+            return "我叫小机"
+        elif '天气' in user_input:
+            return "今天天气不错"
+        elif '再见' in user_input:
+            return "再见"
+        else:
+            return "我听不懂"
+    
+    def run(self):
+        """运行"""
+        self.speak("你好，我是语音机器人")
+        
+        while True:
+            user_input = self.listen()
+            
+            if user_input:
+                response = self.respond(user_input)
+                self.speak(response)
+                
+                if '再见' in user_input:
+                    break
+
+# 运行
+if __name__ == '__main__':
+    bot = VoiceBot()
+    bot.run()
+```
+
+---
+
+## 第三模块：期末项目启动（70分钟）
+
+### 12.5.1 项目要求说明（20分钟）
+
+**项目时间线**：
+- **第12周**：分组、选题、制定计划
+- **第13周**：实施、调试、准备展示
+- **第14周**（如有）：项目展示与答辩
+
+**项目要求**：
+1. **组队**：2-3人一组，或单人完成简单项目
+2. **选题**：从给定题目中选择，或自拟题目（需审批）
+3. **提交物**：
+   - 代码（GitHub仓库）
+   - 演示视频（2-5分钟）
+   - 项目报告（README.md）
+   - 现场演示（可选）
+
+**评分标准**：
+| 项目 | 占比 | 说明 |
 |------|------|------|
-| TurtleBot3 | 开源教育 | $500+ |
-| LoCoBot | 抓取研究 | $2000+ |
-| Fetch | 机械臂+移动 | $5000+ |
-| DBR10 | 国产开源 | ¥2000 |
+| 功能完整度 | 40% | 是否实现核心功能 |
+| 技术难度 | 30% | 技术复杂度与创新性 |
+| 代码质量 | 15% | 代码规范、注释、可读性 |
+| 文档报告 | 15% | README、演示视频质量 |
 
-### 轮式机器人
+---
 
-```
-常见运动模型：
+### 12.5.2 项目选题（10个方向）
 
-1. 差速驱动 (Differential Drive)
-   - 两个独立驱动轮
-   - 简单可靠
-   
-2. 全向驱动 (Omni Drive)
-   - 麦克纳姆轮
-   - 可任意方向移动
+#### 📦 初级项目（适合单人或2人）
 
-3. 阿克曼转向 (Ackermann)
-   - 汽车模型
-   - 需要转向机构
+**1. 视觉颜色追踪机器人**
+- **难度**: ⭐⭐
+- **技术**: OpenCV颜色检测 + ROS2
+- **目标**: 机器人追踪特定颜色物体移动
+- **参考**: 第12周颜色检测代码
+
+**2. 语音控制小乌龟**
+- **难度**: ⭐⭐
+- **技术**: 语音识别 + ROS2 Turtlesim
+- **目标**: 语音命令控制小乌龟运动
+- **扩展**: 添加语音反馈
+
+**3. 简单目标检测系统**
+- **难度**: ⭐⭐⭐
+- **技术**: YOLO + ROS2
+- **目标**: 摄像头实时检测并标注物体
+- **扩展**: 统计物体数量、发布ROS2话题
+
+#### 🚀 中级项目（适合2-3人）
+
+**4. 物体追踪与跟随**
+- **难度**: ⭐⭐⭐
+- **技术**: YOLO + Sort追踪 + ROS2
+- **目标**: 机器人识别并跟随特定物体
+- **扩展**: 保持安全距离
+
+**5. 多传感器融合导航**
+- **难度**: ⭐⭐⭐⭐
+- **技术**: 相机 + 激光雷达 + ROS2 Nav2
+- **目标**: 机器人自主避障导航
+- **扩展**: 语音目标点设置
+
+**6. 手势识别控制**
+- **难度**: ⭐⭐⭐
+- **技术**: MediaPipe手势识别 + ROS2
+- **目标**: 手势控制机器人运动
+- **扩展**: 自定义手势命令
+
+#### 🏆 高级项目（适合3人或有基础）
+
+**7. 智能巡检机器人**
+- **难度**: ⭐⭐⭐⭐
+- **技术**: SLAM + 目标检测 + 语音播报
+- **目标**: 自主巡检并识别异常
+- **扩展**: 生成巡检报告
+
+**8. 人脸识别门禁系统**
+- **难度**: ⭐⭐⭐⭐
+- **技术**: 人脸检测/识别 + 数据库 + ROS2
+- **目标**: 识别授权人员并控制门禁
+- **扩展**: 陌生人告警
+
+**9. 机械臂物体抓取**
+- **难度**: ⭐⭐⭐⭐⭐
+- **技术**: 目标检测 + 逆运动学 + MoveIt
+- **目标**: 识别物体位置并抓取
+- **扩展**: 物体分类存放
+
+**10. 四足机器人基础控制（第13周专题）**
+- **难度**: ⭐⭐⭐⭐⭐
+- **技术**: PyBullet仿真 + 步态生成
+- **目标**: 四足机器人行走控制
+- **扩展**: 地形适应
+
+---
+
+### 12.5.3 项目分组与计划（30分钟）
+
+**分组流程**：
+1. 自由组队（2-3人）
+2. 选择项目方向
+3. 填写项目登记表
+
+**项目登记表**：
+```markdown
+## 项目信息
+
+- **项目名称**: _______________
+- **项目编号**: (1-10)
+- **组长**: _______________
+- **组员**: _______________, _______________
+- **GitHub仓库**: _______________
+
+## 技术栈
+
+- [ ] ROS2
+- [ ] OpenCV
+- [ ] YOLO
+- [ ] 语音识别/合成
+- [ ] 其他: _______________
+
+## 时间计划
+
+- **Week 12**: 
+  - [ ] 完成环境搭建
+  - [ ] 完成基本框架
+  
+- **Week 13**:
+  - [ ] 实现核心功能
+  - [ ] 测试与调试
+  - [ ] 录制演示视频
+  
+- **Week 14** (如有):
+  - [ ] 完善文档
+  - [ ] 准备答辩
 ```
 
 ---
 
-## 本周实验报告
+### 12.5.4 技术答疑与资源（20分钟）
 
-### ✅ 验收清单
+**常见问题**：
 
-| 序号 | 实验 | 要求 | 完成 |
+1. **Q**: 没有真实机器人怎么办？
+   **A**: 使用仿真环境（Gazebo/PyBullet/Webots）
+
+2. **Q**: 摄像头/麦克风不可用？
+   **A**: 使用录制的视频/音频文件测试
+
+3. **Q**: 项目太难怎么办？
+   **A**: 先实现简化版，逐步扩展功能
+
+**推荐资源**：
+- [ROS2官方教程](https://docs.ros.org/en/humble/Tutorials.html)
+- [OpenCV教程](https://docs.opencv.org/4.x/d9/df8/tutorial_root.html)
+- [YOLO文档](https://docs.ultralytics.com/)
+- [课程GitHub示例](https://github.com/ai-robot-class/)
+
+---
+
+## 本周作业
+
+### ✅ 必做
+
+| 序号 | 任务 | 截止 | 完成 |
 |------|------|------|------|
-| 1 | 启动Gazebo | 能显示仿真环境 | ☐ |
-| 2 | 启动TurtleBot3 | 机器人模型显示 | ☐ |
-| 3 | 控制机器人 | 键盘控制移动 | ☐ |
-| 4 | 网络配置 | 多机通信 | ☐ |
-| 5 | 真机控制 | 控制真实机器人 | ☐ |
+| 1 | 完成颜色检测实验 | 本周 | ☐ |
+| 2 | 测试语音识别/合成 | 本周 | ☐ |
+| 3 | 确定项目选题 | 本周五 | ☐ |
+| 4 | 提交项目登记表 | 本周五 | ☐ |
+| 5 | 创建GitHub仓库 | 本周日 | ☐ |
+
+### 🌟 选做（加分）
+
+- 实现HSV颜色调节工具
+- 扩展语音对话功能
+- 完成项目原型（Prototype）
 
 ---
 
 ## 参考文献
 
-[1] Koenig, N., & Howard, A. (2004). Design and Use Paradigms for Gazebo. *IEEE/RSJ International Conference on Intelligent Robots and Systems*.
+[1] Bradski, G. (2000). The OpenCV Library. *Dr. Dobb's Journal*.
 
-[2] Robotis. (2024). *TurtleBot3 Documentation*. Available: https://emanual.robotis.com/
+[2] SpeechRecognition Documentation. https://pypi.org/project/SpeechRecognition/
 
----
-
-## 期末项目预告
-
-> **第13-15周：期末项目**
-> - 选题与设计
-> - 实现与调试
-> - Demo Day展示
+[3] pyttsx3 Documentation. https://pyttsx3.readthedocs.io/
 
 ---
 
-*第12周结束！第一学期完成！*
+## 下周预告
+
+> **第13周：四足机器人入门 + 期末项目实施**
+> - 四足机器人基础概念
+> - PyBullet仿真实战
+> - 项目开发辅导
+
+---
+
+*第12周结束！项目正式启动，加油！*
