@@ -162,6 +162,126 @@ def generate_week_table(students, week_keys, week_info):
     """
 
 
+def generate_pages_carousel(students):
+    """生成学生 GitHub Pages 的滑窗预览，包含健康度反馈"""
+    pages_students = [s for s in students if s.get('pages_enabled') and s.get('pages_url')]
+    if not pages_students:
+        return ""
+
+    slides = []
+    for s in pages_students:
+        github_id = s['github_id']
+        pages_url = s['pages_url']
+        score = s.get('total_score', 0)
+        grade = s.get('grade', 'N/A')
+        repo_url = s['repo_url']
+        repo_name = s.get('repo_name', '')
+        color = grade_color(grade)
+
+        # 健康度反馈
+        audit = s.get('pages_audit') or {}
+        health = audit.get('score', 0)
+        broken_imgs = audit.get('broken_images', [])
+        issues = audit.get('issues', [])
+        suggestions = audit.get('suggestions', [])
+
+        if health >= 85:
+            health_label = "✨ 优秀"
+            health_color = "#10b981"
+        elif health >= 70:
+            health_label = "👍 良好"
+            health_color = "#3b82f6"
+        elif health >= 50:
+            health_label = "⚠️  有问题"
+            health_color = "#f59e0b"
+        else:
+            health_label = "❌ 待修复"
+            health_color = "#ef4444"
+
+        # 反馈面板
+        feedback_html = ""
+        if issues or suggestions or broken_imgs:
+            issue_items = ""
+            for issue in issues:
+                issue_items += f'<li class="issue-item">⚠️ {issue}</li>'
+            for sug in suggestions:
+                issue_items += f'<li class="suggestion-item">💡 {sug}</li>'
+
+            # 显示前 3 张失败的图片
+            broken_html = ""
+            if broken_imgs:
+                items = []
+                for b in broken_imgs[:3]:
+                    src = b.get('src', '')
+                    status = b.get('status', '')
+                    err = b.get('error', '')
+                    if status:
+                        items.append(f'<li><code>{src[:60]}</code> → HTTP {status}</li>')
+                    else:
+                        items.append(f'<li><code>{src[:60]}</code> → {err[:40]}</li>')
+                more = f'<li>... 还有 {len(broken_imgs) - 3} 张</li>' if len(broken_imgs) > 3 else ''
+                broken_html = f'<div class="broken-images-list"><strong>无法加载的图片：</strong><ul>{"".join(items)}{more}</ul></div>'
+
+            feedback_html = f"""
+            <div class="pages-feedback">
+                <details>
+                    <summary>📋 页面健康度反馈（{health}/100，{len(issues)} 个问题 / {len(suggestions)} 条建议）</summary>
+                    <ul class="feedback-list">{issue_items}</ul>
+                    {broken_html}
+                </details>
+            </div>
+            """
+        else:
+            feedback_html = f"""
+            <div class="pages-feedback">
+                <div class="feedback-perfect">✨ 页面无明显问题（{health}/100）</div>
+            </div>
+            """
+
+        slides.append(f"""
+        <div class="pages-slide">
+            <div class="pages-slide-header" style="background: linear-gradient(135deg, {color}, {color}dd);">
+                <img src="https://github.com/{github_id}.png" alt="@{github_id}" class="pages-avatar" onerror="this.src='https://github.com/identicons/{github_id}.png'">
+                <div class="pages-slide-info">
+                    <h3>@{github_id}</h3>
+                    <div class="pages-meta">
+                        <span class="pages-score" style="color:{color};">{score} 分 / {grade}</span>
+                        <span class="health-pill" style="background:{health_color};">{health_label} {health}</span>
+                    </div>
+                </div>
+                <div class="pages-actions">
+                    <a href="{pages_url}" target="_blank" class="pages-action-btn" title="新窗口打开">🔗</a>
+                    <a href="{repo_url}" target="_blank" class="pages-action-btn" title="查看仓库">📂</a>
+                </div>
+            </div>
+            <div class="pages-iframe-wrap">
+                <iframe src="{pages_url}" loading="lazy" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                        referrerpolicy="no-referrer" title="@{github_id} 的作业页面"></iframe>
+                <div class="pages-iframe-overlay">
+                    <a href="{pages_url}" target="_blank" class="pages-open-btn">🚀 在新窗口打开</a>
+                </div>
+            </div>
+            {feedback_html}
+        </div>
+        """)
+
+    return f"""
+    <div class="pages-carousel-section">
+        <h2>🌐 学生 GitHub Pages 作品展（{len(pages_students)} 个已部署）</h2>
+        <p style="text-align:center; color:#666; margin-bottom: 16px;">
+            横向滚动浏览同学们的作业页面 · 系统自动检测图片加载与页面健康度 · 点击 🔗 在新窗口打开完整版
+        </p>
+        <div class="pages-carousel-wrap">
+            <button class="carousel-nav prev" onclick="scrollCarousel(-1)" aria-label="上一个">‹</button>
+            <div class="pages-carousel" id="pagesCarousel">
+                {''.join(slides)}
+            </div>
+            <button class="carousel-nav next" onclick="scrollCarousel(1)" aria-label="下一个">›</button>
+        </div>
+    </div>
+    """
+
+
 def generate_stats(students):
     total = len(students)
     active = [s for s in students if s.get('repo_exists')]
@@ -218,6 +338,7 @@ def generate_html(data):
                              reverse=True)
 
     stats_html = generate_stats(students_sorted)
+    carousel_html = generate_pages_carousel(students_sorted)
     cards_html = "\n".join(generate_student_card(s, week_keys) for s in students_sorted)
     table_html = generate_week_table(students_sorted, week_keys, week_info)
 
@@ -508,10 +629,285 @@ def generate_html(data):
         footer a {{ color: #667eea; text-decoration: none; margin: 0 6px; }}
         footer a:hover {{ text-decoration: underline; }}
 
+        /* ===== Pages Carousel ===== */
+        .pages-carousel-section {{
+            margin: 50px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+        }}
+
+        .pages-carousel-wrap {{
+            position: relative;
+            margin: 20px 0;
+        }}
+
+        .pages-carousel {{
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 10px 4px 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #e5e7eb;
+        }}
+
+        .pages-carousel::-webkit-scrollbar {{
+            height: 8px;
+        }}
+        .pages-carousel::-webkit-scrollbar-track {{
+            background: #f3f4f6;
+            border-radius: 4px;
+        }}
+        .pages-carousel::-webkit-scrollbar-thumb {{
+            background: #667eea;
+            border-radius: 4px;
+        }}
+
+        .pages-slide {{
+            flex: 0 0 480px;
+            scroll-snap-align: start;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e5e7eb;
+        }}
+        .pages-slide:hover {{
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }}
+
+        .pages-slide-header {{
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            color: white;
+        }}
+        .pages-avatar {{
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background: white;
+            margin-right: 12px;
+        }}
+        .pages-slide-info {{
+            flex: 1;
+            min-width: 0;
+        }}
+        .pages-slide-info h3 {{
+            font-size: 1em;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }}
+        .pages-meta {{
+            display: flex;
+            gap: 8px;
+            font-size: 0.78em;
+            opacity: 0.95;
+        }}
+        .pages-score {{
+            background: white;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-weight: 700;
+        }}
+        .pages-repo {{
+            background: rgba(255,255,255,0.25);
+            padding: 2px 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 180px;
+        }}
+        .pages-actions {{
+            display: flex;
+            gap: 6px;
+        }}
+        .pages-action-btn {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 1em;
+            transition: background 0.2s;
+        }}
+        .pages-action-btn:hover {{
+            background: rgba(255,255,255,0.45);
+        }}
+
+        .pages-iframe-wrap {{
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background: #f9fafb;
+            overflow: hidden;
+        }}
+        .pages-iframe-wrap iframe {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(0.85);
+            transform-origin: 0 0;
+            width: 117.6%;
+            height: 117.6%;
+        }}
+        .pages-iframe-overlay {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent 30%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }}
+        .pages-slide:hover .pages-iframe-overlay {{
+            opacity: 1;
+        }}
+        .pages-open-btn {{
+            display: inline-block;
+            padding: 8px 18px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            pointer-events: auto;
+        }}
+        .pages-open-btn:hover {{
+            transform: scale(1.05);
+        }}
+
+        .carousel-nav {{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            color: #667eea;
+            font-size: 1.6em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 5;
+            transition: transform 0.2s, background 0.2s;
+        }}
+        .carousel-nav:hover {{
+            transform: translateY(-50%) scale(1.1);
+            background: #667eea;
+            color: white;
+        }}
+        .carousel-nav.prev {{ left: -10px; }}
+        .carousel-nav.next {{ right: -10px; }}
+
+        .health-pill {{
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.78em;
+        }}
+
+        .pages-feedback {{
+            padding: 12px 16px;
+            background: #fafbfc;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.85em;
+        }}
+
+        .pages-feedback details summary {{
+            cursor: pointer;
+            font-weight: 600;
+            color: #4b5563;
+            outline: none;
+            user-select: none;
+            padding: 4px 0;
+        }}
+        .pages-feedback details summary:hover {{ color: #667eea; }}
+        .pages-feedback details[open] summary {{ margin-bottom: 8px; }}
+
+        .feedback-list {{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }}
+        .feedback-list li {{
+            padding: 4px 0;
+            color: #4b5563;
+            line-height: 1.5;
+        }}
+        .issue-item {{ color: #b45309 !important; }}
+        .suggestion-item {{ color: #1d4ed8 !important; }}
+
+        .feedback-perfect {{
+            color: #10b981;
+            font-weight: 600;
+            padding: 4px 0;
+        }}
+
+        .broken-images-list {{
+            margin-top: 10px;
+            padding: 10px;
+            background: #fef2f2;
+            border-left: 3px solid #ef4444;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }}
+        .broken-images-list strong {{
+            color: #991b1b;
+            display: block;
+            margin-bottom: 4px;
+        }}
+        .broken-images-list ul {{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }}
+        .broken-images-list li {{
+            padding: 2px 0;
+            color: #4b5563;
+        }}
+        .broken-images-list code {{
+            background: white;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            color: #b91c1c;
+        }}
+
         @media (max-width: 768px) {{
             .container {{ padding: 20px; }}
             h1 {{ font-size: 1.6em; }}
             .students-grid {{ grid-template-columns: 1fr; }}
+            .pages-slide {{ flex: 0 0 calc(100vw - 100px); }}
+            .pages-iframe-wrap {{ height: 240px; }}
         }}
     </style>
 </head>
@@ -531,6 +927,8 @@ def generate_html(data):
             <p><strong>ℹ️ 说明</strong>：每周得分按权重加权后计入总分。点击学生卡片可跳转 GitHub 仓库查看详情。</p>
         </div>
 
+        {carousel_html}
+
         <h2>📚 学生排名（按总分）</h2>
         <div class="students-grid">
             {cards_html}
@@ -539,14 +937,30 @@ def generate_html(data):
         {table_html}
 
         <footer>
-            <p>AI机器人课程 · 神韩大学校 · 2026</p>
+            <p>AI 机器人课程 · 信韩大学 软件学院 · 2026</p>
             <p style="margin-top: 8px;">
                 <a href="https://ai-robot-class.github.io/">课程主页</a> |
-                <a href="https://github.com/ai-robot-class">GitHub组织</a> |
-                <a href="../PRIVACY.html">隐私保护</a>
+                <a href="https://github.com/ai-robot-class">GitHub组织</a>
             </p>
         </footer>
     </div>
+
+    <script>
+        function scrollCarousel(direction) {{
+            const carousel = document.getElementById('pagesCarousel');
+            if (!carousel) return;
+            const slideWidth = carousel.querySelector('.pages-slide')?.offsetWidth || 500;
+            carousel.scrollBy({{ left: direction * (slideWidth + 20), behavior: 'smooth' }});
+        }}
+
+        // 监听键盘左右键控制滑窗
+        document.addEventListener('keydown', (e) => {{
+            const carousel = document.getElementById('pagesCarousel');
+            if (!carousel) return;
+            if (e.key === 'ArrowLeft') scrollCarousel(-1);
+            if (e.key === 'ArrowRight') scrollCarousel(1);
+        }});
+    </script>
 </body>
 </html>
 """

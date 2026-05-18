@@ -1,32 +1,31 @@
 #!/usr/bin/env python3
 """
-学生作业自动评价脚本 - 高效版
-- 总分100分制（内容70% + 态度30%）
-- 使用Git Trees API一次获取整个仓库结构（大幅减少API调用）
+学生作业自动评价脚本 v2
+- 总分 100 分制（内容 70% + 态度 30%）
+- 支持任意层级目录、自定义命名（中文/日期/前缀）
+- 使用 Git Trees API 递归获取整个仓库
+- 没有 README 时基于截图、代码等内容评分
 """
 
 import os
+import re
 import json
 import base64
 import requests
-import subprocess
-import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 
 def get_github_token():
-    """从环境变量或gh hosts.yml获取token"""
     token = os.environ.get('GITHUB_TOKEN')
     if not token:
         try:
-            hosts_file = Path.home() / '.config' / 'gh' / 'hosts.yml'
-            if hosts_file.exists():
-                with open(hosts_file) as f:
-                    for line in f:
-                        if 'oauth_token' in line:
-                            token = line.split(':', 1)[1].strip()
-                            break
+            hosts = Path.home() / '.config' / 'gh' / 'hosts.yml'
+            if hosts.exists():
+                for line in hosts.read_text().splitlines():
+                    if 'oauth_token' in line:
+                        token = line.split(':', 1)[1].strip()
+                        break
         except Exception:
             pass
     return token
@@ -52,13 +51,71 @@ WEEKS = {
 
 IMAGE_EXTS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.svg', '.webp')
 CODE_EXTS = ('.py', '.cpp', '.c', '.h', '.hpp', '.java', '.js', '.ts',
-             '.launch.py', '.sh', '.yaml', '.yml', '.cmake')
+             '.launch.py', '.sh', '.yaml', '.yml', '.cmake', '.ipynb')
 DOC_EXTS = ('.pdf', '.doc', '.docx', '.txt', '.markdown')
 VIDEO_EXTS = ('.mp4', '.avi', '.mov', '.mkv', '.webm')
 
+SCREENSHOT_KEYWORDS = ['screenshot', 'capture', 'result', 'output', 'demo',
+                       'show', 'preview', '截图', '结果', '运行', '效果',
+                       '演示', '示例', 'final']
+
+CN_DIGITS = {'一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
+             '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
+             '十一': 11, '十二': 12, '十三': 13}
+
+
+def normalize_week_id(name):
+    """从单个目录名提取 week 编号，支持多种格式"""
+    if not name:
+        return None
+    s = name.lower()
+
+    # 1) week\d+ / week_2 / week-2 / week 2
+    m = re.search(r'week[\s_\-]*?(\d+)', s)
+    if m:
+        return f"week{int(m.group(1))}"
+
+    # 2) \d+week 数字在前：1week, 10week, 2_week
+    m = re.search(r'(\d+)[\s_\-]*?week', s)
+    if m:
+        return f"week{int(m.group(1))}"
+
+    # 3) homework\d+: homework1, homework10
+    m = re.search(r'homework[\s_\-]*?(\d+)', s)
+    if m:
+        return f"week{int(m.group(1))}"
+
+    # 4) hw\d+
+    m = re.search(r'\bhw[\s_\-]*?(\d+)', s)
+    if m:
+        return f"week{int(m.group(1))}"
+
+    # 5) w\d+
+    m = re.search(r'\bw(\d+)\b', s)
+    if m:
+        return f"week{int(m.group(1))}"
+
+    # 4) 第N周
+    m = re.search(r'第\s*(\d+)\s*周', name)
+    if m:
+        return f"week{int(m.group(1))}"
+
+    # 5) 第N章 / chapter N
+    m = re.search(r'(?:第\s*(\d+)\s*章|chapter[\s_\-]*?(\d+))', s)
+    if m:
+        n = m.group(1) or m.group(2)
+        if n:
+            return f"week{int(n)}"
+
+    # 6) 中文数字: 第一周、第十二周
+    m = re.search(r'第([一二三四五六七八九十]+)周', name)
+    if m and m.group(1) in CN_DIGITS:
+        return f"week{CN_DIGITS[m.group(1)]}"
+
+    return None
+
 
 def load_students():
-    """从 students/roster.json 加载学生列表"""
     roster_file = Path('students/roster.json')
     if not roster_file.exists():
         print("⚠️  学生名单文件不存在")
@@ -69,49 +126,247 @@ def load_students():
 
     students = []
     for url in repo_urls:
-        parts = url.rstrip('/').replace('.git', '').split('/')
+        clean = url.rstrip('/').replace('.git', '')
+        parts = clean.split('/')
         if len(parts) >= 4:
             students.append({
                 'github_id': parts[-2],
-                'repo_url': url.rstrip('/').replace('.git', ''),
-                'repo_name': parts[-1].replace('.git', '')
+                'repo_url': clean,
+                'repo_name': parts[-1]
             })
     return students
 
 
-def fetch_repo_info(owner, repo_name):
-    """获取仓库基本信息"""
-    url = f"https://api.github.com/repos/{owner}/{repo_name}"
-    response = requests.get(url, headers=HEADERS, timeout=30)
-    if response.status_code == 200:
-        return True, response.json()
-    return False, f"HTTP {response.status_code}: {response.json().get('message', 'Unknown')}"
+def fetch_repo_info(owner, repo):
+    url = f"https://api.github.com/repos/{owner}/{repo}"
+    r = requests.get(url, headers=HEADERS, timeout=30)
+    if r.status_code == 200:
+        return True, r.json()
+    return False, f"HTTP {r.status_code}: {r.json().get('message', '')}"
 
 
-def fetch_repo_tree(owner, repo_name, default_branch):
-    """一次性获取仓库完整文件树"""
-    url = f"https://api.github.com/repos/{owner}/{repo_name}/git/trees/{default_branch}?recursive=1"
-    response = requests.get(url, headers=HEADERS, timeout=30)
-    if response.status_code == 200:
-        return response.json().get('tree', [])
+def fetch_pages_info(owner, repo):
+    """检测仓库是否启用 GitHub Pages"""
+    url = f"https://api.github.com/repos/{owner}/{repo}/pages"
+    r = requests.get(url, headers=HEADERS, timeout=15)
+    if r.status_code == 200:
+        data = r.json()
+        return {
+            'enabled': True,
+            'url': data.get('html_url') or data.get('url'),
+            'status': data.get('status'),
+        }
+    return {'enabled': False, 'url': f"https://{owner}.github.io/{repo}/"}
+
+
+def check_pages_alive(url):
+    """检测 Pages URL 是否能正常返回 200，并返回 HTML 内容"""
+    if not url:
+        return False, None
+    try:
+        r = requests.get(url, timeout=10, allow_redirects=True)
+        if r.status_code == 200 and len(r.text) > 200:
+            return True, r.text
+    except Exception:
+        pass
+    return False, None
+
+
+def audit_pages_health(pages_url, html, owner, repo):
+    """检测 Pages 页面的健康度：图片加载、链接有效、样式应用等"""
+    report = {
+        'total_images': 0,
+        'broken_images': [],
+        'broken_links': [],
+        'has_title': False,
+        'has_style': False,
+        'has_content': False,
+        'word_count': 0,
+        'issues': [],
+        'suggestions': [],
+        'score': 0,  # 0-100
+    }
+    if not html:
+        return report
+
+    # 标题检测
+    title_match = re.search(r'<title>([^<]+)</title>', html, re.IGNORECASE)
+    if title_match and len(title_match.group(1).strip()) > 3:
+        report['has_title'] = True
+    else:
+        report['issues'].append("缺少有意义的 <title> 标签")
+
+    # 样式检测
+    if '<style' in html.lower() or 'stylesheet' in html.lower() or '_config.yml' in html.lower():
+        report['has_style'] = True
+    else:
+        report['suggestions'].append("可以加入 CSS 美化页面")
+
+    # 主体内容检测（去掉 HTML 标签后的文字量）
+    text_only = re.sub(r'<[^>]+>', ' ', html)
+    text_only = re.sub(r'\s+', ' ', text_only).strip()
+    report['word_count'] = len(text_only)
+    if len(text_only) > 200:
+        report['has_content'] = True
+
+    # 收集首页图片
+    img_tags = re.findall(r'<img[^>]+src=["\']([^"\']+)["\']', html, re.IGNORECASE)
+    md_imgs = re.findall(r'!\[[^\]]*\]\(([^)]+)\)', html)
+
+    # 收集首页内的子页面链接（同域，.html 或目录路径）
+    sub_pages = set()
+    base = pages_url.rstrip('/') + '/'
+    pages_host = f"https://{owner}.github.io/{repo}/"
+    for href in re.findall(r'<a[^>]+href=["\']([^"\']+)["\']', html, re.IGNORECASE):
+        if href.startswith('#') or href.startswith('mailto:') or href.startswith('javascript:'):
+            continue
+        if href.startswith('http://') or href.startswith('https://'):
+            if pages_host.rstrip('/') in href and href != pages_url:
+                sub_pages.add(href)
+        elif href.startswith('/'):
+            sub_pages.add(f"https://{owner}.github.io" + href)
+        else:
+            sub_pages.add(base + href)
+        if len(sub_pages) >= 6:
+            break
+
+    # 抓取前 4 个子页面，收集更多图片
+    sub_pages_to_check = list(sub_pages)[:4]
+    image_sources = []  # [(src, from_url)]
+    for src in img_tags + md_imgs:
+        image_sources.append((src, pages_url))
+
+    for sub_url in sub_pages_to_check:
+        try:
+            r = requests.get(sub_url, timeout=8, allow_redirects=True)
+            if r.status_code == 200:
+                sub_imgs = re.findall(r'<img[^>]+src=["\']([^"\']+)["\']', r.text, re.IGNORECASE)
+                sub_md = re.findall(r'!\[[^\]]*\]\(([^)]+)\)', r.text)
+                for src in sub_imgs + sub_md:
+                    image_sources.append((src, sub_url))
+        except Exception:
+            continue
+
+    # 去重（基于 src+from_url）
+    seen = set()
+    unique_imgs = []
+    for src, from_url in image_sources:
+        key = (src, from_url)
+        if key not in seen:
+            seen.add(key)
+            unique_imgs.append((src, from_url))
+
+    report['total_images'] = len(unique_imgs)
+
+    # 检查每张图片是否能加载（最多 30 张）
+    checked = 0
+    for src, from_url in unique_imgs:
+        if checked >= 30:
+            break
+        if src.startswith('data:'):
+            continue
+        # 解析相对路径（基于该图片所在的页面 URL）
+        if src.startswith('http://') or src.startswith('https://'):
+            full = src
+            if 'github.com' in src and '/avatars/' in src:
+                continue
+        elif src.startswith('//'):
+            full = 'https:' + src
+        elif src.startswith('/'):
+            full = f"https://{owner}.github.io" + src
+        else:
+            # 相对于 from_url 的路径
+            from_dir = from_url.rsplit('/', 1)[0] + '/'
+            full = from_dir + src
+
+        checked += 1
+        try:
+            rr = requests.head(full, timeout=6, allow_redirects=True)
+            if rr.status_code >= 400:
+                rr = requests.get(full, timeout=6, stream=True, allow_redirects=True)
+                rr.close()
+            if rr.status_code >= 400:
+                report['broken_images'].append({
+                    'src': src, 'resolved': full,
+                    'page': from_url.replace(pages_host, '/'),
+                    'status': rr.status_code
+                })
+        except Exception as e:
+            report['broken_images'].append({
+                'src': src, 'resolved': full,
+                'page': from_url.replace(pages_host, '/'),
+                'error': str(e)[:60]
+            })
+
+    # 构造 issues 列表
+    if report['broken_images']:
+        n = len(report['broken_images'])
+        report['issues'].append(f"有 {n} 张图片无法加载（共检查 {checked} 张，总图数 {report['total_images']}）")
+    if not report['has_content']:
+        report['issues'].append(f"页面内容过少（仅 {report['word_count']} 字符）")
+
+    # 计算健康度分数
+    score = 60  # 基础分（有 Pages 就算有努力）
+    if report['has_title']:
+        score += 5
+    if report['has_style']:
+        score += 5
+    if report['has_content']:
+        score += 10
+    if report['total_images'] > 0:
+        broken_ratio = len(report['broken_images']) / max(checked, 1)
+        score += int(20 * (1 - broken_ratio))
+    else:
+        # 没有图片不是错，给中间分
+        score += 10
+    report['score'] = min(score, 100)
+
+    # 推荐建议
+    if report['broken_images']:
+        report['suggestions'].append(
+            "图片路径错误：检查 README 中的图片相对路径，或将图片放入仓库后用相对路径引用"
+        )
+    if report['total_images'] == 0:
+        report['suggestions'].append("添加运行截图和效果图能让作业更加生动")
+    if not report['has_style']:
+        report['suggestions'].append("可以选择 GitHub Pages 主题（Settings → Pages → Theme chooser）")
+
+    return report
+
+
+def fetch_repo_tree(owner, repo, branch):
+    url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
+    r = requests.get(url, headers=HEADERS, timeout=30)
+    if r.status_code == 200:
+        data = r.json()
+        return data.get('tree', []), data.get('truncated', False)
+    return [], False
+
+
+def fetch_commits(owner, repo, per_page=100):
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page={per_page}"
+    r = requests.get(url, headers=HEADERS, timeout=30)
+    if r.status_code == 200:
+        return r.json()
     return []
 
 
-def fetch_recent_commits(owner, repo_name, per_page=100):
-    """获取最近的提交"""
-    url = f"https://api.github.com/repos/{owner}/{repo_name}/commits?per_page={per_page}"
-    response = requests.get(url, headers=HEADERS, timeout=30)
-    if response.status_code == 200:
-        return response.json()
+def fetch_commits_for_path(owner, repo, path):
+    """获取某个路径下的提交记录"""
+    if not path:
+        return []
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits?path={path}&per_page=30"
+    r = requests.get(url, headers=HEADERS, timeout=30)
+    if r.status_code == 200:
+        return r.json()
     return []
 
 
-def fetch_file_content(owner, repo_name, path):
-    """获取单个文件内容"""
-    url = f"https://api.github.com/repos/{owner}/{repo_name}/contents/{path}"
-    response = requests.get(url, headers=HEADERS, timeout=30)
-    if response.status_code == 200:
-        data = response.json()
+def fetch_file_content(owner, repo, path):
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+    r = requests.get(url, headers=HEADERS, timeout=30)
+    if r.status_code == 200:
+        data = r.json()
         try:
             return base64.b64decode(data.get('content', '')).decode('utf-8', errors='ignore')
         except Exception:
@@ -119,42 +374,107 @@ def fetch_file_content(owner, repo_name, path):
     return None
 
 
-def normalize_week_id(name):
-    """从路径名中识别 week 编号"""
-    m = re.match(r'^[Ww]eek[_-]?(\d+)', name)
-    if m:
-        return f"week{int(m.group(1))}"
-    m = re.match(r'^(\d+)[_-]?[Ww]eek', name)
-    if m:
-        return f"week{int(m.group(1))}"
-    return None
-
-
 def group_files_by_week(tree):
-    """根据文件路径将文件按周分组"""
+    """遍历整个仓库的所有路径，按 week 分类
+    支持任意层级目录（多级嵌套）和各种命名方式"""
     week_files = {wk: [] for wk in WEEKS}
-    week_paths = {wk: None for wk in WEEKS}
+    week_anchor = {wk: None for wk in WEEKS}  # 该周作业的"锚定"路径
 
     for item in tree:
         path = item.get('path', '')
         if not path:
             continue
         parts = path.split('/')
-        top = parts[0]
-        wk = normalize_week_id(top)
-        if wk and wk in week_files:
-            week_files[wk].append(item)
-            if week_paths[wk] is None:
-                week_paths[wk] = top
+        for i, segment in enumerate(parts):
+            wk = normalize_week_id(segment)
+            if wk and wk in week_files:
+                week_files[wk].append(item)
+                anchor = '/'.join(parts[:i + 1])
+                cur = week_anchor[wk]
+                if cur is None or len(anchor) < len(cur):
+                    week_anchor[wk] = anchor
+                break
 
-    return week_files, week_paths
+    return week_files, week_anchor
 
 
-def analyze_week(week_id, week_info, files, actual_folder,
-                 commits_by_path, owner, repo_name):
-    """分析单周作业"""
+def find_readme_in_files(files, anchor):
+    """在该 week 文件中查找最合适的 README"""
+    best = None
+    for f in files:
+        if f.get('type') != 'blob':
+            continue
+        path = f['path']
+        name = path.split('/')[-1].lower()
+        if name == 'readme.md':
+            if best is None:
+                best = f
+            else:
+                # 优先选择更靠近 anchor 的 README
+                if anchor and path.startswith(anchor):
+                    parent_depth = path.count('/')
+                    best_depth = best['path'].count('/')
+                    if parent_depth < best_depth:
+                        best = f
+    return best
+
+
+def analyze_screenshots(files):
+    """分析截图的质量和数量"""
+    total_images = 0
+    meaningful_images = 0  # 有意义的截图（基于大小和文件名）
+    image_in_subdir = 0    # 放在 img/screenshots 子目录的
+    avg_size = 0
+    sizes = []
+
+    for f in files:
+        if f.get('type') != 'blob':
+            continue
+        path = f['path']
+        name = path.split('/')[-1].lower()
+        size = f.get('size', 0)
+
+        if not name.endswith(IMAGE_EXTS):
+            continue
+        total_images += 1
+        sizes.append(size)
+
+        # 大小 > 10KB 视为有内容的截图
+        if size > 10240:
+            meaningful_images += 1
+
+        # 文件名包含截图相关关键词
+        if any(kw in name for kw in SCREENSHOT_KEYWORDS):
+            meaningful_images = max(meaningful_images, total_images)
+
+        # 在 img/images/screenshots 等子目录中
+        path_lower = path.lower()
+        if any(d in path_lower for d in ['/img/', '/images/', '/screenshots/',
+                                          '/screenshot/', '/截图/', '/figures/',
+                                          '/figs/', '/pics/', '/photos/']):
+            image_in_subdir += 1
+
+    if sizes:
+        avg_size = sum(sizes) / len(sizes)
+
+    return {
+        'total': total_images,
+        'meaningful': meaningful_images,
+        'in_subdir': image_in_subdir,
+        'avg_size_kb': round(avg_size / 1024, 1) if avg_size else 0,
+    }
+
+
+def analyze_week(week_id, week_info, files, anchor, owner, repo,
+                 path_commits, fallback_commits):
+    """评分宽松，原则：
+       - 只要提交了内容，基础分至少 50（C 等级起步）
+       - README + 截图 + 代码三者俱全 → 80+
+       - 全面优秀 → 95+
+    """
     result = {
         'submitted': False,
+        'actual_path': anchor,
         'content_score': 0,
         'attitude_score': 0,
         'details': {},
@@ -166,160 +486,178 @@ def analyze_week(week_id, week_info, files, actual_folder,
         return result
 
     result['submitted'] = True
-    result['comments'].append(f"✅ 已提交（路径: {actual_folder}）")
+    result['comments'].append(f"✅ 已提交（路径: {anchor}）")
 
-    readme_size = 0
-    readme_path = None
-    image_count = 0
     code_count = 0
     doc_count = 0
     video_count = 0
-    total_files = 0
+    readme_blob = find_readme_in_files(files, anchor)
+    readme_size = readme_blob.get('size', 0) if readme_blob else 0
 
     for f in files:
         if f.get('type') != 'blob':
             continue
-        total_files += 1
-        path = f['path']
-        name = path.split('/')[-1].lower()
-        size = f.get('size', 0)
-
-        if name == 'readme.md':
-            readme_size = max(readme_size, size)
-            readme_path = path
-        elif name.endswith(IMAGE_EXTS):
-            image_count += 1
-        elif name.endswith(CODE_EXTS):
+        name = f['path'].split('/')[-1].lower()
+        if name.endswith(CODE_EXTS):
             code_count += 1
         elif name.endswith(DOC_EXTS):
             doc_count += 1
         elif name.endswith(VIDEO_EXTS):
             video_count += 1
 
-    content_score = 0
+    img_stats = analyze_screenshots(files)
 
-    if readme_path:
+    # ===== 内容评分（满分 70） =====
+    # 1. 基础完成分：只要提交了作业 +25
+    content_score = 25
+    result['comments'].append("✅ 完成本周作业 (+25 基础分)")
+
+    # 2. README 质量（最高 20 分）
+    if readme_blob:
         if readme_size > 3000:
-            content_score += 40
-            result['comments'].append("📝 README非常详细（>3000字符）")
+            content_score += 20
+            result['comments'].append("📝 README非常详细 (+20)")
         elif readme_size > 1500:
-            content_score += 35
-            result['comments'].append("📝 README很详细")
+            content_score += 17
+            result['comments'].append("📝 README很详细 (+17)")
         elif readme_size > 500:
-            content_score += 25
-            result['comments'].append("📝 README较详细")
+            content_score += 14
+            result['comments'].append("📝 README较详细 (+14)")
+        elif readme_size > 100:
+            content_score += 10
+            result['comments'].append("📝 README较简单 (+10)")
         else:
-            content_score += 15
-            result['comments'].append("📝 README较简单")
+            content_score += 6
+            result['comments'].append("📝 有简短README (+6)")
 
-        try:
-            content = fetch_file_content(owner, repo_name, readme_path)
-            if content:
-                depth_bonus = 0
-                if any(k in content for k in ['问题', '思考', '难点', '错误']):
-                    depth_bonus += 3
-                    result['comments'].append("💡 包含问题/思考")
-                if any(k in content for k in ['总结', '心得', '收获', '反思']):
-                    depth_bonus += 3
-                    result['comments'].append("💡 包含学习总结")
-                if any(k in content for k in ['步骤', '过程', '流程', '## ']):
-                    depth_bonus += 2
-                    result['comments'].append("💡 结构化记录")
-                content_score += depth_bonus
-        except Exception:
-            pass
+        content = fetch_file_content(owner, repo, readme_blob['path'])
+        if content:
+            depth = 0
+            if any(k in content for k in ['问题', '思考', '难点', '错误', 'bug', '挑战']):
+                depth += 2
+                result['comments'].append("💡 包含问题/思考 (+2)")
+            if any(k in content for k in ['总结', '心得', '收获', '反思', '体会']):
+                depth += 2
+                result['comments'].append("💡 包含学习总结 (+2)")
+            if any(k in content for k in ['步骤', '流程', '## ', '- [x]', '- [ ]']):
+                depth += 2
+                result['comments'].append("💡 结构化记录 (+2)")
+            if any(k in content for k in ['![', '[图', '图1', '图2', '截图', '图片']):
+                depth += 2
+                result['comments'].append("💡 README中引用了图片 (+2)")
+            content_score += depth
     else:
-        result['comments'].append("❌ 缺少README")
+        result['comments'].append("⚠️  缺少 README")
 
-    if image_count >= 5:
-        content_score += 15
-        result['comments'].append(f"📷 丰富的图片（{image_count}张）")
-    elif image_count >= 3:
-        content_score += 12
-        result['comments'].append(f"📷 较多图片（{image_count}张）")
-    elif image_count >= 1:
-        content_score += 8
-        result['comments'].append(f"📷 有图片（{image_count}张）")
+    # 3. 截图与图片（最高 18 分）—— 截图也算重要内容
+    img_score = 0
+    img_count = img_stats['meaningful']
+    total_imgs = img_stats['total']
+    if img_count >= 5 or total_imgs >= 8:
+        img_score = 18
+        result['comments'].append(f"📷 丰富截图（{total_imgs}张, {img_count}张有效，+18）")
+    elif img_count >= 3 or total_imgs >= 5:
+        img_score = 15
+        result['comments'].append(f"📷 较多截图（{total_imgs}张，+15）")
+    elif img_count >= 1 or total_imgs >= 2:
+        img_score = 12
+        result['comments'].append(f"📷 有截图（{total_imgs}张，+12）")
+    elif total_imgs >= 1:
+        img_score = 8
+        result['comments'].append(f"📷 有图片（{total_imgs}张，+8）")
 
-    if code_count >= 3:
-        content_score += 15
-        result['comments'].append(f"💻 多个代码文件（{code_count}个）")
+    if img_stats['in_subdir'] > 0:
+        img_score = min(img_score + 2, 18)
+        result['comments'].append("📁 图片组织规范")
+
+    content_score += img_score
+
+    # 4. 代码文件（最高 12 分）
+    code_score = 0
+    if code_count >= 5:
+        code_score = 12
+        result['comments'].append(f"💻 完整代码（{code_count}个，+12）")
+    elif code_count >= 3:
+        code_score = 10
+        result['comments'].append(f"💻 多个代码文件（{code_count}个，+10）")
     elif code_count >= 1:
-        content_score += 10
-        result['comments'].append(f"💻 有代码（{code_count}个）")
+        code_score = 7
+        result['comments'].append(f"💻 有代码（{code_count}个，+7）")
+    content_score += code_score
 
+    # 5. 额外资料（最高 5 分）
     if video_count > 0:
-        content_score += 3
-        result['comments'].append("🎬 包含视频演示")
+        content_score += 4
+        result['comments'].append("🎬 包含视频演示 (+4)")
     if doc_count > 0:
         content_score += 2
-        result['comments'].append("📄 包含额外文档")
+        result['comments'].append("📄 包含额外文档 (+2)")
 
     result['content_score'] = min(content_score, 70)
 
-    related_commits = commits_by_path.get(actual_folder, [])
+    # ===== 态度评分（满分 30）—— 提交了就有基础分 =====
+    # 1. 基础态度分：完成了作业就 +10
+    attitude_score = 10
+    result['comments'].append("✅ 完成作业的态度分 (+10)")
+
+    related_commits = path_commits or []
+    if not related_commits and fallback_commits:
+        related_commits = [{'commit': {'author': {'date': c['commit']['author']['date']}},
+                            'sha': c['sha']}
+                           for c in fallback_commits[:5]]
+
     commit_count = len(related_commits)
-    attitude_score = 0
-
+    # 2. 提交频率（最高 10 分）
     if commit_count >= 5:
-        attitude_score += 15
-        result['comments'].append(f"⭐ 多次提交迭代（{commit_count}次）")
+        attitude_score += 10
+        result['comments'].append(f"⭐ 多次提交迭代（{commit_count}次，+10）")
     elif commit_count >= 3:
-        attitude_score += 12
-        result['comments'].append(f"⭐ 多次提交（{commit_count}次）")
-    elif commit_count >= 1:
         attitude_score += 8
-        result['comments'].append(f"⭐ 有提交（{commit_count}次）")
+        result['comments'].append(f"⭐ 多次提交（{commit_count}次，+8）")
+    elif commit_count >= 1:
+        attitude_score += 6
+        result['comments'].append(f"⭐ 有提交（{commit_count}次，+6）")
 
+    # 3. 及时性（最高 10 分）—— 即使延迟也给一些分
     if related_commits:
         try:
-            last_commit_str = related_commits[0]
-            last_commit = datetime.fromisoformat(last_commit_str.replace('Z', '+00:00'))
-            due_date = datetime.fromisoformat(week_info['due_date']).replace(tzinfo=timezone.utc)
-            days_diff = (due_date - last_commit).days
-
+            last_date = related_commits[0]['commit']['author']['date']
+            last = datetime.fromisoformat(last_date.replace('Z', '+00:00'))
+            due = datetime.fromisoformat(week_info['due_date']).replace(tzinfo=timezone.utc)
+            days_diff = (due - last).days
             if days_diff >= 7:
-                attitude_score += 15
-                result['comments'].append("🎉 提前一周以上完成")
-            elif days_diff >= 3:
-                attitude_score += 13
-                result['comments'].append("🎉 提前3天以上完成")
-            elif days_diff >= 0:
                 attitude_score += 10
-                result['comments'].append("✅ 按时完成")
+                result['comments'].append("🎉 提前一周完成 (+10)")
+            elif days_diff >= 3:
+                attitude_score += 9
+                result['comments'].append("🎉 提前完成 (+9)")
+            elif days_diff >= 0:
+                attitude_score += 8
+                result['comments'].append("✅ 按时完成 (+8)")
             elif days_diff >= -7:
                 attitude_score += 5
-                result['comments'].append(f"⏰ 稍延迟（{-days_diff}天）")
+                result['comments'].append(f"⏰ 稍延迟{-days_diff}天 (+5)")
+            elif days_diff >= -30:
+                attitude_score += 3
+                result['comments'].append(f"⏰ 延迟{-days_diff}天 (+3)")
             else:
-                result['comments'].append(f"⏰ 延迟{-days_diff}天")
+                attitude_score += 1
         except Exception:
             pass
 
     result['attitude_score'] = min(attitude_score, 30)
     result['details'] = {
         'readme_size': readme_size,
-        'image_count': image_count,
+        'total_images': img_stats['total'],
+        'meaningful_images': img_stats['meaningful'],
+        'images_in_subdir': img_stats['in_subdir'],
         'code_count': code_count,
         'video_count': video_count,
         'doc_count': doc_count,
         'commit_count': commit_count,
-        'total_files': total_files,
+        'total_files': sum(1 for f in files if f.get('type') == 'blob'),
     }
     return result
-
-
-def group_commits_by_top_folder(commits):
-    """按顶层文件夹分组提交日期（基于 commit message 启发式判断）"""
-    by_folder = {}
-    for c in commits:
-        date = c['commit']['author']['date']
-        msg = (c['commit'].get('message') or '').lower()
-        for wk in WEEKS:
-            num = wk[4:]
-            patterns = [wk, f'week {num}', f'第{num}周', f'w{num}', f'_{wk}_', f'{wk}/']
-            if any(p in msg for p in patterns):
-                by_folder.setdefault(wk, []).append(date)
-    return by_folder
 
 
 def evaluate_student(student):
@@ -330,7 +668,6 @@ def evaluate_student(student):
 
     owner = github_id
     exists, repo_or_error = fetch_repo_info(owner, repo_name)
-
     if not exists:
         print(f"  ❌ 仓库不可访问: {repo_or_error}")
         return {
@@ -346,79 +683,129 @@ def evaluate_student(student):
 
     repo_info = repo_or_error
     default_branch = repo_info.get('default_branch', 'main')
-    print(f"  ✅ 仓库: {repo_info.get('name')} (默认分支: {default_branch})")
+    print(f"  ✅ 仓库: {repo_info.get('name')} (分支: {default_branch})")
 
-    tree = fetch_repo_tree(owner, repo_name, default_branch)
+    # 检测 GitHub Pages
+    pages_info = fetch_pages_info(owner, repo_name)
+    pages_url = pages_info['url']
+    pages_alive, pages_html = check_pages_alive(pages_url)
+    pages_audit = None
+    if pages_alive:
+        pages_audit = audit_pages_health(pages_url, pages_html, owner, repo_name)
+        print(f"  🌐 GitHub Pages: {pages_url} ✅ (健康度: {pages_audit['score']}/100)")
+        if pages_audit['broken_images']:
+            print(f"    ⚠️  {len(pages_audit['broken_images'])} 张图片加载失败")
+        for issue in pages_audit['issues']:
+            print(f"    ⚠️  {issue}")
+    else:
+        print(f"  🌐 GitHub Pages: 未启用或不可访问")
+
+    tree, truncated = fetch_repo_tree(owner, repo_name, default_branch)
     if not tree:
-        tree = fetch_repo_tree(owner, repo_name, 'master')
+        tree, truncated = fetch_repo_tree(owner, repo_name, 'master')
+    if truncated:
+        print("  ⚠️  仓库较大，文件树已截断")
 
-    commits = fetch_recent_commits(owner, repo_name, per_page=100)
+    commits = fetch_commits(owner, repo_name, per_page=100)
+    week_files, week_anchor = group_files_by_week(tree)
 
-    week_files, week_paths = group_files_by_week(tree)
+    # 兜底：如果一周都没识别出来，但根目录有内容（图片/代码/README）
+    # 将根目录的内容按 commit 时间分配给"已结束的周次"
+    matched_count = sum(1 for files in week_files.values() if files)
+    if matched_count == 0 and tree:
+        root_files = [f for f in tree if f.get('type') == 'blob' and '/' not in f['path']]
+        if root_files:
+            print(f"  ⚠️  未识别到 week 文件夹，但根目录有 {len(root_files)} 个文件，按时间分配")
+            # 按文件名中的日期或 commit 顺序分配
+            now = datetime.now(timezone.utc)
+            past_weeks = [(wk, info) for wk, info in WEEKS.items()
+                          if datetime.fromisoformat(info['due_date']).replace(tzinfo=timezone.utc) <= now]
+            # 平均分给已经过去的周次
+            if past_weeks:
+                per_week = max(1, len(root_files) // len(past_weeks))
+                for i, (wk, info) in enumerate(past_weeks):
+                    start = i * per_week
+                    end = (i + 1) * per_week if i < len(past_weeks) - 1 else len(root_files)
+                    chunk = root_files[start:end]
+                    if chunk:
+                        week_files[wk] = chunk
+                        week_anchor[wk] = '.'  # 根目录
 
-    commits_by_folder = {}
-    for c in commits:
-        date = c['commit']['author']['date']
-        msg = (c['commit'].get('message') or '').lower()
-        for wk in WEEKS:
-            num = wk[4:]
-            if (wk in msg or f'week {num}' in msg or f'第{num}周' in msg
-                    or f'w{num} ' in msg or msg.startswith(f'week{num}')):
-                if week_paths.get(wk):
-                    commits_by_folder.setdefault(week_paths[wk], []).append(date)
-
-    fallback_dates = [c['commit']['author']['date'] for c in commits]
-
+    # 为每个 week 获取该路径下的真实提交
     weeks_result = {}
-    total_score = 0.0
+    weighted_sum = 0.0
+    completed_weight = 0.0  # 已上课周次的权重总和
+    now = datetime.now(timezone.utc)
 
     for week_id, week_info in WEEKS.items():
-        actual_path = week_paths.get(week_id)
+        anchor = week_anchor.get(week_id)
         files = week_files.get(week_id, [])
-        related = commits_by_folder.get(actual_path, []) if actual_path else []
+        path_commits = []
+        if anchor:
+            path_commits = fetch_commits_for_path(owner, repo_name, anchor)
 
-        if not related and files:
-            related = fallback_dates[:5]
-
-        wk_result = analyze_week(week_id, week_info, files, actual_path or week_id,
-                                 commits_by_folder, owner, repo_name)
-        if not commits_by_folder.get(actual_path) and related:
-            commit_count = len(related)
-            try:
-                last = datetime.fromisoformat(related[0].replace('Z', '+00:00'))
-                due = datetime.fromisoformat(week_info['due_date']).replace(tzinfo=timezone.utc)
-                days_diff = (due - last).days
-                attitude = wk_result['attitude_score']
-                if commit_count >= 3 and 'commit_count' in wk_result['details'] and wk_result['details']['commit_count'] == 0:
-                    attitude = max(attitude, 8)
-                wk_result['attitude_score'] = attitude
-                wk_result['details']['commit_count'] = max(wk_result['details'].get('commit_count', 0), commit_count)
-            except Exception:
-                pass
-
-        raw_score = wk_result['content_score'] + wk_result['attitude_score']
-        final_score = raw_score * week_info['weight'] / 100
-        wk_result['raw_score'] = raw_score
-        wk_result['final_score'] = round(final_score, 2)
+        wk_result = analyze_week(week_id, week_info, files, anchor,
+                                 owner, repo_name, path_commits, commits)
+        raw = wk_result['content_score'] + wk_result['attitude_score']
+        final = raw * week_info['weight'] / 100
+        wk_result['raw_score'] = raw
+        wk_result['final_score'] = round(final, 2)
         weeks_result[week_id] = wk_result
-        total_score += final_score
 
-        print(f"  📝 {week_id} ({week_info['title']}): {raw_score}/100 → {final_score:.1f}/{week_info['weight']}")
+        # 判断该 week 是否已经上课（截止日期已过 或 已提交）
+        due = datetime.fromisoformat(week_info['due_date']).replace(tzinfo=timezone.utc)
+        is_past = due <= now
+        wk_result['is_past'] = is_past
+        if is_past or wk_result['submitted']:
+            weighted_sum += final
+            completed_weight += week_info['weight']
+            mark = ""
+        else:
+            mark = " (未到截止日期，不计入总分)"
+        print(f"  📝 {week_id} ({week_info['title']}): {raw}/100 → {final:.1f}/{week_info['weight']}{mark}")
+
+    # 归一化总分：已上课部分按 100 分制
+    if completed_weight > 0:
+        total_score = weighted_sum / completed_weight * 100
+    else:
+        total_score = 0.0
 
     grade = (
-        'A+' if total_score >= 90 else
-        'A'  if total_score >= 85 else
-        'A-' if total_score >= 80 else
-        'B+' if total_score >= 75 else
+        'A+' if total_score >= 95 else
+        'A'  if total_score >= 88 else
+        'A-' if total_score >= 82 else
+        'B+' if total_score >= 76 else
         'B'  if total_score >= 70 else
         'B-' if total_score >= 65 else
         'C+' if total_score >= 60 else
         'C'  if total_score >= 55 else
         'C-' if total_score >= 50 else
-        'D'  if total_score >= 30 else
+        'D'  if total_score >= 35 else
         'F'
     )
-    print(f"  🎯 总分: {total_score:.1f}/100  等级: {grade}")
+    print(f"  🎯 总分: {total_score:.1f}/100  等级: {grade}（按已上课部分归一化）")
+
+    # GitHub Pages 加分（最多 +5：基础 +3，健康度高再 +2）
+    if pages_alive:
+        bonus = 3
+        if pages_audit and pages_audit['score'] >= 85:
+            bonus = 5
+        elif pages_audit and pages_audit['score'] >= 70:
+            bonus = 4
+        total_score = min(total_score + bonus, 100)
+        grade = (
+            'A+' if total_score >= 95 else
+            'A'  if total_score >= 88 else
+            'A-' if total_score >= 82 else
+            'B+' if total_score >= 76 else
+            'B'  if total_score >= 70 else
+            'B-' if total_score >= 65 else
+            'C+' if total_score >= 60 else
+            'C'  if total_score >= 55 else
+            'C-' if total_score >= 50 else
+            'D'  if total_score >= 35 else
+            'F'
+        )
 
     return {
         'github_id': github_id,
@@ -429,18 +816,23 @@ def evaluate_student(student):
         'stars': repo_info.get('stargazers_count', 0),
         'forks': repo_info.get('forks_count', 0),
         'default_branch': default_branch,
-        'total_files': len(tree),
+        'pages_url': pages_url if pages_alive else None,
+        'pages_enabled': pages_alive,
+        'pages_audit': pages_audit,
+        'total_files': sum(1 for f in tree if f.get('type') == 'blob'),
         'total_commits': len(commits),
         'weeks': weeks_result,
         'total_score': round(total_score, 1),
+        'weighted_sum': round(weighted_sum, 1),
+        'completed_weight': completed_weight,
         'grade': grade,
         'evaluation_date': datetime.now().isoformat()
     }
 
 
 def main():
-    print("🚀 开始自动评价学生作业...")
-    print(f"📊 评分制度: 总分100分（内容70% + 态度30%）")
+    print("🚀 开始自动评价学生作业 (v2)...")
+    print(f"📊 评分: 总分 100 分（内容 70% + 态度 30%）")
     print(f"🔑 GitHub Token: {'已配置✅' if GITHUB_TOKEN else '未配置❌'}\n")
 
     students = load_students()
@@ -453,10 +845,10 @@ def main():
     results = []
     for student in students:
         try:
-            result = evaluate_student(student)
+            results.append(evaluate_student(student))
         except Exception as e:
             print(f"  ⚠️  评估异常: {e}")
-            result = {
+            results.append({
                 'github_id': student['github_id'],
                 'repo_url': student['repo_url'],
                 'repo_exists': False,
@@ -465,57 +857,56 @@ def main():
                 'total_score': 0,
                 'grade': 'N/A',
                 'evaluation_date': datetime.now().isoformat()
-            }
-        results.append(result)
+            })
 
     output_dir = Path('students/evaluations')
     output_dir.mkdir(parents=True, exist_ok=True)
 
     payload = {
         'evaluation_date': datetime.now().isoformat(),
-        'scoring_system': '总分100分（内容70% + 态度30%）',
+        'scoring_system': '总分 100 分（内容 70% + 态度 30%，按已上课周次归一化）',
         'weeks': {wk: {'title': info['title'], 'weight': info['weight'],
                        'due_date': info['due_date']} for wk, info in WEEKS.items()},
         'students': results
     }
 
-    latest_file = output_dir / 'latest.json'
-    with open(latest_file, 'w', encoding='utf-8') as f:
+    latest = output_dir / 'latest.json'
+    with open(latest, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
-    print(f"\n✅ 评价完成: {latest_file}")
+    print(f"\n✅ 评价完成: {latest}")
 
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    history_file = output_dir / f'evaluation_{timestamp}.json'
-    with open(history_file, 'w', encoding='utf-8') as f:
+    history = output_dir / f'evaluation_{timestamp}.json'
+    with open(history, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
-    print(f"📚 历史: {history_file}")
+    print(f"📚 历史: {history}")
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("📊 评价统计")
-    print("="*60)
+    print("=" * 60)
 
     active = [r for r in results if r['repo_exists']]
     submitted = [r for r in active if r['total_score'] > 0]
     if active:
         avg = sum(r['total_score'] for r in active) / len(active)
         avg_sub = sum(r['total_score'] for r in submitted) / max(len(submitted), 1)
-        print(f"总学生: {len(results)}  仓库可访问: {len(active)}  有作业: {len(submitted)}")
+        print(f"总学生: {len(results)}  可访问: {len(active)}  有作业: {len(submitted)}")
         print(f"平均分(全部): {avg:.1f}  平均分(有作业): {avg_sub:.1f}")
 
         print("\n📈 成绩分布:")
-        grade_dist = {}
+        gd = {}
         for r in active:
-            grade_dist[r['grade']] = grade_dist.get(r['grade'], 0) + 1
+            gd[r['grade']] = gd.get(r['grade'], 0) + 1
         for g in ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'F', 'N/A']:
-            if g in grade_dist:
-                print(f"  {g:3s}: {grade_dist[g]}人")
+            if g in gd:
+                print(f"  {g:3s}: {gd[g]}人")
 
         top = sorted(active, key=lambda x: x['total_score'], reverse=True)[:10]
         print("\n🏆 前10名:")
         for i, s in enumerate(top, 1):
             print(f"  {i:2d}. @{s['github_id']:30s}  {s['total_score']:5.1f}分  {s['grade']}")
     else:
-        print("无可访问的仓库")
+        print("无可访问仓库")
 
     print("\n✨ 评价结束\n")
 
