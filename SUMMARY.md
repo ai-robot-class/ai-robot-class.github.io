@@ -5,8 +5,7 @@
 - [🤖 GitHub Actions自动评价系统使用指南](GITHUB_ACTIONS_GUIDE.md)
 - [📊 学生作业评价总结](EVALUATION_SUMMARY.md)
 - [🔒 隐私保护说明](PRIVACY.md)
-- [👥 学生作业展示（实时面板）](students/index.html)
-- [📖 作业展示说明](students/README.md)
+- [👥 学生作业实时展示](students/README.md)
 
 ## 实际教学内容
 

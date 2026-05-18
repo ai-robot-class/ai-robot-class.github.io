@@ -33,13 +33,29 @@ jobs:
 
       - name: Build GitBook
         run: |
+          # 临时将 students/index.html 移出，避免 honkit 当成 markdown 解析
+          mkdir -p /tmp/students-static
+          cp -r students/index.html /tmp/students-static/index.html
+          cp -r students/roster.json /tmp/students-static/roster.json
+          cp -r students/evaluations /tmp/students-static/evaluations 2>/dev/null || true
+          rm -f students/index.html students/roster.json
+          rm -rf students/evaluations
+
+          # 构建 honkit 站点
           npm run build
           touch _book/.nojekyll
-          # 复制学生作业展示页面（GitBook不会自动处理.html和.json文件）
+
+          # 把静态文件复制到 _book/students/
           mkdir -p _book/students/evaluations
-          cp -r students/index.html _book/students/index.html
-          cp -r students/roster.json _book/students/roster.json
-          cp -r students/evaluations/* _book/students/evaluations/ 2>/dev/null || true
+          cp /tmp/students-static/index.html _book/students/index.html
+          cp /tmp/students-static/roster.json _book/students/roster.json
+          cp -r /tmp/students-static/evaluations/. _book/students/evaluations/ 2>/dev/null || true
+
+          # 恢复原始文件（以便后续 step 使用）
+          cp /tmp/students-static/index.html students/index.html
+          cp /tmp/students-static/roster.json students/roster.json
+          mkdir -p students/evaluations
+          cp -r /tmp/students-static/evaluations/. students/evaluations/ 2>/dev/null || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
