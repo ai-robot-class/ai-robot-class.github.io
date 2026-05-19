@@ -1,0 +1,33 @@
+FROM osrf/ros:humble-desktop-full
+
+# ===== 系统工具 =====
+RUN apt-get update && apt-get install -y \
+    python3-pip git wget curl vim tmux \
+    x11-apps mesa-utils libgl1-mesa-glx \
+    portaudio19-dev libsndfile1 \
+    libgl1-mesa-dri libegl1-mesa libgles2-mesa \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# ===== Python 通用依赖 =====
+RUN pip3 install --no-cache-dir \
+    numpy scipy matplotlib pandas \
+    opencv-python opencv-contrib-python \
+    torch torchvision \
+    ultralytics \
+    speechrecognition pyttsx3 gtts pyaudio \
+    mediapipe \
+    pybullet \
+    rich loguru
+
+# ===== ROS2 工作空间 =====
+WORKDIR /workspace
+RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \
+ && echo "source /workspace/install/setup.bash 2>/dev/null || true" >> /root/.bashrc
+
+# ===== X11 GUI 转发 =====
+ENV DISPLAY=:0
+ENV QT_X11_NO_MITSHM=1
+ENV LIBGL_ALWAYS_INDIRECT=0
+
+CMD ["/bin/bash"]

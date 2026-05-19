@@ -473,25 +473,34 @@ if __name__ == '__main__':
 
 ### 12.5.2 项目选题（10个方向）
 
+> 💡 **每个项目都已为你准备好 Docker 仿真环境 + 代码骨架**！
+> 在 [`project-templates/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates) 目录中。
+>
+> ✅ 你只需要 `docker compose up -d` 启动环境，然后填写代码里 `# TODO:` 标注的核心算法部分（每个项目 3 个 TODO 函数）。
+>
+> ❌ 不用花时间配环境、装依赖、踩 ROS2 坑！
+
+
+
 #### 📦 初级项目（适合单人或2人）
 
 **1. 视觉颜色追踪机器人**
 - **难度**: ⭐⭐
 - **技术**: OpenCV颜色检测 + ROS2
 - **目标**: 机器人追踪特定颜色物体移动
-- **参考**: 第12周颜色检测代码
+- **模板**: [`project-templates/p01-color-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p01-color-tracker)
 
 **2. 语音控制小乌龟**
 - **难度**: ⭐⭐
 - **技术**: 语音识别 + ROS2 Turtlesim
 - **目标**: 语音命令控制小乌龟运动
-- **扩展**: 添加语音反馈
+- **模板**: [`project-templates/p02-voice-turtle/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p02-voice-turtle)
 
 **3. 简单目标检测系统**
 - **难度**: ⭐⭐⭐
 - **技术**: YOLO + ROS2
 - **目标**: 摄像头实时检测并标注物体
-- **扩展**: 统计物体数量、发布ROS2话题
+- **模板**: [`project-templates/p03-yolo-detector/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p03-yolo-detector)
 
 #### 🚀 中级项目（适合2-3人）
 
@@ -499,19 +508,19 @@ if __name__ == '__main__':
 - **难度**: ⭐⭐⭐
 - **技术**: YOLO + Sort追踪 + ROS2
 - **目标**: 机器人识别并跟随特定物体
-- **扩展**: 保持安全距离
+- **模板**: [`project-templates/p04-object-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p04-object-tracker)
 
 **5. 多传感器融合导航**
 - **难度**: ⭐⭐⭐⭐
 - **技术**: 相机 + 激光雷达 + ROS2 Nav2
 - **目标**: 机器人自主避障导航
-- **扩展**: 语音目标点设置
+- **模板**: [`project-templates/p05-nav2-fusion/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p05-nav2-fusion)
 
 **6. 手势识别控制**
 - **难度**: ⭐⭐⭐
 - **技术**: MediaPipe手势识别 + ROS2
 - **目标**: 手势控制机器人运动
-- **扩展**: 自定义手势命令
+- **模板**: [`project-templates/p06-gesture-control/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p06-gesture-control)
 
 #### 🏆 高级项目（适合3人或有基础）
 
@@ -519,29 +528,128 @@ if __name__ == '__main__':
 - **难度**: ⭐⭐⭐⭐
 - **技术**: SLAM + 目标检测 + 语音播报
 - **目标**: 自主巡检并识别异常
-- **扩展**: 生成巡检报告
+- **模板**: [`project-templates/p07-patrol-robot/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p07-patrol-robot)
 
 **8. 人脸识别门禁系统**
 - **难度**: ⭐⭐⭐⭐
 - **技术**: 人脸检测/识别 + 数据库 + ROS2
 - **目标**: 识别授权人员并控制门禁
-- **扩展**: 陌生人告警
+- **模板**: [`project-templates/p08-face-access/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p08-face-access)
 
 **9. 机械臂物体抓取**
 - **难度**: ⭐⭐⭐⭐⭐
 - **技术**: 目标检测 + 逆运动学 + MoveIt
 - **目标**: 识别物体位置并抓取
-- **扩展**: 物体分类存放
+- **模板**: [`project-templates/p09-arm-grasp/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p09-arm-grasp)
 
 **10. 四足机器人基础控制（第13周专题）**
 - **难度**: ⭐⭐⭐⭐⭐
 - **技术**: PyBullet仿真 + 步态生成
 - **目标**: 四足机器人行走控制
 - **扩展**: 地形适应
+- **模板**: [`project-templates/p10-quadruped/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p10-quadruped)
 
 ---
 
-### 12.5.3 项目分组与计划（30分钟）
+### 12.5.3 📦 项目 Docker 模板使用指南
+
+每个选题都在 `project-templates/p01-...` 到 `p10-...` 准备好：
+
+```
+p0X-xxxxxx/
+├── README.md             # 项目说明 + 3 个核心 TODO 任务
+├── Dockerfile            # 容器镜像（ROS2 Humble + 全部依赖）
+├── docker-compose.yml    # 一键启动配置（GUI/摄像头/麦克风都准备好）
+├── src/                  # 代码骨架（已写好 ROS2 框架，留 TODO 给你）
+└── test/                 # 单元测试（提交前自测）
+```
+
+#### 🚀 使用流程（每位同学只需 5 步）
+
+```bash
+# 1. Fork 课程仓库到自己 GitHub，clone 到本地
+git clone https://github.com/<你的用户名>/ai-robot-class.github.io.git
+cd ai-robot-class.github.io/project-templates/p01-color-tracker  # 选你的项目
+
+# 2. 启动容器（首次约 2-5 分钟拉镜像）
+docker compose up -d
+
+# 3. 进入容器开发
+docker compose exec dev bash
+
+# 4. 在容器内编译运行
+colcon build && source install/setup.bash
+# 找到 src/xxxx_node.py 中的 # TODO，开始写代码！
+
+# 5. 完成后提交自己的 GitHub 仓库
+git add . && git commit -m "完成 P01 颜色追踪核心" && git push
+```
+
+#### 🎯 评分聚焦在算法实现
+
+容器配置和骨架代码**不计入评分**。评分点：
+
+| 项目 | 占比 |
+|------|------|
+| 3 个 TODO 函数实现正确 | 40% |
+| 实际运行效果（演示） | 30% |
+| 代码质量（注释/命名） | 15% |
+| 提供的单元测试通过 | 10% |
+| README 报告 + 演示视频 | 5% |
+
+#### 🛠️ 通用环境准备
+
+##### 学生宿主机要求
+
+- **Linux/WSL2**：`xhost +local:docker` 启用 GUI 转发
+- **Mac**：用 `XQuartz` + `host.docker.internal:0`
+- **Windows**：用 WSL2 + WSLg（Win11 自带）
+
+```bash
+# 一次性配置（Linux/WSL2）
+xhost +local:docker
+echo 'xhost +local:docker' >> ~/.bashrc
+```
+
+##### 验证 Docker 与 GUI
+
+```bash
+# 测试 X11 转发
+docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix \
+    osrf/ros:humble-desktop-full \
+    bash -c "apt update && apt install -y x11-apps && xeyes"
+
+# 应该弹出一对眼睛跟着鼠标转
+```
+
+#### 🐳 通用基础镜像
+
+所有项目都基于 `osrf/ros:humble-desktop-full`，包含：
+
+- **ROS2 Humble** 完整桌面版（RViz / Gazebo / rqt 全套）
+- **OpenCV** 4.x + opencv-contrib
+- **PyTorch** + Ultralytics YOLOv8
+- **语音**：SpeechRecognition / pyttsx3 / gTTS / pyaudio
+- **视觉**：MediaPipe / face_recognition / Open3D
+- **仿真**：PyBullet / 多机器人 URDF
+
+#### ⚙️ 如果想用 GPU 加速
+
+```yaml
+# 在 docker-compose.yml 中加入
+services:
+  dev:
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+```
+
+需要先在宿主机装好 `nvidia-container-toolkit`。
+
+---
+
+### 12.5.4 项目分组与计划（30分钟）
 
 **分组流程**：
 1. 自由组队（2-3人）
@@ -584,7 +692,7 @@ if __name__ == '__main__':
 
 ---
 
-### 12.5.4 技术答疑与资源（20分钟）
+### 12.5.5 技术答疑与资源（20分钟）
 
 **常见问题**：
 
