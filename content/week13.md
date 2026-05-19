@@ -8,9 +8,10 @@
 
 | 模块 | 时间 | 主题 | 内容 |
 |------|------|------|------|
-| 模块1 | 80分钟 | 四足机器人基础 | 概述+仿真+步态 |
+| 模块1 | 60分钟 | 四足机器人基础 | 概述+PyBullet仿真+步态 |
+| 模块2 | 20分钟 | **工业级仿真演示** | MATRiX 现场演示（教师演示） |
 | 茶歇 | 10分钟 | 休息 | - |
-| 模块2 | 90分钟 | 项目开发辅导 | 答疑+调试+开发 |
+| 模块3 | 90分钟 | 项目开发辅导 | 答疑+调试+开发 |
 
 ---
 
@@ -20,8 +21,9 @@
 
 | 环节 | 时间 | 内容 |
 |------|------|------|
-| 讲解 | 30分钟 | 四足机器人概述+步态 |
-| 演示+实践 | 50分钟 | PyBullet仿真实战 |
+| 讲解 | 25分钟 | 四足机器人概述+步态 |
+| 演示+实践 | 35分钟 | PyBullet仿真实战（学生跟做）|
+| 工业级演示 | 20分钟 | **MATRiX 现场演示**（教师演示，学生观看）|
 
 ---
 
@@ -451,6 +453,156 @@ Sim2Real的挑战：
 
 ---
 
+## 13.5 工业级仿真平台 — MATRiX（课堂演示 / 选修）
+
+> 让大家看看产业界、研究院在用的高保真仿真平台是什么样的
+
+### 13.5.1 MATRiX 是什么
+
+[MATRiX](https://github.com/ZSIBOT/MATRIX) 是中山智能机器人研究院（ZSIBOT）开源的四足机器人仿真平台：
+
+```
+MATRiX = MuJoCo（物理）+ Unreal Engine 5（渲染）+ CARLA（场景）
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   物理仿真层    →    MuJoCo（高精度、关节动力学）          │
+│        ↓                                                    │
+│   通信中间件    →    ROS2 Humble（话题、服务）              │
+│        ↓                                                    │
+│   视觉渲染层    →    Unreal Engine 5（光线追踪、超写实）   │
+│        ↓                                                    │
+│   场景库        →    CARLA（自动驾驶场景、城市/野外）      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 13.5.2 与 PyBullet 的对比
+
+| 维度 | PyBullet（本课作业） | MATRiX（演示） |
+|------|----------------------|----------------|
+| **物理引擎** | Bullet（简单） | MuJoCo（精确） |
+| **渲染质量** | 简单 OpenGL | UE5 光追、超写实 |
+| **场景库** | 几何 URDF | CARLA 城市/野外 |
+| **传感器仿真** | 基础相机 | 相机/LiDAR/IMU 全栈 |
+| **硬件需求** | ❌ 无独显也行 | ✅ NVIDIA RTX 4060+ |
+| **适用场景** | 教学、原型 | 产业级开发、Sim2Real |
+
+### 13.5.3 硬件要求（必读）
+
+> ⚠️ **完整 MATRiX 必须有独立 NVIDIA 显卡才能运行**
+
+| 项目 | 最低要求 | 推荐 |
+|------|----------|------|
+| 操作系统 | Ubuntu 22.04 | Ubuntu 22.04 |
+| GPU | NVIDIA RTX 4060 | RTX 4070 及以上 |
+| 显存 | 8 GB | 12 GB+ |
+| 驱动 | NVIDIA Driver ≥ 535 | 最新版 |
+| ROS | ROS2 Humble | ROS2 Humble |
+| 编译器 | GCC C++11+ | GCC 11+ |
+
+> 📝 **没有独显的同学**：本课不强制要求安装 MATRiX。课堂上看演示即可，作业用 PyBullet 完成。
+
+### 13.5.4 Docker 快速部署（仅供有显卡同学）
+
+```bash
+# 1. 安装 NVIDIA Container Toolkit（让 Docker 能用 GPU）
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list \
+  | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt update && sudo apt install -y nvidia-container-toolkit
+sudo systemctl restart docker
+
+# 2. 拉取 MATRiX 代码并构建（需要联网下载 ~10GB 资源包）
+git clone https://github.com/ZSIBOT/MATRIX.git
+cd MATRIX
+bash scripts/install_deps.sh
+
+# 3. 下载发布资源（基础包 + 运行时 + 地图）
+bash scripts/release_manager/install_chunks.sh 0.1.2
+
+# 4. 验证环境
+bash scripts/check_env.sh runtime
+
+# 5. 启动仿真
+./bin/sim_launcher
+```
+
+> 💡 **网络问题**：如果 ROS apt 源不可达，使用 `ROSAPTREPOURL=<镜像>` 环境变量。
+> 如果 aria2/wget 报 TLS 错误，加 `SKIPARIA2=1` 跳过加速。
+
+### 13.5.5 课堂演示流程（建议 8-10 分钟）
+
+> 👨‍🏫 **教师指南**：在带独显的笔记本上提前安装好 MATRiX，课堂现场演示
+
+#### 演示脚本
+
+```
+[0:00 - 0:30] 介绍 MATRiX 的定位
+  "我们前面学的 PyBullet 是教学版仿真，
+   现在给大家看一下产业界、研究院用的工业级仿真平台 —— MATRiX"
+
+[0:30 - 2:00] 启动 sim_launcher，展示界面
+  - 演示机器人选择（Unitree Go1 / Go2 / 自定义）
+  - 演示地图选择（城市 / 工地 / 野外 / 室内）
+  - 强调：这是 UE5 实时渲染，光线追踪
+
+[2:00 - 4:00] 启动一个城市场景
+  - 让四足机器人在城市街道上漫游
+  - 展示相机视角切换（俯瞰 / 第三人称 / 第一人称）
+  - 强调：相机/LiDAR 数据可以通过 ROS2 topic 接入
+
+[4:00 - 6:00] 用手柄/键盘控制机器人
+  - 让学生看到响应感
+  - 强调：物理基于 MuJoCo，运动学约束真实
+
+[6:00 - 8:00] 展示 ROS2 接入
+  - 开另一个终端：rqt 看 topic 列表
+  - 启动一个 SLAM 或导航节点
+  - 强调："和我们前几周学的 ROS2 完全兼容"
+
+[8:00 - 10:00] 总结 & Q&A
+  - 为什么用 UE5？→ 视觉模型可以训练成更接近真实
+  - Sim2Real 怎么做？→ Domain Randomization 在这里设置
+  - 学生可以做什么？→ 留作业：思考如何用 PyBullet 仿真训练，
+                       再迁移到 MATRiX 这种高保真仿真验证
+```
+
+#### 演示前检查清单
+
+- [ ] 笔记本电源接好（UE5 + GPU 很耗电）
+- [ ] 提前 `bash scripts/release_manager/install_chunks.sh 0.1.2` 完成
+- [ ] 提前下载 2-3 个常用地图（避免现场下载）
+- [ ] 测试投影分辨率（UE5 高分辨率渲染流畅度）
+- [ ] 准备一个手柄（演示效果更好）
+- [ ] 录屏软件（备份录像，作为下次离线播放）
+
+### 13.5.6 选修拓展任务
+
+**适合电脑有独显的同学（可作为期末项目加分）**：
+
+1. **场景搭建**：用 MATRiX 自定义场景（按 [Custom Scene Guide](https://github.com/ZSIBOT/MATRIX/tree/main/docs)）
+2. **数据采集**：在 MATRiX 中跑机器人，采集相机/LiDAR 数据用于训练
+3. **Sim2Real 对比**：同一控制策略在 PyBullet 和 MATRiX 中跑，对比效果
+4. **多机器人协同**：参考 [Multi-Robot Tutorial](https://github.com/ZSIBOT/MATRIX/tree/main/docs)
+
+**没有独显的同学也能做的扩展**：
+
+1. **MuJoCo 学习**（CPU 即可）：`pip install mujoco`，跑 MuJoCo 自带 4 足模型
+2. **看 MATRiX 源码**：阅读 `src/` 目录理解工业级仿真器的架构
+3. **写技术对比报告**：PyBullet / MuJoCo / Gazebo / MATRiX 的差异分析
+
+### 13.5.7 进一步学习
+
+- 📚 [MATRiX 官方文档](https://github.com/ZSIBOT/MATRIX/tree/main/docs)
+- 💬 MATRiX 微信社区（README 中扫码）
+- 🎬 课堂演示录像（教师上传到课程仓库的 `demos/` 目录）
+- 🔬 [MuJoCo 官网](https://mujoco.org/) - MATRiX 的物理核心
+- 🎮 [Unreal Engine 学习路径](https://www.unrealengine.com/zh-CN/onlinelearning-courses)
+
+---
+
 ## 第二次课：期末项目开发辅导（3小时）
 
 ### ⏱️ 时间分配
@@ -464,9 +616,9 @@ Sim2Real的挑战：
 
 ---
 
-## 13.5 项目开发指导
+## 13.6 项目开发指导
 
-### 13.5.1 项目开发检查清单
+### 13.6.1 项目开发检查清单
 
 #### 阶段1：基础搭建（应在第12周完成）
 
@@ -498,7 +650,7 @@ Sim2Real的挑战：
 
 ---
 
-### 13.5.2 常见问题解答（FAQ）
+### 13.6.2 常见问题解答（FAQ）
 
 #### Q1: 如何在没有真实机器人的情况下测试？
 
@@ -597,7 +749,7 @@ git pull
 
 ---
 
-### 13.5.3 项目展示准备
+### 13.6.3 项目展示准备
 
 #### 演示视频录制要点
 
@@ -717,7 +869,7 @@ project/
 
 ---
 
-### 13.5.4 项目评分细则
+### 13.6.4 项目评分细则
 
 | 评分项 | 权重 | 优秀(90-100) | 良好(75-89) | 及格(60-74) | 不及格(<60) |
 |--------|------|-------------|-------------|-------------|-------------|
