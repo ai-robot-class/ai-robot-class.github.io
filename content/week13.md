@@ -14,15 +14,19 @@
 
 <div style="text-align:center; margin: 20px 0;">
 
-<iframe src="//player.bilibili.com/player.html?aid=113906957842712&bvid=BV1qzKMeBE9Q&cid=28206067857&p=1&autoplay=0&high_quality=1&danmaku=0"
-        scrolling="no" border="0" frameborder="no" framespacing="0"
-        allowfullscreen="true" width="100%" height="450"
+<iframe width="100%" height="450"
+        src="https://www.youtube.com/embed/4DKrcpa8Z_E"
+        title="Unitree H1 robots dance at CCTV Spring Festival Gala 2025"
+        frameborder="0"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
         style="max-width:800px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.2);">
 </iframe>
 
 <p style="color:#666; font-size:0.9em; margin-top:8px;">
-🎭 <strong>2025 央视春晚《秧 BOT》</strong> · 宇树 H1 × 新疆艺术学院（来源：B 站央视新闻官方）<br>
-🌍 <a href="https://www.youtube.com/results?search_query=Unitree+H1+CCTV+Spring+Festival+Gala+2025" target="_blank">YouTube 搜索备用链接</a>
+🎭 <strong>2025 央视春晚《秧 BOT》</strong> · 16 台宇树 H1 跳陕北秧歌<br>
+🇨🇳 国内访问: <a href="https://search.bilibili.com/all?keyword=%E5%AE%87%E6%A0%91%E6%98%A5%E6%99%9A" target="_blank">B 站搜索"宇树春晚"</a> ·
+🌍 海外访问: <a href="https://www.youtube.com/results?search_query=Unitree+H1+CCTV+Spring+Festival+Gala+2025" target="_blank">YouTube 搜索</a>
 </p>
 
 </div>
@@ -391,17 +395,23 @@ MPC 思想（简化版）：
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin: 20px 0;">
 
 <div style="text-align:center;">
-<iframe src="//player.bilibili.com/player.html?bvid=BV1qzKMeBE9Q&page=1&autoplay=0&high_quality=1&danmaku=0"
-        scrolling="no" frameborder="no"
-        allowfullscreen="true" width="100%" height="260"
+<iframe width="100%" height="260"
+        src="https://www.youtube.com/embed/4DKrcpa8Z_E"
+        title="Unitree H1 CCTV Spring Festival 2025"
+        frameborder="0"
+        allow="encrypted-media; picture-in-picture"
+        allowfullscreen
         style="border-radius:8px;"></iframe>
 <p style="font-size:0.85em; color:#666;">🎭 春晚《秧 BOT》<br>16 台 H1 跳陕北秧歌</p>
 </div>
 
 <div style="text-align:center;">
-<iframe src="//player.bilibili.com/player.html?bvid=BV1Lr421v7nA&page=1&autoplay=0&high_quality=1&danmaku=0"
-        scrolling="no" frameborder="no"
-        allowfullscreen="true" width="100%" height="260"
+<iframe width="100%" height="260"
+        src="https://www.youtube.com/embed/GtPs_ygfaEA"
+        title="Unitree H1 World Record Running"
+        frameborder="0"
+        allow="encrypted-media; picture-in-picture"
+        allowfullscreen
         style="border-radius:8px;"></iframe>
 <p style="font-size:0.85em; color:#666;">🏃 Unitree H1 全力奔跑<br>3.3 m/s 世界纪录</p>
 </div>
@@ -445,16 +455,23 @@ MPC 思想（简化版）：
 <details>
 <summary>📋 教师备注：如何更新视频（点开看）</summary>
 
-如果某视频失效或者你想替换：
+**目前所有视频都用 YouTube 嵌入**（B 站 iframe 跨域限制太严格，
+即使是公开视频也常被 referrer 拦截，本课程实测无法在第三方网站播放）。
 
-1. 找到目标视频的 BV 号（B 站 URL `bilibili.com/video/BVxxxx` 中的 `BVxxxx`）
-   或 YouTube 视频 ID（URL `youtube.com/watch?v=XXX` 中的 `XXX`）
+如果某 YouTube 视频失效或想替换：
+
+1. 找到目标视频的 YouTube 视频 ID
+   （URL `youtube.com/watch?v=XXX` 中的 `XXX`）
 
 2. 在 `content/week13.md` 中找到对应 iframe，替换：
-   - B 站：`bvid=BV1qzKMeBE9Q` → `bvid=你的BV号`
-   - YouTube：`/embed/-9EM5_VFlt8` → `/embed/你的视频ID`
+   `/embed/旧ID` → `/embed/你的视频ID`
 
-3. 推送即可，无需重启服务
+3. 推送到 main 分支即可（GitHub Actions 会自动重新部署）
+
+**国内学生如何看 YouTube？**
+- 走学校 VPN（推荐）
+- 用 B 站搜索同名视频（绝大多数 YouTube 火爆视频在 B 站都有搬运）
+- 视频下方都已提供 B 站搜索链接
 
 </details>
 
