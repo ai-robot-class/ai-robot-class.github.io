@@ -1,15 +1,46 @@
 # 第 13 周：四足机器人入门 + 期末项目实施
 
-## 🎬 开场故事
+## 🎬 开场：从央视春晚说起
 
-> 2005 年，一段视频在 YouTube 上爆红。视频中一名工程师在结冰的山坡上踹了一台机器狗一脚——
-> 它**摇晃了一下，居然没倒**，反而像狗一样调整重心、稳稳地继续往前走。
+> 2025 年除夕夜，全国 7 亿观众盯着电视。
+> 16 台**宇树 H1 人形机器人** 穿着花棉袄，跟新疆舞蹈演员一起表演陕北秧歌《秧 BOT》。
+> 整齐的转身、抛手绢、扭腰胯——
+> **这不是 CG，是真实的机器人在跳舞**。
+
+中国第一次在央视舞台上展示了这个能力。第二天，宇树科技的股价飞涨，订单接到手软。
+你正在用的这门课，**就是带你走进这个新世界的入场券**。
+
+### 🎥 现场视频（一定要看！）
+
+<div style="text-align:center; margin: 20px 0;">
+
+<iframe src="//player.bilibili.com/player.html?aid=113906957842712&bvid=BV1qzKMeBE9Q&cid=28206067857&p=1&autoplay=0&high_quality=1&danmaku=0"
+        scrolling="no" border="0" frameborder="no" framespacing="0"
+        allowfullscreen="true" width="100%" height="450"
+        style="max-width:800px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.2);">
+</iframe>
+
+<p style="color:#666; font-size:0.9em; margin-top:8px;">
+🎭 <strong>2025 央视春晚《秧 BOT》</strong> · 宇树 H1 × 新疆艺术学院（来源：B 站央视新闻官方）<br>
+🌍 <a href="https://www.youtube.com/results?search_query=Unitree+H1+CCTV+Spring+Festival+Gala+2025" target="_blank">YouTube 搜索备用链接</a>
+</p>
+
+</div>
+
+> 💡 **思考题（开场 3 分钟）**：
 >
-> 这就是波士顿动力的 **BigDog**。从那一刻起，世界开始相信：
-> **机器人可以像动物一样在复杂地形中行走**。
+> 看完视频，你觉得这些机器人是怎么做到「16 台同步跳舞」的？
+> - 它们是预先编程好动作的？还是实时控制的？
+> - 万一摔倒了会怎么样？
+> - 如果你来当导演，你会让它们做什么动作？
 
-20 年过去，今天宇树 Go2 售价已经降到 1 万人民币，你的笔记本就能让它在仿真中跑起来。
-这节课，我们将看看这个领域是怎么走到今天的，然后亲手让一只四足机器人在屏幕上走起来。
+### 🌟 这节课你将学到
+
+20 年前（2005 年）**波士顿动力 BigDog** 被踹不倒的视频震惊世界。
+20 年后（2025 年）**宇树春晚机器人**让全国看到中国制造的实力。
+**这之间发生了什么？** 让我们一起回顾这个领域的 60 年演进。
+
+并且，最重要的：你的笔记本就能让一只机器狗在屏幕上跑起来。
 
 ---
 
@@ -352,8 +383,80 @@ MPC 思想（简化版）：
 ```
 
 > 🤯 **2026 年的现状**：当年波士顿动力工程师写 6 个月才能调出来的步态，今天 ETH 的学生在 NVIDIA Isaac Lab 里训练 8 小时就能复现。
->
-> 📺 **强烈推荐看**：[Boston Dynamics Atlas 跳舞](https://www.youtube.com/watch?v=fn3KWM1kuAw) · [Unitree H1 跑步](https://www.youtube.com/watch?v=BqRBcb-bOdg)
+
+### 🎬 这个时代的标志性场面（视频）
+
+#### 🇨🇳 中国队（宇树科技）：从机器狗到机器人跳舞
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin: 20px 0;">
+
+<div style="text-align:center;">
+<iframe src="//player.bilibili.com/player.html?bvid=BV1qzKMeBE9Q&page=1&autoplay=0&high_quality=1&danmaku=0"
+        scrolling="no" frameborder="no"
+        allowfullscreen="true" width="100%" height="260"
+        style="border-radius:8px;"></iframe>
+<p style="font-size:0.85em; color:#666;">🎭 春晚《秧 BOT》<br>16 台 H1 跳陕北秧歌</p>
+</div>
+
+<div style="text-align:center;">
+<iframe src="//player.bilibili.com/player.html?bvid=BV1Lr421v7nA&page=1&autoplay=0&high_quality=1&danmaku=0"
+        scrolling="no" frameborder="no"
+        allowfullscreen="true" width="100%" height="260"
+        style="border-radius:8px;"></iframe>
+<p style="font-size:0.85em; color:#666;">🏃 Unitree H1 全力奔跑<br>3.3 m/s 世界纪录</p>
+</div>
+
+</div>
+
+#### 🇺🇸 美国队：波士顿动力 + Figure AI
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin: 20px 0;">
+
+<div style="text-align:center;">
+<iframe width="100%" height="260"
+        src="https://www.youtube.com/embed/-9EM5_VFlt8"
+        title="Boston Dynamics Atlas"
+        frameborder="0"
+        allow="encrypted-media; picture-in-picture"
+        allowfullscreen
+        style="border-radius:8px;"></iframe>
+<p style="font-size:0.85em; color:#666;">🤸 Boston Dynamics Atlas<br>跑酷+体操（2024）</p>
+</div>
+
+<div style="text-align:center;">
+<iframe width="100%" height="260"
+        src="https://www.youtube.com/embed/Sq1QZB5baNw"
+        title="Figure 01"
+        frameborder="0"
+        allow="encrypted-media; picture-in-picture"
+        allowfullscreen
+        style="border-radius:8px;"></iframe>
+<p style="font-size:0.85em; color:#666;">🤝 Figure 01 + OpenAI<br>自然语言对话+做家务</p>
+</div>
+
+</div>
+
+> 📺 **打不开 B 站/YouTube？** 用关键词到任意视频网站搜索即可：
+> - [B 站搜索"宇树春晚"](https://search.bilibili.com/all?keyword=%E5%AE%87%E6%A0%91%E6%98%A5%E6%99%9A)
+> - [B 站搜索"宇树 H1 跑步"](https://search.bilibili.com/all?keyword=%E5%AE%87%E6%A0%91%20H1%20%E8%B7%91%E6%AD%A5)
+> - [YouTube: Boston Dynamics Atlas](https://www.youtube.com/results?search_query=Boston+Dynamics+Atlas)
+> - [YouTube: Figure 01 OpenAI](https://www.youtube.com/results?search_query=Figure+01+OpenAI)
+
+<details>
+<summary>📋 教师备注：如何更新视频（点开看）</summary>
+
+如果某视频失效或者你想替换：
+
+1. 找到目标视频的 BV 号（B 站 URL `bilibili.com/video/BVxxxx` 中的 `BVxxxx`）
+   或 YouTube 视频 ID（URL `youtube.com/watch?v=XXX` 中的 `XXX`）
+
+2. 在 `content/week13.md` 中找到对应 iframe，替换：
+   - B 站：`bvid=BV1qzKMeBE9Q` → `bvid=你的BV号`
+   - YouTube：`/embed/-9EM5_VFlt8` → `/embed/你的视频ID`
+
+3. 推送即可，无需重启服务
+
+</details>
 
 ### 📊 演进时间轴一图流
 
