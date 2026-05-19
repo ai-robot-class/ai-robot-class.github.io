@@ -1,136 +1,94 @@
-# 项目 1：视觉颜色追踪机器人
+# 项目 1：基于视频的颜色追踪（ROS bag 输出）
 
-> 🎯 难度 ⭐⭐ · 技术：OpenCV + ROS2 + Turtlesim
+> ⭐⭐ · 技术：OpenCV + ROS2 + 视频文件
 
-## 项目目标
+## 🎯 项目目标
 
-让 Turtlesim 中的小乌龟自动追踪摄像头看到的特定颜色物体（例如红色球）：
-- 物体在画面左 → 小乌龟左转
-- 物体在画面右 → 小乌龟右转
-- 物体在画面中心 → 小乌龟前进
+从给定视频中追踪特定颜色物体，输出处理后视频和 ROS bag（cmd_vel 命令序列）
+
+## 📦 数据来源（无需任何硬件）
+
+课程提供 `demo/colored_ball.mp4`（红色小球在白桌子上滚动）
+扩展可用：B 站/YouTube 任意颜色物体视频
+
+## ⚙️ 运行模式
+
+| 模式 | 输入 | 输出 |
+|------|------|------|
+| 🟢 **默认（无硬件）** | `demo/colored_ball.mp4` | `output.mp4` + `cmd_vel.bag` |
+| 🟡 **扩展（有摄像头）** | `/dev/video0` 实时 | 实时 RViz 显示 |
 
 ## 🚀 快速启动
 
 ```bash
-# 1. 启动容器
+# 1. 启动容器（首次约 2-5 分钟）
 docker compose up -d
 docker compose exec dev bash
 
-# 2. 编译
+# 2. 下载数据集（如有）
+bash demo/download_data.sh 2>/dev/null || true
+
+# 3. 编译
 colcon build && source install/setup.bash
 
-# 3. 启动 Turtlesim
-ros2 run turtlesim turtlesim_node &
+# 4. 默认无硬件模式运行
+# 默认无硬件模式
+ros2 run color_tracker tracker_node --video demo/colored_ball.mp4 \
+    --output output.mp4 --bag cmd_vel.bag
 
-# 4. 启动颜色追踪节点
-ros2 run color_tracker tracker_node
+# 验证：回放 bag 看 Twist 序列
+ros2 bag play cmd_vel.bag &
+ros2 topic echo /cmd_vel
 ```
 
-## 📁 项目结构
+## ✍️ 你要做的（3 个 TODO 函数）
 
-```
-p01-color-tracker/
-├── Dockerfile                          # 容器配置
-├── docker-compose.yml                  # 容器编排
-├── README.md                            # 本文件
-├── src/
-│   └── color_tracker/
-│       ├── package.xml
-│       ├── setup.py
-│       ├── color_tracker/
-│       │   ├── __init__.py
-│       │   └── tracker_node.py         # ⭐ 学生填代码的地方
-│       └── launch/
-│           └── tracker.launch.py
-├── test/
-│   └── test_color_detection.py         # 单元测试
-└── demo/
-    └── sample.mp4                       # 测试用视频
-```
+### TODO 1：`detect_color`
 
-## ✍️ 你要做的（TODO 列表）
+在 BGR 帧中用 HSV 阈值检测目标颜色，返回最大轮廓中心 (x, y)
 
-打开 `src/color_tracker/color_tracker/tracker_node.py`，完成 3 个核心函数：
+### TODO 2：`compute_twist`
 
-### TODO 1：HSV 颜色检测
+根据目标 x 偏离图像中心的程度，输出 Twist（含线速度+角速度）
 
-```python
-def detect_color(self, frame):
-    """
-    输入 BGR 图像，返回目标颜色物体的中心坐标 (x, y)
-    
-    要求：
-    1. 转 HSV 色彩空间
-    2. 用 cv2.inRange 提取目标颜色（参数 self.lower_hsv / self.upper_hsv）
-    3. 用 cv2.findContours 找轮廓
-    4. 选最大的轮廓，返回质心坐标
-    5. 若没找到 → 返回 None
-    """
-    # TODO: 你的代码（约 10-15 行）
-    pass
-```
+### TODO 3：`save_to_bag`
 
-### TODO 2：根据位置计算控制命令
+把每帧产生的 Twist 写入 ROS bag，便于回放或离线分析
 
-```python
-def compute_twist(self, target_x, frame_width):
-    """
-    根据目标在图像中的 x 坐标，返回 Twist 消息
-    
-    要求：
-    1. 目标在中心 ± 50 像素 → 前进（linear.x = 0.5）
-    2. 目标偏左 → 左转（angular.z > 0）
-    3. 目标偏右 → 右转（angular.z < 0）
-    4. 角速度大小应与偏离量成正比
-    """
-    # TODO: 你的代码（约 10 行）
-    pass
-```
 
-### TODO 3：发布控制命令
-
-```python
-def image_callback(self, msg):
-    """
-    订阅图像 → 检测 → 发布 cmd_vel
-    """
-    # 1. 将 ROS Image 转为 OpenCV（已写好）
-    frame = self.bridge.imgmsg_to_cv2(msg, 'bgr8')
-    
-    # TODO: 调用 detect_color 和 compute_twist，发布到 /turtle1/cmd_vel
-    pass
-```
 
 ## 🧪 测试
 
 ```bash
-# 单元测试（不需要摄像头）
 pytest test/
 
-# 集成测试（需要摄像头或视频文件）
-ros2 launch color_tracker tracker.launch.py use_video:=demo/sample.mp4
+# 项目特定的端到端测试
+bash test/integration_test.sh
 ```
-
-## 💡 提示
-
-- HSV 颜色范围参考：红色 H=[0, 10] 或 [170, 180]；绿色 H=[40, 80]；蓝色 H=[100, 130]
-- 用 `cv2.imshow` 实时显示中间结果，方便调试
-- `force_smoothing` 推荐用滑动平均（避免抖动）
-
-## 🌟 加分项
-
-- [ ] 用滑动条 (`cv2.createTrackbar`) 实时调 HSV 阈值
-- [ ] 增加距离估计（用轮廓面积近似）
-- [ ] 处理多目标（追踪最大的，或最近的）
-- [ ] 失去目标后自动巡逻
 
 ## 📊 评分要点
 
 | 评分点 | 占比 |
 |--------|------|
-| detect_color 实现正确 | 15% |
-| compute_twist 逻辑合理 | 15% |
-| 实际运行效果 | 30% |
-| 测试通过率 | 15% |
-| 代码注释 + README | 10% |
-| 演示视频 | 15% |
+| 3 个 TODO 实现正确性 | 40% |
+| 在提供数据集上的运行效果 | 30% |
+| 代码质量（注释、命名、模块化）| 15% |
+| 文档完整度 + 演示视频 | 10% |
+| **加分**：自己采集额外数据/改进算法 | +5% |
+
+## 🔌 扩展：使用真实硬件
+
+如果你有 `/dev/video0`，把它加到 `docker-compose.yml` 的 `devices:` 字段，然后用 `--source camera` 参数运行。但**不是必须**。
+
+## 💡 提示
+
+- 把 `templates/` 下的骨架代码读一遍，理解整体流程
+- 不会写时去看 [PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics) 或官方教程
+- **卡住超过 30 分钟立即在课程群提问**，不要硬磕
+
+## 🌟 加分项
+
+- 录制 2-3 分钟的演示视频上传
+- 在 README 中写技术博客式的开发记录
+- 测试自己的算法在更多数据上的效果
+- 提供完整的可视化（matplotlib/rviz）

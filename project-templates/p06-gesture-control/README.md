@@ -1,50 +1,64 @@
-# 项目 6：手势识别控制
+# 项目 6：基于视频的手势识别命令
 
 > ⭐⭐⭐ · 技术：MediaPipe Hands + ROS2
 
 ## 🎯 项目目标
 
-用手势（手掌 / 拳头 / 食指方向）控制机器人运动
+从手势演示视频识别手势序列，转换成 Twist 命令保存为 ROS bag，可在 Turtlesim 回放
+
+## 📦 数据来源（无需任何硬件）
+
+课程提供 6 个手势演示视频（每段 5-10 秒）：
+- `demo/gesture_palm.mp4` (张开手掌 = 停止)
+- `demo/gesture_fist.mp4` (拳头 = 前进)
+- `demo/gesture_point_left.mp4` (食指向左 = 左转)
+- `demo/gesture_point_right.mp4` (食指向右 = 右转)
+- `demo/gesture_thumbs_up.mp4` (竖大拇指 = 加速)
+- `demo/gesture_mixed.mp4` (混合手势序列)
+
+## ⚙️ 运行模式
+
+| 模式 | 输入 | 输出 |
+|------|------|------|
+| 🟢 **默认** | `demo/*.mp4` 手势视频 | 命令序列 + Turtlesim 轨迹图 |
+| 🟡 **扩展（有摄像头）** | `/dev/video0` | 实时手势 → Twist |
 
 ## 🚀 快速启动
 
 ```bash
-# 启动容器
+# 1. 启动容器（首次约 2-5 分钟）
 docker compose up -d
 docker compose exec dev bash
 
-# 编译
+# 2. 下载数据集（如有）
+bash demo/download_data.sh 2>/dev/null || true
+
+# 3. 编译
 colcon build && source install/setup.bash
 
-# 运行
-ros2 run gesture_control gesture_node
+# 4. 默认无硬件模式运行
+# 处理单个视频
+python -m gesture_control.run --video demo/gesture_mixed.mp4 \
+    --output commands.csv --bag commands.bag
+
+# 在 Turtlesim 上回放
+ros2 run turtlesim turtlesim_node &
+ros2 bag play commands.bag
 ```
 
-## ✍️ 你要做的（TODO 列表）
+## ✍️ 你要做的（3 个 TODO 函数）
 
-### TODO 1：`detect_landmarks`
+### TODO 1：`extract_landmarks`
 
-用 mp.solutions.hands 检测 21 个手部关键点
-
-```python
-# 在源码中找到这个函数，按注释提示实现
-```
+用 `mp.solutions.hands` 处理视频每一帧，得到 21 个手部关键点的 (x,y,z)
 
 ### TODO 2：`classify_gesture`
 
-根据关键点位置判断手势：手掌张开 / 拳头 / 指向 X 方向（共 5 类）
+基于关键点的相对位置和角度，分类 5 种手势（不用深度学习，纯几何规则）
 
-```python
-# 在源码中找到这个函数，按注释提示实现
-```
+### TODO 3：`gesture_to_twist_sequence`
 
-### TODO 3：`gesture_to_twist`
-
-把手势映射为 Twist 命令（手掌=停止，拳头=前进，食指方向=转弯方向）
-
-```python
-# 在源码中找到这个函数，按注释提示实现
-```
+把视频识别出的手势按时间顺序输出 Twist 序列（带时间戳）
 
 
 
@@ -52,25 +66,34 @@ ros2 run gesture_control gesture_node
 
 ```bash
 pytest test/
+
+# 项目特定的端到端测试
+bash test/integration_test.sh
 ```
 
 ## 📊 评分要点
 
 | 评分点 | 占比 |
 |--------|------|
-| 核心 TODO 实现正确 | 40% |
-| 运行效果 | 30% |
-| 代码质量 | 15% |
-| 文档与演示视频 | 15% |
+| 3 个 TODO 实现正确性 | 40% |
+| 在提供数据集上的运行效果 | 30% |
+| 代码质量（注释、命名、模块化）| 15% |
+| 文档完整度 + 演示视频 | 10% |
+| **加分**：自己采集额外数据/改进算法 | +5% |
+
+## 🔌 扩展：使用真实硬件
+
+如果你有 `/dev/video0`，把它加到 `docker-compose.yml` 的 `devices:` 字段，然后用 `--source camera` 参数运行。但**不是必须**。
 
 ## 💡 提示
 
-- 先把 `templates/` 下的骨架代码读一遍，理解整体流程
+- 把 `templates/` 下的骨架代码读一遍，理解整体流程
 - 不会写时去看 [PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics) 或官方教程
-- 卡住超过 30 分钟立即在课程群提问，不要硬磕
+- **卡住超过 30 分钟立即在课程群提问**，不要硬磕
 
 ## 🌟 加分项
 
-- 录制 2-3 分钟的演示视频
-- 写技术博客记录开发过程
-- 用 GitHub Issues 跟踪自己的开发任务
+- 录制 2-3 分钟的演示视频上传
+- 在 README 中写技术博客式的开发记录
+- 测试自己的算法在更多数据上的效果
+- 提供完整的可视化（matplotlib/rviz）

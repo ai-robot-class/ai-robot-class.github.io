@@ -1,13 +1,12 @@
 FROM osrf/ros:humble-desktop-full
 
 RUN apt-get update && apt-get install -y \
-    python3-pip git vim x11-apps mesa-utils libgl1-mesa-glx \
-    ros-humble-cv-bridge ros-humble-turtlesim \
+    python3-pip git vim wget curl x11-apps mesa-utils libgl1-mesa-glx ros-humble-cv-bridge ros-humble-rosbag2 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --no-cache-dir \
-    numpy opencv-python opencv-contrib-python \
-    rich loguru pytest
+    numpy opencv-python pytest rich loguru \
+    opencv-python numpy
 
 WORKDIR /workspace
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \

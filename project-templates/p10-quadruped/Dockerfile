@@ -1,12 +1,12 @@
 FROM osrf/ros:humble-desktop-full
 
 RUN apt-get update && apt-get install -y \
-    python3-pip git vim x11-apps mesa-utils libgl1-mesa-glx \
+    python3-pip git vim wget curl x11-apps mesa-utils libgl1-mesa-glx \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --no-cache-dir \
     numpy opencv-python pytest rich loguru \
-    pybullet numpy matplotlib
+    pybullet numpy matplotlib cma
 
 WORKDIR /workspace
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \

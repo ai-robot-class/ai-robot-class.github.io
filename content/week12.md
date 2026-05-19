@@ -471,83 +471,137 @@ if __name__ == '__main__':
 
 ---
 
-### 12.5.2 项目选题（10个方向）
+### 12.5.2 项目选题（10个方向 · 默认无硬件可完成）
 
-> 💡 **每个项目都已为你准备好 Docker 仿真环境 + 代码骨架**！
-> 在 [`project-templates/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates) 目录中。
+> 💯 **重要：所有项目重新设计为「无任何外设也能完成」！**
 >
-> ✅ 你只需要 `docker compose up -d` 启动环境，然后填写代码里 `# TODO:` 标注的核心算法部分（每个项目 3 个 TODO 函数）。
+> 不论你电脑是否有摄像头、麦克风、独显，都能用**课程提供的数据集 / ROS bag / 仿真环境**完成项目。
+
+#### 🎯 设计思路
+
+| 数据源 | 项目数 | 来源 |
+|--------|-------|------|
+| 📹 视频 / 音频文件 | 3 个 | 课程组录制 |
+| 🗂️ ROS bag（KITTI 等）| 1 个 | 复用 Week 6 数据 |
+| 📊 公开数据集（MOT17、LFW）| 2 个 | 业界基准数据集 |
+| 🏗️ 纯仿真（Gazebo / PyBullet）| 4 个 | 完全 CPU 可跑 |
+
+每个项目同时提供 **🟢 默认（无硬件）** 和 **🟡 扩展（有硬件）** 两种模式，扩展模式作为加分项。
+
+#### 📦 初级项目（适合单人或 2 人）
+
+**1. 基于视频的颜色追踪 → ROS bag 输出** 🟢
+- **难度**: ⭐⭐ · **数据源**: 课程提供 `colored_ball.mp4`
+- **任务**: 视频追踪彩色物体 → 生成 cmd_vel ROS bag → Turtlesim 回放
+- **技术**: OpenCV HSV + ROS2 bag
+- **模板**: [`p01-color-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p01-color-tracker)
+
+**2. 基于音频文件的语音命令解析** 🟢
+- **难度**: ⭐⭐ · **数据源**: 课程提供 5 个预录中文 `.wav`
+- **任务**: 离线语音识别（Vosk）→ 解析 Twist 序列 → 画轨迹 GIF
+- **技术**: SpeechRecognition + Vosk **离线**模型 + Turtlesim
+- **模板**: [`p02-voice-turtle/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p02-voice-turtle)
+
+**3. KITTI 数据集物体检测可视化** 🟢
+- **难度**: ⭐⭐⭐ · **数据源**: Week 6 用过的 KITTI ROS bag
+- **任务**: YOLO 检测 → 发布 ROS topic → 生成 CSV 统计报告
+- **技术**: YOLOv8 + ROS2 bag + KITTI
+- **模板**: [`p03-yolo-detector/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p03-yolo-detector)
+
+#### 🚀 中级项目（适合 2-3 人）
+
+**4. MOT17 多目标追踪 + 指标评估** 🟢
+- **难度**: ⭐⭐⭐ · **数据源**: MOT17 行人追踪基准数据集
+- **任务**: 实现 SORT 跟踪 → 计算 MOTA / IDF1 / FP / FN / IDsw 五项指标
+- **技术**: YOLO + SORT 卡尔曼跟踪 + motmetrics
+- **模板**: [`p04-object-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p04-object-tracker)
+
+**5. Gazebo 仿真 SLAM + Nav2 自主导航** 🟢
+- **难度**: ⭐⭐⭐⭐ · **数据源**: TurtleBot3 仿真环境（apt 自带）
+- **任务**: 自动建图 → 保存地图 → Nav2 穿越障碍 → 记录 5 次任务指标
+- **技术**: Gazebo Classic + slam_toolbox + Nav2
+- **模板**: [`p05-nav2-fusion/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p05-nav2-fusion)
+
+**6. 基于视频的手势识别命令** 🟢
+- **难度**: ⭐⭐⭐ · **数据源**: 课程提供 6 个手势演示视频
+- **任务**: MediaPipe 提取 21 关键点 → 几何分类 5 种手势 → 输出 ROS bag
+- **技术**: MediaPipe Hands + 几何规则 + ROS2
+- **模板**: [`p06-gesture-control/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p06-gesture-control)
+
+#### 🏆 高级项目（适合 3 人或有基础）
+
+**7. Gazebo 仿真 + YOLO 智能巡检** 🟢
+- **难度**: ⭐⭐⭐⭐ · **数据源**: aws_robomaker_hospital_world 仿真医院
+- **任务**: 自动巡检 10 个 waypoint → 发现异常停下 → 生成 PDF 报告
+- **技术**: Gazebo + Nav2 waypoint + YOLO + PDF 报告
+- **模板**: [`p07-patrol-robot/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p07-patrol-robot)
+
+**8. 基于人脸数据集的识别系统** 🟢
+- **难度**: ⭐⭐⭐⭐ · **数据源**: LFW 子集 / 课程提供照片
+- **任务**: 训练注册库 → 测试集评估 → 输出准确率/召回率/混淆矩阵
+- **技术**: face_recognition (dlib) + SQLite + 评估指标
+- **模板**: [`p08-face-access/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p08-face-access)
+
+**9. PyBullet 机械臂仿真抓取** 🟢
+- **难度**: ⭐⭐⭐⭐⭐ · **数据源**: 纯 PyBullet 仿真
+- **任务**: 视觉识别仿真方块 → 逆运动学规划 → 抓取放入箱子
+- **技术**: PyBullet + 内置 Kuka URDF + 视觉伺服
+- **模板**: [`p09-arm-grasp/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p09-arm-grasp)
+
+**10. PyBullet 四足机器人步态优化** 🟢
+- **难度**: ⭐⭐⭐⭐⭐ · **数据源**: PyBullet 自带 Laikago / A1 URDF
+- **任务**: 实现 Trot 步态 → 用 CMA-ES 优化步频/步长/抬腿高度
+- **技术**: PyBullet + Trot 步态 + CMA-ES
+- **模板**: [`p10-quadruped/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p10-quadruped)
+
+#### 💪 项目设计亮点
+
+- **复用本课程知识**：KITTI (Week 6)、YOLO (Week 10)、追踪 (Week 11)、Docker (Week 8)、运动学 (Week 5)、路径规划 (Week 9)
+- **公开基准数据集**：MOT17、LFW、KITTI 等，便于客观量化评分
+- **可量化指标**：mAP、MOTA、准确率、SLAM 误差等都能算出来
+- **零硬件门槛**：所有项目用一台普通笔记本（MacBook Air 也行）就能跑
+- **可扩展性**：有硬件的同学可以切换"实时模式"作为加分项
+
+#### 🎯 自动评分系统（学生可自查、教师可批量评分）
+
+> 📊 **每个项目都附带自动评分脚本**，可以一键查看自己的完成度！
 >
-> ❌ 不用花时间配环境、装依赖、踩 ROS2 坑！
+> 📂 详细文档：[`project-templates/grading/README.md`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/grading)
 
+##### 学生自查（提交前必跑）
 
+```bash
+# 在项目目录下运行
+cd p01-color-tracker
+python3 ../grading/run_grading.py . --student YOUR_GITHUB_ID
+```
 
-#### 📦 初级项目（适合单人或2人）
+会自动打印 5 个维度的得分：
 
-**1. 视觉颜色追踪机器人**
-- **难度**: ⭐⭐
-- **技术**: OpenCV颜色检测 + ROS2
-- **目标**: 机器人追踪特定颜色物体移动
-- **模板**: [`project-templates/p01-color-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p01-color-tracker)
+```
+📋 评分报告
+  总分: 85.0/100  等级: A
+  - 项目结构完整      10.0/10  ✅
+  - TODO 函数实现     32.0/40  ⚠️
+  - 集成测试通过      28.0/30  ✅
+  - 代码质量          8.0/10   ✅
+  - 文档与提交       7.0/10    ✅
+```
 
-**2. 语音控制小乌龟**
-- **难度**: ⭐⭐
-- **技术**: 语音识别 + ROS2 Turtlesim
-- **目标**: 语音命令控制小乌龟运动
-- **模板**: [`project-templates/p02-voice-turtle/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p02-voice-turtle)
+##### 评分维度说明（总分 100）
 
-**3. 简单目标检测系统**
-- **难度**: ⭐⭐⭐
-- **技术**: YOLO + ROS2
-- **目标**: 摄像头实时检测并标注物体
-- **模板**: [`project-templates/p03-yolo-detector/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p03-yolo-detector)
+| 维度 | 占比 | 自动检查内容 |
+|------|------|--------------|
+| 🗂️ 项目结构 | 10% | README/Dockerfile/docker-compose 是否齐全 |
+| ✅ TODO 函数实现 | 40% | 3 个 TODO 是否真的实现（不是 pass）|
+| 🔄 集成测试 | 30% | 跑通端到端流程，检查输出文件 |
+| 🎨 代码质量 | 10% | ruff lint 检查 |
+| 📄 文档与提交 | 10% | README 详细度 + Git 提交次数 + 演示输出 |
 
-#### 🚀 中级项目（适合2-3人）
+##### GitHub Actions 自动评分
 
-**4. 物体追踪与跟随**
-- **难度**: ⭐⭐⭐
-- **技术**: YOLO + Sort追踪 + ROS2
-- **目标**: 机器人识别并跟随特定物体
-- **模板**: [`project-templates/p04-object-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p04-object-tracker)
-
-**5. 多传感器融合导航**
-- **难度**: ⭐⭐⭐⭐
-- **技术**: 相机 + 激光雷达 + ROS2 Nav2
-- **目标**: 机器人自主避障导航
-- **模板**: [`project-templates/p05-nav2-fusion/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p05-nav2-fusion)
-
-**6. 手势识别控制**
-- **难度**: ⭐⭐⭐
-- **技术**: MediaPipe手势识别 + ROS2
-- **目标**: 手势控制机器人运动
-- **模板**: [`project-templates/p06-gesture-control/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p06-gesture-control)
-
-#### 🏆 高级项目（适合3人或有基础）
-
-**7. 智能巡检机器人**
-- **难度**: ⭐⭐⭐⭐
-- **技术**: SLAM + 目标检测 + 语音播报
-- **目标**: 自主巡检并识别异常
-- **模板**: [`project-templates/p07-patrol-robot/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p07-patrol-robot)
-
-**8. 人脸识别门禁系统**
-- **难度**: ⭐⭐⭐⭐
-- **技术**: 人脸检测/识别 + 数据库 + ROS2
-- **目标**: 识别授权人员并控制门禁
-- **模板**: [`project-templates/p08-face-access/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p08-face-access)
-
-**9. 机械臂物体抓取**
-- **难度**: ⭐⭐⭐⭐⭐
-- **技术**: 目标检测 + 逆运动学 + MoveIt
-- **目标**: 识别物体位置并抓取
-- **模板**: [`project-templates/p09-arm-grasp/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p09-arm-grasp)
-
-**10. 四足机器人基础控制（第13周专题）**
-- **难度**: ⭐⭐⭐⭐⭐
-- **技术**: PyBullet仿真 + 步态生成
-- **目标**: 四足机器人行走控制
-- **扩展**: 地形适应
-- **模板**: [`project-templates/p10-quadruped/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p10-quadruped)
+学生可以在自己的项目仓库加上 `.github/workflows/grade.yml`，
+每次 push 都自动跑评分并生成 Markdown 报告（详见 grading/README.md）。
 
 ---
 

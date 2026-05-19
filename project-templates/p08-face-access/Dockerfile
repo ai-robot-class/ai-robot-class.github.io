@@ -1,13 +1,12 @@
 FROM osrf/ros:humble-desktop-full
 
 RUN apt-get update && apt-get install -y \
-    python3-pip git vim x11-apps mesa-utils libgl1-mesa-glx cmake build-essential libboost-all-dev libopenblas-dev \
-    ros-humble-cv-bridge \
+    python3-pip git vim wget curl x11-apps mesa-utils libgl1-mesa-glx cmake build-essential libboost-all-dev libopenblas-dev libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --no-cache-dir \
     numpy opencv-python pytest rich loguru \
-    face_recognition dlib opencv-python
+    face_recognition dlib opencv-python sqlite3 numpy
 
 WORKDIR /workspace
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \

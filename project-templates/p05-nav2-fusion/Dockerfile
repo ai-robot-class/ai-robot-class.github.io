@@ -1,8 +1,9 @@
 FROM osrf/ros:humble-desktop-full
 
 RUN apt-get update && apt-get install -y \
-    python3-pip git vim x11-apps mesa-utils libgl1-mesa-glx ros-humble-nav2-bringup ros-humble-slam-toolbox \
+    python3-pip git vim wget curl x11-apps mesa-utils libgl1-mesa-glx ros-humble-nav2-bringup ros-humble-slam-toolbox \
     ros-humble-turtlebot3-* ros-humble-gazebo-ros-pkgs \
+    ros-humble-stage-ros2 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --no-cache-dir \

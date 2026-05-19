@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+build/
+install/
+log/
+*.bag
+*.mp4
+*.gif
+*.pdf
+*.db
+*.png
+demo/data/
+**/demo/*.tar.gz
+**/demo/*.zip

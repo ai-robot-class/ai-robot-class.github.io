@@ -4,7 +4,7 @@ services:
     image: airobot-class/p01-color-tracker:latest
     container_name: p01-color-tracker
     network_mode: host
-    privileged: true
+    privileged: false
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - QT_X11_NO_MITSHM=1
@@ -12,9 +12,11 @@ services:
     volumes:
       - .:/workspace
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - /dev/video0:/dev/video0
-    devices:
-      - /dev/video0
+      # - /dev/video0:/dev/video0  # 取消注释以启用 /dev/video0
+    # 取消注释下面的设备和卷映射以使用真实硬件
+    # devices:
+    #   - /dev/video0
+
     stdin_open: true
     tty: true
     command: /bin/bash
