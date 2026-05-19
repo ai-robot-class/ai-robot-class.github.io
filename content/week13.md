@@ -15,7 +15,7 @@
 <div style="text-align:center; margin: 20px 0;">
 
 <iframe width="100%" height="450"
-        src="https://www.youtube.com/embed/4DKrcpa8Z_E"
+        src="https://www.youtube.com/embed/Fw_dSNxhhY4"
         title="Unitree H1 robots dance at CCTV Spring Festival Gala 2025"
         frameborder="0"
         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -396,7 +396,7 @@ MPC 思想（简化版）：
 
 <div style="text-align:center;">
 <iframe width="100%" height="260"
-        src="https://www.youtube.com/embed/4DKrcpa8Z_E"
+        src="https://www.youtube.com/embed/Fw_dSNxhhY4"
         title="Unitree H1 CCTV Spring Festival 2025"
         frameborder="0"
         allow="encrypted-media; picture-in-picture"
