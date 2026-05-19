@@ -388,92 +388,39 @@ MPC 思想（简化版）：
 
 > 🤯 **2026 年的现状**：当年波士顿动力工程师写 6 个月才能调出来的步态，今天 ETH 的学生在 NVIDIA Isaac Lab 里训练 8 小时就能复现。
 
-### 🎬 这个时代的标志性场面（视频）
+### 🎬 海外同行的最新作品
 
-#### 🇨🇳 中国队（宇树科技）：从机器狗到机器人跳舞
-
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin: 20px 0;">
-
-<div style="text-align:center;">
-<iframe width="100%" height="260"
-        src="https://www.youtube.com/embed/Fw_dSNxhhY4"
-        title="Unitree H1 CCTV Spring Festival 2025"
-        frameborder="0"
-        allow="encrypted-media; picture-in-picture"
-        allowfullscreen
-        style="border-radius:8px;"></iframe>
-<p style="font-size:0.85em; color:#666;">🎭 春晚《秧 BOT》<br>16 台 H1 跳陕北秧歌</p>
-</div>
-
-<div style="text-align:center;">
-<iframe width="100%" height="260"
-        src="https://www.youtube.com/embed/GtPs_ygfaEA"
-        title="Unitree H1 World Record Running"
-        frameborder="0"
-        allow="encrypted-media; picture-in-picture"
-        allowfullscreen
-        style="border-radius:8px;"></iframe>
-<p style="font-size:0.85em; color:#666;">🏃 Unitree H1 全力奔跑<br>3.3 m/s 世界纪录</p>
-</div>
-
-</div>
-
-#### 🇺🇸 美国队：波士顿动力 + Figure AI
-
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin: 20px 0;">
-
-<div style="text-align:center;">
-<iframe width="100%" height="260"
+<div style="margin: 20px 0;">
+<iframe width="100%" height="380"
         src="https://www.youtube.com/embed/-9EM5_VFlt8"
         title="Boston Dynamics Atlas"
         frameborder="0"
         allow="encrypted-media; picture-in-picture"
         allowfullscreen
-        style="border-radius:8px;"></iframe>
-<p style="font-size:0.85em; color:#666;">🤸 Boston Dynamics Atlas<br>跑酷+体操（2024）</p>
+        style="border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15);"></iframe>
+<p style="text-align:center; color:#666; font-size:0.9em; margin-top:8px;">
+🤸 <strong>Boston Dynamics Atlas</strong> · 跑酷与体操（2024）·
+<a href="https://www.youtube.com/watch?v=-9EM5_VFlt8" target="_blank">YouTube 原链接</a>
+</p>
 </div>
 
-<div style="text-align:center;">
-<iframe width="100%" height="260"
+<div style="margin: 20px 0;">
+<iframe width="100%" height="380"
         src="https://www.youtube.com/embed/Sq1QZB5baNw"
         title="Figure 01"
         frameborder="0"
         allow="encrypted-media; picture-in-picture"
         allowfullscreen
-        style="border-radius:8px;"></iframe>
-<p style="font-size:0.85em; color:#666;">🤝 Figure 01 + OpenAI<br>自然语言对话+做家务</p>
+        style="border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.15);"></iframe>
+<p style="text-align:center; color:#666; font-size:0.9em; margin-top:8px;">
+🤝 <strong>Figure 01 + OpenAI</strong> · 大模型驱动的人形机器人对话与做家务 ·
+<a href="https://www.youtube.com/watch?v=Sq1QZB5baNw" target="_blank">YouTube 原链接</a>
+</p>
 </div>
 
-</div>
-
-> 📺 **打不开 B 站/YouTube？** 用关键词到任意视频网站搜索即可：
-> - [B 站搜索"宇树春晚"](https://search.bilibili.com/all?keyword=%E5%AE%87%E6%A0%91%E6%98%A5%E6%99%9A)
-> - [B 站搜索"宇树 H1 跑步"](https://search.bilibili.com/all?keyword=%E5%AE%87%E6%A0%91%20H1%20%E8%B7%91%E6%AD%A5)
-> - [YouTube: Boston Dynamics Atlas](https://www.youtube.com/results?search_query=Boston+Dynamics+Atlas)
-> - [YouTube: Figure 01 OpenAI](https://www.youtube.com/results?search_query=Figure+01+OpenAI)
-
-<details>
-<summary>📋 教师备注：如何更新视频（点开看）</summary>
-
-**目前所有视频都用 YouTube 嵌入**（B 站 iframe 跨域限制太严格，
-即使是公开视频也常被 referrer 拦截，本课程实测无法在第三方网站播放）。
-
-如果某 YouTube 视频失效或想替换：
-
-1. 找到目标视频的 YouTube 视频 ID
-   （URL `youtube.com/watch?v=XXX` 中的 `XXX`）
-
-2. 在 `content/week13.md` 中找到对应 iframe，替换：
-   `/embed/旧ID` → `/embed/你的视频ID`
-
-3. 推送到 main 分支即可（GitHub Actions 会自动重新部署）
-
-**国内学生如何看 YouTube？**
-- 走学校 VPN（推荐）
-- 用 B 站搜索同名视频（绝大多数 YouTube 火爆视频在 B 站都有搬运）
-- 视频下方都已提供 B 站搜索链接
-
-</details>
+> 📺 **国内访问 YouTube 困难？** 这些视频在 B 站都有官方/搬运版本：
+> [搜 Boston Dynamics Atlas](https://search.bilibili.com/all?keyword=Boston+Dynamics+Atlas) ·
+> [搜 Figure 01](https://search.bilibili.com/all?keyword=Figure+01)
 
 ### 📊 演进时间轴一图流
 
