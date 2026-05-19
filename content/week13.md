@@ -499,10 +499,9 @@ GE Walking         AIBO/ASIMO        BigDog/Spot      ANYmal/Go1       RT-2/π0
 > 同样的代码框架，期末项目 P10 你可以亲手让它跑起来。
 
 <div style="text-align:center; margin: 20px 0;">
-
-![三种步态并排对比](../images/week13/pybullet_compare.gif)
-
-<p style="color:#666; font-size:0.9em;">
+<img src="../images/week13/pybullet_compare.gif" alt="三种步态并排对比"
+     style="max-width:100%; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.15);">
+<p style="color:#666; font-size:0.9em; margin-top:8px;">
 左：Walk（缓慢稳）· 中：Trot（小跑）· 右：Bound（兔跳）· 用 PyBullet 仿真渲染
 </p>
 </div>
@@ -510,12 +509,29 @@ GE Walking         AIBO/ASIMO        BigDog/Spot      ANYmal/Go1       RT-2/π0
 #### 单独看 Trot 步态
 
 <div style="text-align:center; margin: 20px 0;">
-
-![Trot 步态](../images/week13/pybullet_trot.gif)
-
-<p style="color:#666; font-size:0.9em;">
+<img src="../images/week13/pybullet_trot.gif" alt="Trot 步态"
+     style="max-width:480px; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.15);">
+<p style="color:#666; font-size:0.9em; margin-top:8px;">
 🏃 <strong>Trot</strong>：对角腿同时抬起 / 同时落下（最常见的日常步态）
 </p>
+</div>
+
+#### 慢速 Walk vs 兔跳 Bound
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin: 20px 0; text-align:center;">
+
+<div>
+<img src="../images/week13/pybullet_walk.gif" alt="Walk 步态"
+     style="max-width:100%; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+<p style="font-size:0.85em; color:#666;">🚶 <strong>Walk</strong>：4 拍轮流，3 腿永远着地，最稳</p>
+</div>
+
+<div>
+<img src="../images/week13/pybullet_bound.gif" alt="Bound 步态"
+     style="max-width:100%; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+<p style="font-size:0.85em; color:#666;">🐰 <strong>Bound</strong>：前后腿同步，像兔子跳</p>
+</div>
+
 </div>
 
 > 👀 **观察提示**：
