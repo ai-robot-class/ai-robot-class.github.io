@@ -60,6 +60,14 @@ def detect_project_type(project_dir: Path) -> str:
 
 def grade_one_project(project_dir: Path, student_id: str = "unknown") -> dict:
     """评分单个项目"""
+    # 检查是否在 submodule 目录中
+    if project_dir.name == 'final-project':
+        # 自动切换到 submodule
+        submodule = project_dir / 'project-repo'
+        if submodule.exists():
+            print(f"🔗 检测到 final-project，自动切换到 submodule: {submodule}")
+            project_dir = submodule
+
     GraderClass = load_project_grader(project_dir)
     grader = GraderClass(str(project_dir), student_id)
     report = grader.grade()

@@ -605,7 +605,256 @@ python3 ../grading/run_grading.py . --student YOUR_GITHUB_ID
 
 ---
 
-### 12.5.3 📦 项目 Docker 模板使用指南
+### 12.5.3 📁 项目仓库与作业仓库分离（必读）
+
+> 💡 期末项目代码**必须独立存放在新的 GitHub 仓库**，然后在你**作业仓库的 `final-project/` 文件夹**中通过 Git Submodule 引用。
+
+#### 🎯 为什么这么设计？
+
+| 痛点 | 解决方案 |
+|------|---------|
+| 多人协作时代码冲突 | 项目独立仓库，专门的协作场所 |
+| 个人作业仓库太杂 | 作业仓库只放各周习题，期末项目独立 |
+| 单人项目也要练习项目化思维 | 强制独立仓库 = 简历可直接用 |
+| 评分需要看个人贡献 | submodule + 个人 README 双重展示 |
+
+#### 📂 推荐目录结构
+
+```
+你的作业仓库（如 ai-robot-homework-zhangsan）
+├── week2/
+├── week3/
+├── ...
+├── week12/
+├── week13/
+└── final-project/                # 期末项目展示文件夹
+    ├── README.md                 # ⭐ 个人贡献说明（你自己写）
+    ├── project-repo/             # 🔗 Git Submodule（指向项目仓库）
+    └── my_contributions.md       # 详细贡献清单（可选）
+
+期末项目独立仓库（如 ai-robot-final-color-tracker-team1）
+├── README.md                     # 项目整体说明
+├── Dockerfile
+├── docker-compose.yml
+├── src/                          # 实际代码
+├── demo/
+└── test/
+```
+
+#### 🚀 Step-by-Step 创建流程
+
+##### Step 1：创建项目仓库（无论单人还是多人）
+
+```bash
+# 在 GitHub 网页创建一个新仓库，例如：
+# - 单人：     ai-robot-final-color-tracker-zhangsan
+# - 多人：     ai-robot-final-color-tracker-team1
+# - 推荐命名： ai-robot-final-<项目主题>-<组名或个人>
+
+# 克隆到本地
+git clone https://github.com/<your-org>/ai-robot-final-color-tracker-team1.git
+cd ai-robot-final-color-tracker-team1
+
+# 复制项目模板内容进来
+cp -r /path/to/ai-robot-class.github.io/project-templates/p01-color-tracker/* .
+
+# 提交初始代码
+git add . && git commit -m "🎉 初始化项目模板"
+git push
+```
+
+##### Step 2：在作业仓库中以 submodule 形式引用
+
+```bash
+# 切到你的作业仓库
+cd ai-robot-homework-zhangsan
+
+# 创建 final-project 文件夹
+mkdir -p final-project
+cd final-project
+
+# 添加 submodule（关键操作！）
+git submodule add https://github.com/<your-org>/ai-robot-final-color-tracker-team1.git project-repo
+
+# 写自己的 README（说明个人贡献，模板见下文）
+vim README.md
+# 编辑后保存
+
+# 提交
+cd ..
+git add final-project
+git commit -m "🔗 引用期末项目仓库 + 个人贡献说明"
+git push
+```
+
+##### Step 3：克隆带 submodule 的仓库（评分时教师使用）
+
+```bash
+# 教师评分时这样克隆，会同时拉取主仓库 + submodule
+git clone --recursive https://github.com/student/ai-robot-homework-zhangsan.git
+
+# 如果已经 clone 了，再拉取 submodule：
+git submodule update --init --recursive
+```
+
+#### 📝 个人贡献 README 模板
+
+> 把下面这个模板复制到 `final-project/README.md`，按提示填写。
+
+```markdown
+# 🎓 期末项目个人贡献说明
+
+## 📌 项目信息
+
+- **项目名称**：基于视频的颜色追踪机器人
+- **项目编号**：P01
+- **项目仓库**：[ai-robot-final-color-tracker-team1](https://github.com/xxx/ai-robot-final-color-tracker-team1)
+- **作业仓库本人路径**：`final-project/project-repo/`（submodule）
+
+## 👥 团队成员（如多人）
+
+| GitHub ID | 角色 | 主要负责 |
+|-----------|------|---------|
+| @alice | 组长 | 整体架构 + detect_color |
+| **@me（本人）** | 组员 | compute_twist + 集成测试 |
+| @bob | 组员 | 数据集准备 + README |
+
+> 单人完成填："独立完成所有任务"
+
+## 🎯 我在项目中的具体贡献
+
+### 📝 我负责实现的核心功能
+
+1. **`compute_twist()` 函数**
+   - 实现了 PID 式比例控制
+   - 代码位置：[`src/color_tracker/color_tracker/tracker_node.py#L45-L72`](https://github.com/xxx/ai-robot-final-color-tracker-team1/blob/main/src/color_tracker/color_tracker/tracker_node.py#L45-L72)
+   - 我的相关 commits：
+     - [`a1b2c3d`](https://github.com/xxx/ai-robot-final-color-tracker-team1/commit/a1b2c3d) - 初版 PID 实现
+     - [`d4e5f6g`](https://github.com/xxx/ai-robot-final-color-tracker-team1/commit/d4e5f6g) - 加入平滑滤波
+
+2. **集成测试**
+   - 设计了 5 个测试用例覆盖边界情况
+   - 代码位置：`test/test_compute_twist.py`
+
+3. **README 与演示视频**
+   - 编写项目 README 的"使用说明"部分
+   - 录制并剪辑演示视频
+
+### 📊 我的提交统计
+
+```bash
+# 在项目仓库目录运行：
+git log --author="<我的 GitHub 邮箱>" --oneline | wc -l
+# 输出：例如 12（我提交了 12 次）
+```
+
+我的 commit 列表（自动生成）：
+```
+a1b2c3d feat: PID 式 compute_twist 初版
+d4e5f6g fix: 加入平滑滤波避免抖动
+b7c8d9e test: 增加 5 个 compute_twist 测试用例
+... 
+```
+
+### 🧠 学习收获
+
+- 学到了 ROS2 节点的发布订阅模式
+- 理解了 PID 控制的基础原理
+- 体会到多人协作时分支管理的重要性
+
+### 🐛 遇到的问题与解决方案
+
+1. **问题**：Twist 命令导致小乌龟剧烈抖动
+   - **解决**：在 compute_twist 中加入滑动平均滤波（移动窗口 = 5）
+   
+2. **问题**：本地无法 import cv_bridge
+   - **解决**：用 Docker 容器跑，避免环境问题
+
+## 🎬 演示
+
+- 📹 [演示视频（B 站链接）](https://www.bilibili.com/video/xxx)
+- 📷 [运行截图](./screenshots/)
+
+## 📊 自评分
+
+```bash
+# 我用课程评分系统自查的结果：
+$ python3 ../grading/run_grading.py project-repo --student my_github_id
+总分: 87.5/100  等级: A
+```
+
+详细评分报告：[`grade_report.md`](./grade_report.md)
+
+## 🔗 相关链接
+
+- 项目主仓库：https://github.com/xxx/ai-robot-final-color-tracker-team1
+- 我的 PR 列表：https://github.com/xxx/ai-robot-final-color-tracker-team1/pulls?q=author:my_github_id
+- 我的所有 commit：https://github.com/xxx/ai-robot-final-color-tracker-team1/commits?author=my_github_id
+```
+
+#### 🔍 评分如何识别个人贡献？
+
+教师评分时会：
+
+1. **克隆作业仓库**（`--recursive` 自动拉 submodule）
+2. **看 `final-project/README.md`** 了解你的角色
+3. **跑评分脚本**：
+   ```bash
+   python3 grading/run_grading.py final-project/project-repo --student YOUR_ID
+   ```
+4. **检查 Git 提交记录**，看你在项目仓库中的实际贡献：
+   ```bash
+   cd final-project/project-repo
+   git log --author=YOUR_GITHUB_ID --oneline | wc -l
+   ```
+5. **核对 README 中的 commit 链接** 是否真的指向你的提交
+
+#### ❓ 常见问题
+
+**Q1：单人完成需要建独立仓库吗？**
+
+A：**需要**。理由：
+- 培养工程化思维（简历可直接用）
+- 期末项目 = 独立作品集 = 找工作神器
+- 命名建议：`ai-robot-final-<主题>-<github_id>`
+
+**Q2：多人项目，每个人都要在自己作业仓库放 submodule？**
+
+A：**是的**。每个组员的作业仓库都要：
+1. 引用同一个项目仓库（submodule）
+2. 写自己的 `final-project/README.md`（说明自己的具体贡献）
+
+这样评分时每个人都能被独立评估。
+
+**Q3：忘记加 `--recursive` 怎么办？**
+
+A：在已经克隆的仓库里跑：
+```bash
+git submodule update --init --recursive
+```
+
+**Q4：submodule 怎么更新？**
+
+A：项目仓库更新后：
+```bash
+cd final-project/project-repo
+git pull origin main
+cd ../..
+git add final-project/project-repo
+git commit -m "📌 更新项目仓库指针"
+git push
+```
+
+**Q5：能不能直接复制项目仓库代码而不用 submodule？**
+
+A：**不可以**。理由：
+- 代码会脱离原项目，无法追踪更新
+- 教师无法验证你的真实贡献（commit 历史丢失）
+- submodule 是工业界标准做法，必须掌握
+
+---
+
+### 12.5.4 📦 项目 Docker 模板使用指南
 
 每个选题都在 `project-templates/p01-...` 到 `p10-...` 准备好：
 
@@ -703,7 +952,7 @@ services:
 
 ---
 
-### 12.5.4 项目分组与计划（30分钟）
+### 12.5.5 项目分组与计划（30分钟）
 
 **分组流程**：
 1. 自由组队（2-3人）
@@ -746,7 +995,7 @@ services:
 
 ---
 
-### 12.5.5 技术答疑与资源（20分钟）
+### 12.5.6 技术答疑与资源（20分钟）
 
 **常见问题**：
 

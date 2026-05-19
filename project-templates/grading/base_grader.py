@@ -153,7 +153,7 @@ class BaseGrader:
             item.add_note("⚠️  代码质量检查超时")
 
     def grade_documentation(self):
-        """评分维度 5：文档与提交"""
+        """评分维度 5：文档与提交（含个人贡献检测）"""
         item = self.items['documentation']
         score = 0
 
@@ -173,13 +173,29 @@ class BaseGrader:
             )
             commits = len(result.stdout.strip().splitlines()) if result.returncode == 0 else 0
             if commits >= 5:
-                score += 3
+                score += 2
                 item.add_note(f"✅ Git 提交 {commits} 次（≥5 次）")
             elif commits >= 2:
-                score += 2
+                score += 1
                 item.add_note(f"⚠️  Git 提交 {commits} 次（建议 ≥5 次）")
             else:
                 item.add_note(f"❌ Git 提交过少 ({commits} 次)")
+
+            # 检测个人贡献（如果指定了 student_id）
+            if self.student_id and self.student_id != "unknown":
+                my_result = subprocess.run(
+                    ['git', 'log', f'--author={self.student_id}', '--oneline', '--all'],
+                    cwd=self.project_dir, capture_output=True, text=True, timeout=10
+                )
+                my_commits = len(my_result.stdout.strip().splitlines()) if my_result.returncode == 0 else 0
+                if my_commits > 0:
+                    ratio = my_commits / max(commits, 1)
+                    score += 2
+                    item.add_note(f"✅ 个人提交 {my_commits}/{commits} ({ratio:.0%})")
+                    self._my_commits = my_commits
+                    self._team_commits = commits
+                else:
+                    item.add_note(f"⚠️  未检测到 @{self.student_id} 的提交（多人项目请确认 GitHub 邮箱）")
         except Exception:
             pass
 
@@ -187,7 +203,7 @@ class BaseGrader:
         outputs = list(self.project_dir.glob('output.*')) + list(self.project_dir.glob('*.mp4')) \
                 + list(self.project_dir.glob('demo*.gif'))
         if outputs:
-            score += 4
+            score += 3
             item.add_note(f"✅ 提交了演示输出 ({outputs[0].name})")
         else:
             item.add_note(f"⚠️  未发现演示视频/输出")
