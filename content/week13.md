@@ -493,9 +493,39 @@ GE Walking         AIBO/ASIMO        BigDog/Spot      ANYmal/Go1       RT-2/π0
 
 ## 13.4 让我们看懂机器狗怎么"走路" — 步态详解
 
-### 🎞️ 步态的本质：4 条腿的"节奏舞蹈"
+### 🤖 PyBullet 仿真实拍：三种步态对比
 
-用一段 ASCII 帧动画展示 **Trot 步态**（最常见、能跑）：
+> ⬇️ 下面是用 **PyBullet 物理仿真**生成的真实步态动画（Laikago/Unitree 早期型号）。
+> 同样的代码框架，期末项目 P10 你可以亲手让它跑起来。
+
+<div style="text-align:center; margin: 20px 0;">
+
+![三种步态并排对比](../images/week13/pybullet_compare.gif)
+
+<p style="color:#666; font-size:0.9em;">
+左：Walk（缓慢稳）· 中：Trot（小跑）· 右：Bound（兔跳）· 用 PyBullet 仿真渲染
+</p>
+</div>
+
+#### 单独看 Trot 步态
+
+<div style="text-align:center; margin: 20px 0;">
+
+![Trot 步态](../images/week13/pybullet_trot.gif)
+
+<p style="color:#666; font-size:0.9em;">
+🏃 <strong>Trot</strong>：对角腿同时抬起 / 同时落下（最常见的日常步态）
+</p>
+</div>
+
+> 👀 **观察提示**：
+> - 注意 LF（左前）和 RH（右后）是**同时**抬起的
+> - RF（右前）和 LH（左后）是另一对"搭档"
+> - 整个机身因为对角对称，所以**几乎不会左右晃**
+
+### 🎞️ 步态的"4 条腿节奏舞蹈"（ASCII 动画）
+
+我们用一段 ASCII 帧动画再次展示 **Trot 步态**：
 
 ```
 Trot 步态 = 对角线腿同步抬起/落下（像马小跑）
