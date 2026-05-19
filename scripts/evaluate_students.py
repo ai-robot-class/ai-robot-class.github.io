@@ -43,8 +43,8 @@ WEEKS = {
     'week7':  {'title': 'Markdown整理',     'weight': 5,  'due_date': '2026-04-19'},
     'week8':  {'title': 'Docker容器',       'weight': 8,  'due_date': '2026-04-26'},
     'week9':  {'title': '数学基础',         'weight': 8,  'due_date': '2026-05-03'},
-    'week10': {'title': 'YOLO检测',         'weight': 10, 'due_date': '2026-05-10'},
-    'week11': {'title': '目标追踪',         'weight': 10, 'due_date': '2026-05-17'},
+    'week10': {'title': 'Docker与OpenCV',   'weight': 10, 'due_date': '2026-05-10'},
+    'week11': {'title': 'Docker进阶与Pages', 'weight': 10, 'due_date': '2026-05-17'},
     'week12': {'title': '视觉与语音',       'weight': 10, 'due_date': '2026-05-24'},
     'week13': {'title': '期末项目',         'weight': 15, 'due_date': '2026-06-22'},
 }

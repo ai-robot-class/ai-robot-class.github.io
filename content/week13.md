@@ -10,7 +10,7 @@
 中国第一次在央视舞台上展示了这个能力。第二天，宇树科技的股价飞涨，订单接到手软。
 你正在用的这门课，**就是带你走进这个新世界的入场券**。
 
-### 🎥 现场视频（一定要看！）
+### 🎥 现场视频
 
 <div style="text-align:center; margin: 20px 0;">
 
@@ -486,6 +486,7 @@ GE Walking         AIBO/ASIMO        BigDog/Spot      ANYmal/Go1       RT-2/π0
 > - RF（右前）和 LH（左后）是另一对"搭档"
 > - 整个机身因为对角对称，所以**几乎不会左右晃**
 
+---
 
 ### 🎼 5 种步态的"节拍图"
 
@@ -505,6 +506,8 @@ GE Walking         AIBO/ASIMO        BigDog/Spot      ANYmal/Go1       RT-2/π0
 - 🟠 **Pace** 同侧腿（LF↔LH、RF↔RH）同步 → 骆驼特征
 - 🔴 **Bound** 前腿对、后腿对各自同步 → 兔子跳
 - 🟣 **Gallop** 4 条腿轮流，节奏不对称 → 猎豹冲刺时的姿态
+
+---
 
 ### 🔍 不同步态的速度-能耗对比
 
@@ -853,6 +856,177 @@ Sim2Real的挑战：
 2. **视觉导航**：结合视觉感知的自主导航
 3. **操作任务**：带机械臂的四足机器人
 4. **人形机器人**：四足技术向双足迁移
+
+---
+
+### 13.7.4 🚀 实战代码：用进化策略训练一群机器狗爬楼梯
+
+> 完整代码：[`examples/quadruped_rl_stairs.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_rl_stairs.py)
+>
+> **12 只机器狗同时进化** —— 一台笔记本 1 分钟训练，全程录 GIF 见证它们从摔倒到能跑的演化过程。
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week13/rl_stairs_training.gif"
+     alt="一群机器狗用 CMA-ES 学习爬楼梯"
+     style="max-width:100%; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.18);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+🐕 <strong>12 只机器狗同时被 CMA-ES 进化</strong> · 60 代 · 1 分钟训练（8 worker 并行）<br>
+彩虹楼梯：从橙红 → 黄 → 绿 → 青，每级 5 cm
+</p>
+</div>
+
+**视频里你能看到的现象**：
+
+- 🤡 **Gen 1**：12 只机器狗站着抖动，所有候选都是随机参数 → 几乎都摔倒
+- 🤔 **Gen 10**：开始有 2-3 只能向前跨步，但姿态歪歪扭扭
+- 💪 **Gen 30**：大部分机器狗都能往前走了，最优个体接近楼梯起点
+- 🏆 **Gen 50+**：最优个体能跨上第一级台阶
+
+#### 🧠 核心思路：CMA-ES 进化策略
+
+不用神经网络，直接用**参数化步态** + **进化算法**搜索最优参数：
+
+```
+┌─────────────────────────────────────────┐
+│  10 个参数描述步态：                       │
+│  - 步频 freq      (0.5 ~ 3.0 Hz)        │
+│  - 抬腿高度 lift  (0.05 ~ 0.25 m)       │
+│  - 站立角度       (大腿 / 小腿)            │
+│  - 4 条腿的相位偏移                       │
+│  - 前倾偏置（爬坡专用）                    │
+└─────────────────────────────────────────┘
+                ↓
+         CMA-ES 演化算法
+         （每代生成 12 套参数）
+                ↓
+          仿真测试每套
+       看能爬多远不摔倒
+                ↓
+       保留最好的，下一代
+         50 代后 → 学会爬坡
+```
+
+#### 📝 关键代码片段
+
+**(1) 环境：平地 + 斜坡 + 机器人**
+
+```python
+class QuadrupedSlopeEnv:
+    def _build_world(self):
+        # 平地（机器人起点）
+        p.loadURDF('plane.urdf')
+
+        # 斜坡：用 box 旋转 15° 当作斜面
+        slope_orn = p.getQuaternionFromEuler([0, -math.radians(15), 0])
+        p.loadURDF('cube.urdf', [1.5, 0, 0.25], slope_orn,
+                   globalScaling=2.0, useFixedBase=True)
+
+        # 四足机器人（Laikago）
+        self._spawn_robot()
+```
+
+**(2) 奖励函数：跑得越远，奖励越多**
+
+```python
+def _compute_reward(self):
+    pos, orn = p.getBasePositionAndOrientation(self.robot)
+    rpy = p.getEulerFromQuaternion(orn)
+
+    forward_dist = pos[0] - self.start_x   # 关键：往前走的距离
+    height = pos[2]
+    roll, pitch, _ = rpy
+
+    reward = forward_dist * 1.0           # 鼓励前进
+    reward += max(0, height - 0.2) * 0.5  # 保持高度（不躺平）
+
+    # 摔倒条件
+    done = False
+    if height < 0.15 or abs(roll) > 1.0 or abs(pitch) > 1.0:
+        done = True
+        reward -= 3.0   # 摔倒重罚
+    return reward, done
+```
+
+**(3) CMA-ES 训练循环（极简）**
+
+```python
+import cma
+
+es = cma.CMAEvolutionStrategy(initial_params, sigma=0.3,
+                              {'popsize': 12, 'bounds': [[-1]*10, [1]*10]})
+
+for gen in range(50):
+    candidates = es.ask()              # 生成 12 套候选参数
+    rewards = []
+    for params in candidates:
+        reward, dist = evaluate(env, params)   # 仿真测试
+        rewards.append(-reward)        # 取负（CMA-ES 最小化）
+    es.tell(candidates, rewards)       # 告诉算法每个的成绩
+    print(f"Gen {gen}: best dist = {max(dist):.2f}m")
+```
+
+#### 🚀 实际运行（学生可直接跑）
+
+```bash
+# 1. 装依赖
+pip install pybullet numpy cma matplotlib imageio
+
+# 2. 训练（1-2 分钟，并行 8 个 worker，12 只机器狗同时进化）
+python quadruped_rl_stairs.py train --generations 50 --num_envs 8 --popsize 12 \
+    --record_progress training.gif
+
+# 输出示例：
+# Gen   1/50 | best dist = 0.02m  best climb = 0.00m   ← 全摔
+# Gen  10/50 | best dist = 0.40m  best climb = 0.00m   ← 开始站
+# Gen  30/50 | best dist = 1.85m  best climb = 0.05m   ← 走起来
+# Gen  50/50 | best dist = 2.58m  best climb = 0.19m   ← 爬上来
+
+# 3. 演示（一群 9 只机器狗用学到的参数）
+python quadruped_rl_stairs.py demo --num_robots 9 --record swarm_demo.gif
+```
+
+#### ⚙️ 性能与硬件加速
+
+| 配置 | 耗时（50 代）|
+|------|------------|
+| 单进程 `--num_envs 1` | ~6 分钟 |
+| 4 worker `--num_envs 4` | ~2 分钟 |
+| 8 worker `--num_envs 8` | ~1 分钟 |
+| 16 worker `--num_envs 16` | ~50 秒 |
+
+**关于 GPU**：PyBullet 物理引擎**本身不支持 GPU**。要用 GPU 大规模并行（如同时跑 4096 个机器人），需要切换到：
+
+- 🟢 [NVIDIA Isaac Lab / Isaac Gym](https://developer.nvidia.com/isaac-sim) — 需 RTX 显卡 + Linux
+- 🟢 [MuJoCo MJX](https://mujoco.readthedocs.io/en/latest/mjx.html) — JAX 实现，支持 GPU/TPU
+- 🟢 [Brax (Google)](https://github.com/google/brax) — JAX 实现的物理引擎
+
+本教学示例用 CPU 多进程 `--num_envs` 已经够用。
+
+#### 💡 这就是工业界 RL 的"骨架"
+
+虽然我们用的是 CMA-ES（进化策略）而不是 PPO（强化学习），但**核心循环完全一样**：
+
+| 元素 | 简化版（本代码）| 工业版（ETH ANYmal） |
+|------|----------------|---------------------|
+| **策略** | 10 个参数 | 几百万个神经网络权重 |
+| **优化算法** | CMA-ES | PPO / SAC |
+| **奖励** | 前进距离 - 摔倒 | 前进 + 节能 + 平稳 + 跟随指令 |
+| **训练时长** | 5 分钟 | 4096 个机器人并行训练 24 小时 |
+| **能干什么** | 爬 15° 斜坡 | 爬山、跳台阶、运货物 |
+
+**学完这个示例，你就理解了腿足机器人 RL 的所有核心概念**。
+想进一步深入，看深蓝学院《强化学习与机器人控制》课程（13.9 节）。
+
+#### 🌟 扩展挑战
+
+学有余力的同学可以尝试：
+
+1. **加高台阶**：把 `STAIR_STEP_HEIGHT` 从 5cm 改到 10cm、15cm，看机器人能跨多高
+2. **换地形**：把彩虹楼梯改成不规则石头堆、独木桥
+3. **改奖励函数**：让机器狗优雅地爬而不是冲撞
+4. **可视化训练曲线**：用 matplotlib 画 reward / climb 曲线
+5. **真正的神经网络策略**：用 PyTorch + PPO 替换 CMA-ES（参考 [stable-baselines3](https://github.com/DLR-RM/stable-baselines3)）
+6. **GPU 加速**：切换到 Isaac Lab 跑 4096 个机器人并行 → 训练时间从 1 分钟降到 1 秒
 
 ---
 
