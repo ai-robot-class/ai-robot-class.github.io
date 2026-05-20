@@ -861,7 +861,7 @@ Sim2Real的挑战：
 
 ### 13.7.4 🚀 实战代码：PPO + Residual Controller 训练机器狗爬楼梯
 
-> 完整代码：[`examples/quadruped_ppo_residual_stairs.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_ppo_residual_stairs.py)
+> 完整代码：[`week13/quadruped_ppo_residual_stairs.py`](https://github.com/ai-robot-class/week13/blob/main/quadruped_ppo_residual_stairs.py)
 >
 > 本节采用 **PPO + residual controller**。它不是让神经网络从零发明走路，而是先给机器人一个稳定的 trot 基础步态，再让 PPO 学习每个关节的小幅修正。
 
@@ -912,12 +912,13 @@ PPO 神经网络
 #### 程序文件目录
 
 ```text
-examples/
+week13/                              # Git submodule: https://github.com/ai-robot-class/week13
 ├── quadruped_ppo_residual_stairs.py   # PPO + residual controller 主程序
 ├── run_quadruped_skill_curriculum.py  # 长时间课程学习训练脚本
 ├── quadruped_training_debug_notes.md  # 本次训练调试记录
 ├── ppo_run_flat.zip                   # 已训练好的平地跑步模型
 ├── ppo_residual_stairs.zip            # 已训练好的低台阶模型（三阶进步片段来自它）
+├── quadruped_rl_stairs.py             # 早期 CMA-ES 爬楼梯基线
 └── quadruped_rl_slope.py              # 斜坡步态示例
 
 images/week13/
@@ -994,6 +995,12 @@ stable_on_top = (
 cd /home/robot/areal2025.github.io
 ```
 
+第一次 clone 课程仓库后，需要先拉取第 13 周代码 submodule：
+
+```bash
+git submodule update --init --recursive
+```
+
 安装依赖：
 
 ```bash
@@ -1007,9 +1014,9 @@ pip install pybullet numpy gymnasium stable-baselines3 torch opencv-python
 演示平地跑步模型：
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py demo \
+python3 week13/quadruped_ppo_residual_stairs.py demo \
     --task run \
-    --model examples/ppo_run_flat.zip \
+    --model week13/ppo_run_flat.zip \
     --steps 500 \
     --gui
 ```
@@ -1017,19 +1024,19 @@ python3 examples/quadruped_ppo_residual_stairs.py demo \
 录制平地跑步视频：
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py demo \
+python3 week13/quadruped_ppo_residual_stairs.py demo \
     --task run \
-    --model examples/ppo_run_flat.zip \
+    --model week13/ppo_run_flat.zip \
     --steps 500 \
-    --record examples/student_run_demo.mp4
+    --record week13/student_run_demo.mp4
 ```
 
 演示低台阶模型：
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py demo \
+python3 week13/quadruped_ppo_residual_stairs.py demo \
     --task stairs \
-    --model examples/ppo_residual_stairs.zip \
+    --model week13/ppo_residual_stairs.zip \
     --stair_steps 4 \
     --step_height 0.03 \
     --init_x 0.00 \
@@ -1040,17 +1047,17 @@ python3 examples/quadruped_ppo_residual_stairs.py demo \
 录制低台阶视频：
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py demo \
+python3 week13/quadruped_ppo_residual_stairs.py demo \
     --task stairs \
-    --model examples/ppo_residual_stairs.zip \
+    --model week13/ppo_residual_stairs.zip \
     --stair_steps 4 \
     --step_height 0.03 \
     --init_x 0.00 \
     --steps 500 \
-    --record examples/student_stairs_demo.mp4
+    --record week13/student_stairs_demo.mp4
 ```
 
-> `examples/ppo_residual_stairs.zip` 不是“完美爬完楼梯”的模型，而是本次训练中能明显爬上约三阶低台阶的代表模型。它适合作为课堂讨论材料：为什么已经有进步，但还没达到严格成功？
+> `week13/ppo_residual_stairs.zip` 不是“完美爬完楼梯”的模型，而是本次训练中能明显爬上约三阶低台阶的代表模型。它适合作为课堂讨论材料：为什么已经有进步，但还没达到严格成功？
 
 **方法 B：学生自己从头训练**
 
@@ -1059,39 +1066,39 @@ python3 examples/quadruped_ppo_residual_stairs.py demo \
 **第一步：平地稳定跑步**
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py train \
+python3 week13/quadruped_ppo_residual_stairs.py train \
     --task run \
     --timesteps 300000 \
     --num_envs 8 \
     --batch_size 2048 \
     --curriculum \
-    --model examples/ppo_run_flat.zip
+    --model week13/student_run_flat.zip
 ```
 
 **第二步：加载跑步模型，训练低平台跳跃**
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py train \
+python3 week13/quadruped_ppo_residual_stairs.py train \
     --task jump \
-    --load_model examples/ppo_run_flat.zip \
+    --load_model week13/student_run_flat.zip \
     --timesteps 400000 \
     --num_envs 8 \
     --batch_size 2048 \
     --curriculum \
-    --model examples/ppo_jump_low.zip
+    --model week13/student_jump_low.zip
 ```
 
 **第三步：加载跳跃模型，训练低台阶**
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py train \
+python3 week13/quadruped_ppo_residual_stairs.py train \
     --task stairs \
-    --load_model examples/ppo_jump_low.zip \
+    --load_model week13/student_jump_low.zip \
     --timesteps 500000 \
     --num_envs 8 \
     --batch_size 2048 \
     --curriculum \
-    --model examples/ppo_stairs_low.zip
+    --model week13/student_stairs_low.zip
 ```
 
 这里推荐默认打开 `--curriculum`。程序会先训练平地跑步，再训练低平台跳跃，最后训练“离台阶很近的低台阶”，并逐步把机器人起点往后拉、增加台阶数量。直接从远距离 5cm 完整楼梯开始训练太难，容易陷入“刚接近第一阶就摔倒”的局部最优。
@@ -1101,27 +1108,27 @@ python3 examples/quadruped_ppo_residual_stairs.py train \
 如果学生想在已有成果上继续改进，可以从 `ppo_residual_stairs.zip` 接着训练：
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py train \
+python3 week13/quadruped_ppo_residual_stairs.py train \
     --task stairs \
-    --load_model examples/ppo_residual_stairs.zip \
+    --load_model week13/ppo_residual_stairs.zip \
     --timesteps 300000 \
     --num_envs 8 \
     --batch_size 2048 \
     --curriculum \
-    --model examples/student_stairs_continue.zip
+    --model week13/student_stairs_continue.zip
 ```
 
 训练后录制新模型：
 
 ```bash
-python3 examples/quadruped_ppo_residual_stairs.py demo \
+python3 week13/quadruped_ppo_residual_stairs.py demo \
     --task stairs \
-    --model examples/student_stairs_continue.zip \
+    --model week13/student_stairs_continue.zip \
     --stair_steps 4 \
     --step_height 0.03 \
     --init_x 0.00 \
     --steps 500 \
-    --record examples/student_stairs_continue.mp4
+    --record week13/student_stairs_continue.mp4
 ```
 
 **方法 D：长时间自动调试**
@@ -1129,12 +1136,12 @@ python3 examples/quadruped_ppo_residual_stairs.py demo \
 如果要连续调试 10 小时并自动整理视频，可以运行：
 
 ```bash
-python3 examples/run_quadruped_skill_curriculum.py \
+python3 week13/run_quadruped_skill_curriculum.py \
     --hours 10 \
     --num_envs 8
 ```
 
-该脚本会循环执行 `run -> jump -> stairs`，每个阶段保存模型、录制 demo 视频、解析 episode 结果，并把当前最重要的视频整理到 `examples/rl_runs/<时间戳>/important_videos/`。
+该脚本会循环执行 `run -> jump -> stairs`，每个阶段保存模型、录制 demo 视频、解析 episode 结果，并把当前最重要的视频整理到 `week13/rl_runs/<时间戳>/important_videos/`。
 
 学生提交作业时，建议至少提交三样东西：
 
@@ -1148,7 +1155,7 @@ python3 examples/run_quadruped_skill_curriculum.py \
 |------|----------|------|
 | 快速冒烟测试 | `--task run --timesteps 50000 --num_envs 2 --curriculum` | 检查程序能跑 |
 | 课堂演示 | `run 300k -> jump 400k -> stairs 500k` | 能看到分阶段学习过程 |
-| 较认真训练 | `examples/run_quadruped_skill_curriculum.py --hours 10` | 自动循环调试并整理视频 |
+| 较认真训练 | `week13/run_quadruped_skill_curriculum.py --hours 10` | 自动循环调试并整理视频 |
 | 工业级训练 | Isaac Lab / MuJoCo MJX 上千并行环境 | 才能高成功率、强鲁棒 |
 
 > 注意：PyBullet 是 CPU 物理仿真，不能像 Isaac Gym 那样一次跑几千只机器狗。PPO 能力更强，但训练时间也会更长。
@@ -1158,13 +1165,13 @@ python3 examples/run_quadruped_skill_curriculum.py \
 本次实测从“平地跑步 -> 低平台跳跃 -> 低台阶上楼”连续训练约 **7 小时 22 分钟** 后手动停止。训练输出保存在：
 
 ```text
-examples/rl_runs/20260520_015053_10h/
+week13/rl_runs/20260520_015053_10h/
 ```
 
 训练完成了 12 轮完整循环，并开始第 13 轮平地跑步。重要视频已自动整理到：
 
 ```text
-examples/rl_runs/20260520_015053_10h/important_videos/
+week13/rl_runs/20260520_015053_10h/important_videos/
 ```
 
 <div style="text-align:center; margin: 20px 0;">
