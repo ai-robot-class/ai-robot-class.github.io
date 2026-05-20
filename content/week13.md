@@ -465,20 +465,24 @@ GE Walking         AIBO/ASIMO        BigDog/Spot      ANYmal/Go1       RT-2/π0
 
 #### 慢速 Walk vs 兔跳 Bound
 
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin: 20px 0; text-align:center;">
+**Walk：慢速、稳定、三足支撑**
 
-<div>
+<div style="text-align:center; margin: 20px 0;">
 <img src="../images/week13/pybullet_walk.gif" alt="Walk 步态"
-     style="max-width:100%; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-<p style="font-size:0.85em; color:#666;">🚶 <strong>Walk</strong>：4 拍轮流，3 腿永远着地，最稳</p>
+     style="max-width:480px; width:100%; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+🚶 <strong>Walk</strong>：4 拍轮流，通常有 3 条腿保持着地，速度慢但稳定性最好。
+</p>
 </div>
 
-<div>
+**Bound：高速、跳跃、前后腿成组**
+
+<div style="text-align:center; margin: 20px 0;">
 <img src="../images/week13/pybullet_bound.gif" alt="Bound 步态"
-     style="max-width:100%; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-<p style="font-size:0.85em; color:#666;">🐰 <strong>Bound</strong>：前后腿同步，像兔子跳</p>
-</div>
-
+     style="max-width:480px; width:100%; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+🐰 <strong>Bound</strong>：前腿成组、后腿成组，适合高速跳跃式前进。
+</p>
 </div>
 
 > 👀 **观察提示**：
