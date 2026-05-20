@@ -20,6 +20,10 @@ __pycache__/
 *.pyd
 .Python
 
+# 强化学习训练中间产物（完整日志/视频/模型很大，讲义只保留精选成果）
+examples/rl_runs/
+examples/*_demo.mp4
+
 # 编辑器相关
 .vscode/
 .idea/

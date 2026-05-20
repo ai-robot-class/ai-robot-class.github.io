@@ -859,174 +859,394 @@ Sim2Real的挑战：
 
 ---
 
-### 13.7.4 🚀 实战代码：用进化策略训练一群机器狗爬楼梯
+### 13.7.4 🚀 实战代码：PPO + Residual Controller 训练机器狗爬楼梯
 
-> 完整代码：[`examples/quadruped_rl_stairs.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_rl_stairs.py)
+> 完整代码：[`examples/quadruped_ppo_residual_stairs.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_ppo_residual_stairs.py)
 >
-> **12 只机器狗同时进化** —— 一台笔记本 1 分钟训练，全程录 GIF 见证它们从摔倒到能跑的演化过程。
+> 本节采用 **PPO + residual controller**。它不是让神经网络从零发明走路，而是先给机器人一个稳定的 trot 基础步态，再让 PPO 学习每个关节的小幅修正。
+
+#### 为什么用 Residual Controller？
+
+四足机器人爬楼梯不是简单的“往前跑”。如果奖励函数写得不严格，机器人很容易学会投机动作：
+
+- 身体翻倒，但腿抬得比台阶高
+- 冲到最后一级附近后摔下去
+- 用机身或小腿卡在台阶上，而不是脚掌站稳
+
+所以本课把任务拆成两层：
+
+```
+基础步态生成器（trot）
+        ↓
+给出 12 个关节的 nominal target
+        ↓
+PPO 神经网络
+        ↓
+输出 12 维 residual correction
+        ↓
+最终关节目标 = 基础步态 + 小幅修正
+```
+
+这样做有三个好处：
+
+| 项目 | 直接端到端 RL | PPO + residual controller |
+|------|---------------|---------------------------|
+| 初始探索 | 大量摔倒 | 从可走步态附近开始 |
+| 学习目标 | 同时学走路和爬楼 | 主要学抬脚、落脚、稳住身体 |
+| 课堂可解释性 | 黑盒较强 | 能清楚看到“基础控制 + 学习修正” |
+| 训练稳定性 | 较难 | 更适合教学和 CPU 仿真 |
+
+#### 严格成功定义
+
+本任务中，“成功”不是身体高度超过台阶，也不是腿翘到台阶上方。必须同时满足：
+
+1. 机身中心到达最后一级台阶区域
+2. 机身保持直立，`body_up_z > 0.88`
+3. 至少两只脚趾 `toe link` 真实接触最后一级台阶
+4. 身体、大腿、小腿不能把机器人撑在台阶上
+5. 速度和角速度足够小
+6. 连续稳定保持约 `0.45s`
+
+这比“看起来爬上去”严格得多，也更接近真实机器人任务。
+
+#### 程序文件目录
+
+```text
+examples/
+├── quadruped_ppo_residual_stairs.py   # PPO + residual controller 主程序
+├── run_quadruped_skill_curriculum.py  # 长时间课程学习训练脚本
+├── quadruped_training_debug_notes.md  # 本次训练调试记录
+├── ppo_run_flat.zip                   # 已训练好的平地跑步模型
+├── ppo_residual_stairs.zip            # 已训练好的低台阶模型（三阶进步片段来自它）
+└── quadruped_rl_slope.py              # 斜坡步态示例
+
+images/week13/
+├── quadruped_stairs_three_steps_progress.gif
+├── quadruped_training_reward_curve.png
+└── quadruped_progress_*.gif           # 训练过程精选动图
+
+content/
+└── week13.md                          # 本讲义
+```
+
+主程序内部结构：
+
+```text
+quadruped_ppo_residual_stairs.py
+├── build_stairs()                     # 创建楼梯环境
+├── gait_targets()                     # 基础 trot 步态生成器
+├── ResidualStairsEnv                  # Gymnasium 环境封装
+│   ├── observation_space              # 姿态、速度、关节、接触、相位
+│   ├── action_space                   # 12 维 residual action
+│   ├── _reward_done()                 # 奖励与严格成功判定
+│   └── render()                       # 录制演示视频
+├── train()                            # stable-baselines3 PPO 训练
+└── demo()                             # 加载模型并演示
+```
+
+#### 关键代码思想
+
+**1. 基础步态 + residual action**
+
+```python
+base = gait_targets(self.t, leg, self.gait)
+targets = base + residual[idx : idx + 3]
+```
+
+PPO 输出的是小幅修正，而不是完整关节角：
+
+```python
+ACTION_SCALE = np.array([0.10, 0.18, 0.22] * 4)
+residual = action * ACTION_SCALE
+```
+
+**2. 观测空间**
+
+策略网络可以看到：
+
+- 机身位置、高度、速度、角速度
+- 机身朝上方向 `body_up_z`
+- gait phase 的 `sin/cos`
+- 12 个关节角与关节速度
+- 4 个脚趾是否接触地面
+- 上一帧 action
+- 距离最后一级台阶还差多少
+
+**3. 成功判定：必须脚踩最终台阶**
+
+```python
+stable_on_top = (
+    STAIR_TOP_X - SUCCESS_X_MARGIN <= pos[0] <= STAIR_TOP_X + 0.08
+    and climb >= STAIR_TOP_HEIGHT - SUCCESS_HEIGHT_TOL
+    and body_up_z > 0.88
+    and toe_contacts >= 2
+    and not bad_body_contact
+    and speed < 0.55
+    and spin < 1.2
+)
+```
+
+#### 学生使用指南
+
+进入仓库根目录：
+
+```bash
+cd /home/robot/areal2025.github.io
+```
+
+安装依赖：
+
+```bash
+pip install pybullet numpy gymnasium stable-baselines3 torch opencv-python
+```
+
+如果只想看训练成果，不需要重新训练，直接加载我们已经训练好的模型即可。
+
+**方法 A：直接使用训练成果**
+
+演示平地跑步模型：
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py demo \
+    --task run \
+    --model examples/ppo_run_flat.zip \
+    --steps 500 \
+    --gui
+```
+
+录制平地跑步视频：
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py demo \
+    --task run \
+    --model examples/ppo_run_flat.zip \
+    --steps 500 \
+    --record examples/student_run_demo.mp4
+```
+
+演示低台阶模型：
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py demo \
+    --task stairs \
+    --model examples/ppo_residual_stairs.zip \
+    --stair_steps 4 \
+    --step_height 0.03 \
+    --init_x 0.00 \
+    --steps 500 \
+    --gui
+```
+
+录制低台阶视频：
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py demo \
+    --task stairs \
+    --model examples/ppo_residual_stairs.zip \
+    --stair_steps 4 \
+    --step_height 0.03 \
+    --init_x 0.00 \
+    --steps 500 \
+    --record examples/student_stairs_demo.mp4
+```
+
+> `examples/ppo_residual_stairs.zip` 不是“完美爬完楼梯”的模型，而是本次训练中能明显爬上约三阶低台阶的代表模型。它适合作为课堂讨论材料：为什么已经有进步，但还没达到严格成功？
+
+**方法 B：学生自己从头训练**
+
+推荐先按技能分阶段训练，不要直接训练楼梯。
+
+**第一步：平地稳定跑步**
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py train \
+    --task run \
+    --timesteps 300000 \
+    --num_envs 8 \
+    --batch_size 2048 \
+    --curriculum \
+    --model examples/ppo_run_flat.zip
+```
+
+**第二步：加载跑步模型，训练低平台跳跃**
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py train \
+    --task jump \
+    --load_model examples/ppo_run_flat.zip \
+    --timesteps 400000 \
+    --num_envs 8 \
+    --batch_size 2048 \
+    --curriculum \
+    --model examples/ppo_jump_low.zip
+```
+
+**第三步：加载跳跃模型，训练低台阶**
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py train \
+    --task stairs \
+    --load_model examples/ppo_jump_low.zip \
+    --timesteps 500000 \
+    --num_envs 8 \
+    --batch_size 2048 \
+    --curriculum \
+    --model examples/ppo_stairs_low.zip
+```
+
+这里推荐默认打开 `--curriculum`。程序会先训练平地跑步，再训练低平台跳跃，最后训练“离台阶很近的低台阶”，并逐步把机器人起点往后拉、增加台阶数量。直接从远距离 5cm 完整楼梯开始训练太难，容易陷入“刚接近第一阶就摔倒”的局部最优。
+
+**方法 C：从我们的模型继续训练**
+
+如果学生想在已有成果上继续改进，可以从 `ppo_residual_stairs.zip` 接着训练：
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py train \
+    --task stairs \
+    --load_model examples/ppo_residual_stairs.zip \
+    --timesteps 300000 \
+    --num_envs 8 \
+    --batch_size 2048 \
+    --curriculum \
+    --model examples/student_stairs_continue.zip
+```
+
+训练后录制新模型：
+
+```bash
+python3 examples/quadruped_ppo_residual_stairs.py demo \
+    --task stairs \
+    --model examples/student_stairs_continue.zip \
+    --stair_steps 4 \
+    --step_height 0.03 \
+    --init_x 0.00 \
+    --steps 500 \
+    --record examples/student_stairs_continue.mp4
+```
+
+**方法 D：长时间自动调试**
+
+如果要连续调试 10 小时并自动整理视频，可以运行：
+
+```bash
+python3 examples/run_quadruped_skill_curriculum.py \
+    --hours 10 \
+    --num_envs 8
+```
+
+该脚本会循环执行 `run -> jump -> stairs`，每个阶段保存模型、录制 demo 视频、解析 episode 结果，并把当前最重要的视频整理到 `examples/rl_runs/<时间戳>/important_videos/`。
+
+学生提交作业时，建议至少提交三样东西：
+
+1. 训练或继续训练后的模型 `.zip`
+2. 一段 demo 视频 `.mp4`
+3. 简短记录：奖励函数改了什么、失败模式是什么、是否比原模型更稳定
+
+#### 训练时间预期
+
+| 配置 | 建议参数 | 预期 |
+|------|----------|------|
+| 快速冒烟测试 | `--task run --timesteps 50000 --num_envs 2 --curriculum` | 检查程序能跑 |
+| 课堂演示 | `run 300k -> jump 400k -> stairs 500k` | 能看到分阶段学习过程 |
+| 较认真训练 | `examples/run_quadruped_skill_curriculum.py --hours 10` | 自动循环调试并整理视频 |
+| 工业级训练 | Isaac Lab / MuJoCo MJX 上千并行环境 | 才能高成功率、强鲁棒 |
+
+> 注意：PyBullet 是 CPU 物理仿真，不能像 Isaac Gym 那样一次跑几千只机器狗。PPO 能力更强，但训练时间也会更长。
+
+#### 本次连续训练记录
+
+本次实测从“平地跑步 -> 低平台跳跃 -> 低台阶上楼”连续训练约 **7 小时 22 分钟** 后手动停止。训练输出保存在：
+
+```text
+examples/rl_runs/20260520_015053_10h/
+```
+
+训练完成了 12 轮完整循环，并开始第 13 轮平地跑步。重要视频已自动整理到：
+
+```text
+examples/rl_runs/20260520_015053_10h/important_videos/
+```
 
 <div style="text-align:center; margin: 20px 0;">
-<img src="../images/week13/rl_stairs_training.gif"
-     alt="一群机器狗用 CMA-ES 学习爬楼梯"
+<img src="../images/week13/quadruped_stairs_three_steps_progress.gif"
+     alt="四足机器人经过训练后明显爬上约三阶低台阶"
      style="max-width:100%; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.18);">
 <p style="font-size:0.9em; color:#666; margin-top:8px;">
-🐕 <strong>12 只机器狗同时被 CMA-ES 进化</strong> · 60 代 · 1 分钟训练（8 worker 并行）<br>
-彩虹楼梯：从橙红 → 黄 → 绿 → 青，每级 5 cm
+PPO + residual controller 连续训练后的楼梯片段：机器人已经能明显向前爬上约三阶低台阶，但还没有达到“最终台阶稳定站住”的严格成功标准。
 </p>
 </div>
 
-**视频里你能看到的现象**：
+训练过程中，demo 评估指标整体呈现出明显的阶段性提升。尤其是平地跑步从第 1 轮的 `0.89` 提升到第 12 轮的 `13.57`；楼梯阶段虽然没有达到最终稳定成功，但第 10 轮的爬升高度已经接近三阶低台阶。
 
-- 🤡 **Gen 1**：12 只机器狗站着抖动，所有候选都是随机参数 → 几乎都摔倒
-- 🤔 **Gen 10**：开始有 2-3 只能向前跨步，但姿态歪歪扭扭
-- 💪 **Gen 30**：大部分机器狗都能往前走了，最优个体接近楼梯起点
-- 🏆 **Gen 50+**：最优个体能跨上第一级台阶
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week13/quadruped_training_reward_curve.png"
+     alt="四足机器人强化学习训练过程中的 demo 指标和楼梯爬升高度曲线"
+     style="max-width:100%; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.14);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+训练 12 轮后的评估曲线：上图是每轮 demo 的 reward proxy / metric，下图是楼梯阶段最大爬升高度。虚线分别表示一阶、二阶、三阶低台阶高度。
+</p>
+</div>
 
-#### 🧠 核心思路：CMA-ES 进化策略
+下面五个片段展示了这次训练从失败到进步的过程：
 
-不用神经网络，直接用**参数化步态** + **进化算法**搜索最优参数：
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin:20px 0;">
+  <figure style="margin:0;">
+    <img src="../images/week13/quadruped_progress_run_01.gif"
+         alt="第 1 轮平地跑步，机器人只能短距离向前并很快摔倒"
+         style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+    <figcaption style="font-size:0.85em; color:#666; margin-top:6px;">Run 01：早期只能短距离向前，很快失稳</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <img src="../images/week13/quadruped_progress_run_12.gif"
+         alt="第 12 轮平地跑步，机器人已经能稳定向前跑出很远"
+         style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+    <figcaption style="font-size:0.85em; color:#666; margin-top:6px;">Run 12：平地前进能力明显增强，接近 13.47 m</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <img src="../images/week13/quadruped_progress_jump_08.gif"
+         alt="第 8 轮跳跃训练，机器人学会更强的向前冲刺动作"
+         style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+    <figcaption style="font-size:0.85em; color:#666; margin-top:6px;">Jump 08：跳跃阶段学到更强向前冲刺，但还不是稳定跳跃</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <img src="../images/week13/quadruped_progress_stairs_04.gif"
+         alt="第 4 轮楼梯训练，机器人开始能接近并尝试跨上台阶"
+         style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+    <figcaption style="font-size:0.85em; color:#666; margin-top:6px;">Stairs 04：开始能接近台阶并尝试跨上去</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <img src="../images/week13/quadruped_progress_stairs_09.gif"
+         alt="第 9 轮楼梯训练，机器人姿态更直立并能向台阶区域推进"
+         style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+    <figcaption style="font-size:0.85em; color:#666; margin-top:6px;">Stairs 09：姿态更直立，能向台阶区域推进</figcaption>
+  </figure>
+</div>
 
-```
-┌─────────────────────────────────────────┐
-│  10 个参数描述步态：                       │
-│  - 步频 freq      (0.5 ~ 3.0 Hz)        │
-│  - 抬腿高度 lift  (0.05 ~ 0.25 m)       │
-│  - 站立角度       (大腿 / 小腿)            │
-│  - 4 条腿的相位偏移                       │
-│  - 前倾偏置（爬坡专用）                    │
-└─────────────────────────────────────────┘
-                ↓
-         CMA-ES 演化算法
-         （每代生成 12 套参数）
-                ↓
-          仿真测试每套
-       看能爬多远不摔倒
-                ↓
-       保留最好的，下一代
-         50 代后 → 学会爬坡
-```
+| 阶段 | 最有代表性的视频 | 实测结果 | 结论 |
+|------|------------------|----------|------|
+| 平地跑步 | `important_videos/best_run_12.mp4` | 前进约 `13.47 m`，`body_up_z = 0.974`，但 episode 末尾仍判定为摔倒 | 平地向前运动能力明显进步，但还不是稳定完整跑步 |
+| 低平台跳跃 | `important_videos/best_jump_08.mp4` | 前进约 `4.49 m`，爬升 `0.0 m`，最终摔倒 | 没有学会有效跳跃，更多是在向前冲 |
+| 低台阶上楼 | `videos/10_stairs.mp4` / 上方 GIF | 最大爬升约 `0.085 m`，约等于三阶低台阶高度，姿态仍不够稳定 | 已经能明显爬上约三阶，是很大的进步；但还没有在最终台阶稳定站住 |
 
-#### 📝 关键代码片段
+第 10 轮 stairs demo 是这次训练中最值得保留的进步片段。按当前低台阶高度 `0.03 m` 计算，`0.085 m` 的最大爬升已经接近三阶高度；从视频上看，机器人不再只是原地翻倒或抬腿，而是能借助向前运动爬上连续台阶。不过，严格成功标准仍然要求机器人到达最终台阶区域后保持直立、脚趾稳定接触台阶并停住，因此它还不能算“完整完成楼梯任务”。
 
-**(1) 环境：平地 + 斜坡 + 机器人**
+这次训练的主要经验是：
 
-```python
-class QuadrupedSlopeEnv:
-    def _build_world(self):
-        # 平地（机器人起点）
-        p.loadURDF('plane.urdf')
+1. **区分“明显进步”和“严格成功”**：能爬上约三阶低台阶是重要进步；但严格成功必须同时满足身体在最终台阶附近、身体保持直立、至少两个脚趾稳定接触最终台阶、没有翻倒或身体撞台阶。
+2. **先会跑，再谈跳，再谈上楼**：直接训练楼梯会让策略学到“向前扑、抬腿、翻倒”的投机行为，而不是稳定运动。
+3. **奖励必须区分前进和稳定前进**：只奖励 `x` 方向距离会鼓励机器人低姿态冲出去，因此需要同时约束 `body_up_z`、横向漂移、角速度、身体高度和脚接触。
+4. **当前 residual controller 仍偏弱**：基础 gait 本身不够稳定时，PPO 只学习小幅 residual 很难补出完整跑步、跳跃和上楼能力。
+5. **视频审查比数值指标更可靠**：本次多次出现指标看似进步，但视频中实际是翻倒、滑行或抬脚误判，因此训练脚本必须保存 demo 视频作为判断依据。
 
-        # 斜坡：用 box 旋转 15° 当作斜面
-        slope_orn = p.getQuaternionFromEuler([0, -math.radians(15), 0])
-        p.loadURDF('cube.urdf', [1.5, 0, 0.25], slope_orn,
-                   globalScaling=2.0, useFixedBase=True)
+后续如果继续改进，建议先把目标缩小为：平地跑步 episode 全程不摔倒；然后训练单次低平台跳跃；最后再进入多级台阶。必要时可以引入更强的基础控制器，例如手写站立控制、足端轨迹跟踪、模仿学习，或者切换到 Isaac Lab / MuJoCo MJX 进行更大规模并行训练。
 
-        # 四足机器人（Laikago）
-        self._spawn_robot()
-```
+#### 扩展挑战
 
-**(2) 奖励函数：跑得越远，奖励越多**
-
-```python
-def _compute_reward(self):
-    pos, orn = p.getBasePositionAndOrientation(self.robot)
-    rpy = p.getEulerFromQuaternion(orn)
-
-    forward_dist = pos[0] - self.start_x   # 关键：往前走的距离
-    height = pos[2]
-    roll, pitch, _ = rpy
-
-    reward = forward_dist * 1.0           # 鼓励前进
-    reward += max(0, height - 0.2) * 0.5  # 保持高度（不躺平）
-
-    # 摔倒条件
-    done = False
-    if height < 0.15 or abs(roll) > 1.0 or abs(pitch) > 1.0:
-        done = True
-        reward -= 3.0   # 摔倒重罚
-    return reward, done
-```
-
-**(3) CMA-ES 训练循环（极简）**
-
-```python
-import cma
-
-es = cma.CMAEvolutionStrategy(initial_params, sigma=0.3,
-                              {'popsize': 12, 'bounds': [[-1]*10, [1]*10]})
-
-for gen in range(50):
-    candidates = es.ask()              # 生成 12 套候选参数
-    rewards = []
-    for params in candidates:
-        reward, dist = evaluate(env, params)   # 仿真测试
-        rewards.append(-reward)        # 取负（CMA-ES 最小化）
-    es.tell(candidates, rewards)       # 告诉算法每个的成绩
-    print(f"Gen {gen}: best dist = {max(dist):.2f}m")
-```
-
-#### 🚀 实际运行（学生可直接跑）
-
-```bash
-# 1. 装依赖
-pip install pybullet numpy cma matplotlib imageio
-
-# 2. 训练（1-2 分钟，并行 8 个 worker，12 只机器狗同时进化）
-python quadruped_rl_stairs.py train --generations 50 --num_envs 8 --popsize 12 \
-    --record_progress training.gif
-
-# 输出示例：
-# Gen   1/50 | best dist = 0.02m  best climb = 0.00m   ← 全摔
-# Gen  10/50 | best dist = 0.40m  best climb = 0.00m   ← 开始站
-# Gen  30/50 | best dist = 1.85m  best climb = 0.05m   ← 走起来
-# Gen  50/50 | best dist = 2.58m  best climb = 0.19m   ← 爬上来
-
-# 3. 演示（一群 9 只机器狗用学到的参数）
-python quadruped_rl_stairs.py demo --num_robots 9 --record swarm_demo.gif
-```
-
-#### ⚙️ 性能与硬件加速
-
-| 配置 | 耗时（50 代）|
-|------|------------|
-| 单进程 `--num_envs 1` | ~6 分钟 |
-| 4 worker `--num_envs 4` | ~2 分钟 |
-| 8 worker `--num_envs 8` | ~1 分钟 |
-| 16 worker `--num_envs 16` | ~50 秒 |
-
-**关于 GPU**：PyBullet 物理引擎**本身不支持 GPU**。要用 GPU 大规模并行（如同时跑 4096 个机器人），需要切换到：
-
-- 🟢 [NVIDIA Isaac Lab / Isaac Gym](https://developer.nvidia.com/isaac-sim) — 需 RTX 显卡 + Linux
-- 🟢 [MuJoCo MJX](https://mujoco.readthedocs.io/en/latest/mjx.html) — JAX 实现，支持 GPU/TPU
-- 🟢 [Brax (Google)](https://github.com/google/brax) — JAX 实现的物理引擎
-
-本教学示例用 CPU 多进程 `--num_envs` 已经够用。
-
-#### 💡 这就是工业界 RL 的"骨架"
-
-虽然我们用的是 CMA-ES（进化策略）而不是 PPO（强化学习），但**核心循环完全一样**：
-
-| 元素 | 简化版（本代码）| 工业版（ETH ANYmal） |
-|------|----------------|---------------------|
-| **策略** | 10 个参数 | 几百万个神经网络权重 |
-| **优化算法** | CMA-ES | PPO / SAC |
-| **奖励** | 前进距离 - 摔倒 | 前进 + 节能 + 平稳 + 跟随指令 |
-| **训练时长** | 5 分钟 | 4096 个机器人并行训练 24 小时 |
-| **能干什么** | 爬 15° 斜坡 | 爬山、跳台阶、运货物 |
-
-**学完这个示例，你就理解了腿足机器人 RL 的所有核心概念**。
-想进一步深入，看深蓝学院《强化学习与机器人控制》课程（13.9 节）。
-
-#### 🌟 扩展挑战
-
-学有余力的同学可以尝试：
-
-1. **加高台阶**：把 `STAIR_STEP_HEIGHT` 从 5cm 改到 10cm、15cm，看机器人能跨多高
-2. **换地形**：把彩虹楼梯改成不规则石头堆、独木桥
-3. **改奖励函数**：让机器狗优雅地爬而不是冲撞
-4. **可视化训练曲线**：用 matplotlib 画 reward / climb 曲线
-5. **真正的神经网络策略**：用 PyTorch + PPO 替换 CMA-ES（参考 [stable-baselines3](https://github.com/DLR-RM/stable-baselines3)）
-6. **GPU 加速**：切换到 Isaac Lab 跑 4096 个机器人并行 → 训练时间从 1 分钟降到 1 秒
+1. **课程学习**：调整 `--curriculum` 的阶段，让初始距离、台阶高度、台阶数量、摩擦力逐步变难
+2. **奖励改进**：加入能耗惩罚、身体平稳奖励、脚滑惩罚
+3. **观测增强**：加入台阶高度图或前方深度相机
+4. **鲁棒性训练**：随机摩擦力、机器人质量、关节延迟
+5. **迁移到 GPU 仿真**：用 Isaac Lab 或 MuJoCo MJX 做大规模并行训练
 
 ---
 
