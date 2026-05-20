@@ -791,7 +791,8 @@ def main():
     p.loadURDF("plane.urdf")
     
     # 加载机器人
-    robotId = p.loadURDF("laikago/laikago_toes.urdf", [0, 0, 0.5])
+    start_orientation = p.getQuaternionFromEuler([math.pi / 2, 0, math.pi / 2]) # Keeps the robot facing forward
+    robotId = p.loadURDF("laikago/laikago_toes.urdf", [0, 0, 0.5],start_orientation)
     
     # 创建控制器
     controller = QuadrupedController(robotId)
