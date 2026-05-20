@@ -871,6 +871,52 @@ Sim2Real的挑战：
 >
 > 本节采用 **PPO + residual controller**。它不是让神经网络从零发明走路，而是先给机器人一个稳定的 trot 基础步态，再让 PPO 学习每个关节的小幅修正。
 
+#### 本节课代码使用
+
+先 fork 第 13 周代码仓库：
+
+```text
+https://github.com/ai-robot-class/week13
+```
+
+fork 后，学生账号下会有一个自己的 `week13` 仓库，例如：
+
+```text
+https://github.com/<your-github-name>/week13
+```
+
+然后进入自己的作业仓库根目录：
+
+```bash
+cd <student-homework-repo>
+```
+
+把自己 fork 出来的 `week13` 仓库添加为 submodule：
+
+```bash
+git submodule add https://github.com/<your-github-name>/week13.git week13
+```
+
+准备作业报告和结果目录：
+
+```bash
+mkdir -p reports results
+```
+
+提交 submodule 记录和作业目录：
+
+```bash
+git add .gitmodules week13 reports results
+git commit -m "Add week13 submodule"
+git push
+```
+
+以后换电脑或重新 clone 作业仓库时，再初始化 submodule：
+
+```bash
+git submodule update --init --recursive
+```
+
 #### 为什么用 Residual Controller？
 
 四足机器人爬楼梯不是简单的“往前跑”。如果奖励函数写得不严格，机器人很容易学会投机动作：
@@ -993,19 +1039,7 @@ stable_on_top = (
 )
 ```
 
-#### 学生使用指南
-
-进入仓库根目录：
-
-```bash
-cd /home/robot/areal2025.github.io
-```
-
-第一次 clone 课程仓库后，需要先拉取第 13 周代码 submodule：
-
-```bash
-git submodule update --init --recursive
-```
+#### 本地运行
 
 安装依赖：
 
