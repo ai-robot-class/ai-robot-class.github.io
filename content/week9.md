@@ -93,6 +93,15 @@ print(f"单位向量: {unit_vector}")
 | 点积 | a·b | 投影、夹角 | `np.dot(a, b)` |
 | 叉积 | a×b | 法向量、力矩 | `np.cross(a, b)` |
 
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/vector_ops.gif"
+     alt="向量加法（平行四边形法则）与点积（投影）的几何动画"
+     style="max-width:600px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+向量加法的平行四边形法则 &amp; 点积的投影几何意义
+</p>
+</div>
+
 ```python
 # 向量运算示例
 a = np.array([1, 0, 0])  # x轴方向
@@ -127,6 +136,16 @@ print(f"叉积: {cross_product}")  # [0, 0, 1] (z轴方向)
 R(θ) = [cos(θ)  -sin(θ)]
        [sin(θ)   cos(θ)]
 ```
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/rotation_2d.gif"
+     alt="2D 旋转矩阵作用于一个 L 形物体的动画，左边图形旋转，右边矩阵数值同步变化"
+     style="max-width:800px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+2D 旋转矩阵 R(θ) 作用于一个 L 形物体：每个点都被 R 乘一次，整体绕原点旋转。<br>
+右侧矩阵数值随 θ 实时更新——这就是李群 SO(2) 的"一个元素"。
+</p>
+</div>
 
 ```python
 import numpy as np
@@ -174,6 +193,16 @@ T = [R  t]    R: 3×3旋转矩阵
 
 应用：p' = T * p
 ```
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/homogeneous_transform.gif"
+     alt="齐次变换矩阵动画：图形先旋转再平移，右侧 4×4 齐次矩阵实时更新"
+     style="max-width:800px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+齐次变换 T 把"旋转 + 平移"压成一个 4×4 矩阵：<br>
+变换的合成 = 矩阵的乘法，T<sub>AB</sub>·T<sub>BC</sub> = T<sub>AC</sub>。
+</p>
+</div>
 
 ```python
 def homogeneous_transform(rotation, translation):
@@ -284,24 +313,15 @@ print(f"变换后: {p_transformed[:3]}")  # [1, 3, 3]
 
 ##### C. 万向锁的几何直观
 
-```
-                 ┌──────────┐
-                 │  外环 Z   │  ← 偏航 yaw（始终绕世界 Z 轴）
-                 └────┬─────┘
-                      ↓
-                 ┌────┴─────┐
-                 │  中环 Y'  │  ← 俯仰 pitch（绕外环带来的新 Y）
-                 └────┬─────┘
-                      ↓
-                 ┌────┴─────┐
-                 │  内环 X'' │  ← 滚转 roll（绕中环带来的新 X）
-                 └──────────┘
-
-正常情况：三个环互相独立 → 任意朝向都能合成
-
-中环转 90° 时：内环和外环旋转轴对齐 → 无论怎么转内外环
-              都只能让物体绕同一个方向转 → 万向锁
-```
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/gimbal_lock.gif"
+     alt="3D 动画展示欧拉角万向锁：当 pitch 转到 90° 时外环和内环的旋转轴重合，自由度从 3 降为 2"
+     style="max-width:850px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>万向锁实时演示</strong>：三个旋转环（红=外环 Z，绿=中环 Y'，蓝=内环 X''）随欧拉角变化。<br>
+当 pitch 转到 90° 时，红绿环旋转轴对齐 → <strong>丢失 1 个自由度</strong>（右侧状态卡变红）。
+</p>
+</div>
 
 > 📌 **工程结论**：欧拉角**只用于显示和人机交互**（用户友好），**绝不用于状态变量和优化**。所有内部计算用四元数 + 李代数。
 
@@ -588,6 +608,16 @@ exp(θK) = I + θK + (θK)²/2! + (θK)³/3! + (θK)⁴/4! + ...
 R = I + (sin θ / θ)·[ω]× + ((1 - cos θ) / θ²)·[ω]×²
 ```
 
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/rodrigues_axis_angle.gif"
+     alt="Rodrigues 公式 3D 动画：立方体绕一个固定旋转轴连续旋转 360°，右侧实时显示旋转矩阵数值"
+     style="max-width:850px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>Rodrigues 公式实时演示</strong>：so(3) 向量 ω 绕固定轴增大角度 θ，<br>
+左侧立方体被 R = exp([ω]×) 连续旋转，右侧实时显示 ω、θ 与旋转矩阵 R 的所有元素。
+</p>
+</div>
+
 **特殊情形（θ → 0）的处理**（数值稳定性）：
 
 ```
@@ -854,6 +884,16 @@ slerp(q₀, q₁, t) = sin((1-t)·Ω)/sin(Ω) · q₀  +  sin(t·Ω)/sin(Ω) · 
 - 角速度恒定（不像欧拉角线性插值那样忽快忽慢）
 - 路径最短（球面大圆弧）
 - 适合相机切换、关键帧动画、姿态控制目标平滑
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/quaternion_slerp.gif"
+     alt="四元数 SLERP 与欧拉角线性插值的并排对比动画：左侧 SLERP 路径平滑，右侧欧拉角插值出现路径扭曲"
+     style="max-width:850px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>SLERP vs 欧拉角直接插值</strong>：相同起止姿态，左边四元数 SLERP 沿球面最短弧平滑过渡，<br>
+右边欧拉角逐分量线性相加却出现路径扭曲——这就是相机/关键帧动画都用 SLERP 的原因。
+</p>
+</div>
 
 ##### G. 三者分工：工程实践的"标准链路"
 
@@ -1173,21 +1213,15 @@ SE(3) 指数：    exp(ξ∧) = [exp([ω]×)  V·ρ; 0 1]
 
 > **问题**：已知关节角度，求末端位置
 
-```
-机械臂示例：
-
-    末端
-     •
-    /
-   /  θ2
-  /___
-  |
-  | θ1
-  |___
-  底座
-
-正运动学：[θ1, θ2] → [x, y]
-```
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/forward_kinematics.gif"
+     alt="2-DOF 机械臂正运动学动画：关节角度连续变化，末端在工作空间内画出轨迹，右侧实时显示数值"
+     style="max-width:850px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>FK：输入关节角 (θ₁, θ₂) → 计算末端 (x, y)</strong>。<br>
+两个关节角同时变化，末端在工作空间内画出连续轨迹（橙色尾巴）。
+</p>
+</div>
 
 #### 2.1.1 DH参数法
 
@@ -1225,6 +1259,16 @@ print(f"末端位置: ({x:.2f}, {y:.2f})")
 ### 2.2 逆运动学（Inverse Kinematics）
 
 > **问题**：已知末端位置，求关节角度（更难！）
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/inverse_kinematics.gif"
+     alt="2-DOF 机械臂逆运动学动画：末端沿圆形轨迹运动，关节角度被余弦定理实时反求"
+     style="max-width:850px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>IK：给定末端目标圆形轨迹（橙色虚线），反求每一时刻的 (θ₁, θ₂)</strong>。<br>
+机械臂末端跟随目标，红色实线 = 实际轨迹，右侧实时显示余弦定理求解结果。
+</p>
+</div>
 
 ```
 逆运动学：[x, y] → [θ1, θ2]
@@ -1298,6 +1342,16 @@ print(f"验证: 目标({target[0]:.2f}, {target[1]:.2f}), 实际({x_check:.2f}, 
 ### 2.3 雅可比矩阵（Jacobian Matrix）
 
 > 描述关节速度与末端速度的关系
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/jacobian.gif"
+     alt="雅可比矩阵动画：机械臂运动中末端速度向量（红箭头）随关节速度实时变化，右侧显示矩阵和奇异性判定"
+     style="max-width:850px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>雅可比矩阵 v = J(θ)·θ̇ 实时演示</strong>：左图红色箭头 = 末端速度向量，<br>
+右图实时显示 J 的所有元素与 det(J)。<strong>det(J) → 0 时进入奇异位形</strong>（状态变红）。
+</p>
+</div>
 
 ```
 雅可比矩阵：
@@ -1392,6 +1446,16 @@ plt.show()
 > 卷积是计算机视觉和深度学习的核心运算
 
 #### 3.2.1 什么是卷积？
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/convolution.gif"
+     alt="2D 卷积滑动窗口动画：红框在输入图像上扫过，每一步与卷积核做元素相乘累加，结果写入右侧特征图"
+     style="max-width:900px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>2D 卷积完整过程</strong>：左图红框 = 当前窗口，中间是卷积核（边缘检测算子），<br>
+右图每一格就是「窗口 × 核」逐元素相乘后求和的结果——这就是 CNN 第一层在做的事。
+</p>
+</div>
 
 ```
 卷积 = 滑动窗口 × 加权求和
@@ -1520,6 +1584,16 @@ plt.show()
 梯度幅值：|∇I| = √((∂I/∂x)² + (∂I/∂y)²)
 梯度方向：θ = arctan(∂I/∂y / ∂I/∂x)
 ```
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/edge_detection.gif"
+     alt="Sobel 边缘检测动画：依次显示原图、X 方向梯度、Y 方向梯度、梯度幅值"
+     style="max-width:900px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>Sobel 边缘检测的四个阶段</strong>：原图 → ∂I/∂x（垂直边缘）→ ∂I/∂y（水平边缘）→ |∇I|（梯度幅值）。<br>
+方块、圆、三角形的边缘被自动提取——这就是经典视觉、SLAM 特征点的起点。
+</p>
+</div>
 
 ```python
 def compute_gradient(image):
@@ -1816,6 +1890,17 @@ Dijkstra 会选择上方草地路径 ✅
 
 > 💎 Dijkstra + **启发式（Heuristic）** = 又快又最优
 
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/bfs_vs_astar.gif"
+     alt="BFS vs A* 并排扩展过程对比动画：BFS 像水波一样无差别向外扩展，A* 朝目标方向直奔"
+     style="max-width:850px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>BFS vs A* 同一张地图扩展过程对比</strong>：<br>
+左边 BFS 像水波一样无差别向外扩展（蓝色方块），最终扩展节点数很多；<br>
+右边 A* 借助曼哈顿启发式直奔目标，扩展节点数显著更少。两者都能找到最优路径（红色实线）。
+</p>
+</div>
+
 **核心思想**：在 Dijkstra 的基础上，**估计当前节点到目标的距离 h(n)**，朝着目标方向优先扩展。
 
 ```
@@ -1867,6 +1952,16 @@ Dijkstra：均匀向外扩展        A*：朝目标方向扩展
 ### 4.5 RRT（快速扩展随机树）
 
 > 🌳 高维空间规划的利器（如机械臂 7 维关节空间）
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/rrt_planning.gif"
+     alt="RRT 随机采样建树动画：从起点出发，每次随机采样一个点并向最近的树节点延伸，逐渐生长出一棵覆盖空间的树"
+     style="max-width:600px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>RRT 生长过程</strong>：橙色 × = 随机采样点，绿色 ● = 新加入的树节点。<br>
+树从起点 S 出发，每一步朝随机方向延伸一小段，最终在障碍间生长出能到达目标 ★ 的路径（红线）。
+</p>
+</div>
 
 **为什么需要 RRT？**
 
@@ -1938,6 +2033,16 @@ function RRT(start, goal, max_iter):
 ### 4.6 DWA（动态窗口法）— 局部规划
 
 > 🎯 实时避障常用，ROS Nav 默认局部规划器之一
+
+<div style="text-align:center; margin: 20px 0;">
+<img src="../images/week9/dwa_planning.gif"
+     alt="DWA 动态窗口法动画：左侧在世界空间显示候选轨迹束并高亮最优轨迹，右侧速度空间显示采样点的评分"
+     style="max-width:900px; width:100%; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.15);">
+<p style="font-size:0.9em; color:#666; margin-top:8px;">
+<strong>DWA 在速度空间采样并模拟未来轨迹</strong>：左图是世界坐标中的所有候选轨迹（颜色 = 评分），<br>
+右图是 (v, ω) 速度窗口里的采样点（颜色 = 评分）。<strong>红色星标 = 最高分轨迹</strong>，机器人就执行它。
+</p>
+</div>
 
 **全局规划 vs 局部规划**：
 
@@ -2140,6 +2245,30 @@ pip install roboticstoolbox-python
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
+
+### 🎬 本章动画索引
+
+> 本周所有动画都由 [`scripts/gen_week9_animations.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/scripts/gen_week9_animations.py) 一个脚本生成。
+> 学生可以 clone 后修改参数（旋转轴、机械臂长度、卷积核、起点终点等）来"做自己的版本"。
+
+| # | 章节 | 动画 | 解释什么 |
+|---|------|------|---------|
+| 1 | §1.2.2 | `vector_ops.gif` | 向量加法（平行四边形法则）+ 点积（投影） |
+| 2 | §1.3.1 | `rotation_2d.gif` | 2D 旋转矩阵 R(θ) 作用于物体 |
+| 3 | §1.3.2 | `homogeneous_transform.gif` | 齐次变换 = 旋转 + 平移 |
+| 4 | §1.4.1 | `gimbal_lock.gif` | 欧拉角万向锁的几何过程 |
+| 5 | §1.4.4 | `rodrigues_axis_angle.gif` | Rodrigues 公式 so(3)→SO(3) |
+| 6 | §1.4.6 | `quaternion_slerp.gif` | SLERP vs 欧拉角线性插值对比 |
+| 7 | §2.1 | `forward_kinematics.gif` | 2-DOF 机械臂正运动学 |
+| 8 | §2.2 | `inverse_kinematics.gif` | 2-DOF 机械臂逆运动学（跟随圆轨迹） |
+| 9 | §2.3 | `jacobian.gif` | 雅可比矩阵 + 奇异位形 |
+| 10 | §3.2.1 | `convolution.gif` | 2D 卷积滑动窗口 |
+| 11 | §3.3.1 | `edge_detection.gif` | Sobel 边缘检测四阶段 |
+| 12 | §4.4 | `bfs_vs_astar.gif` | BFS vs A* 扩展过程对比 |
+| 13 | §4.5 | `rrt_planning.gif` | RRT 随机采样建树 |
+| 14 | §4.6 | `dwa_planning.gif` | DWA 速度空间采样 + 评分 |
+
+> 💡 **🌟 选做题加分项**：clone 仓库 → 修改 `gen_week9_animations.py` 里某个动画的参数（例如把机械臂改成 3-DOF，或把 RRT 障碍物换一种布局）→ 生成你自己的 GIF → 在 PR 里附上。
 
 ---
 
