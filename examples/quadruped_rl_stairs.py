@@ -55,6 +55,25 @@ STAIR_STEP_DEPTH = 0.40     # 每级深 40 cm
 STAIR_NUM_STEPS = 4         # 共 4 级
 STAIR_X_START = 0.6         # 楼梯起点距机器人 60cm（近一些）
 STAIR_WIDTH = 5.0           # 楼梯左右宽 5 m（容纳 12+ 机器人）
+STAIR_TOP_X = STAIR_X_START + STAIR_NUM_STEPS * STAIR_STEP_DEPTH
+STAIR_TOP_HEIGHT = STAIR_NUM_STEPS * STAIR_STEP_HEIGHT
+SUCCESS_HOLD_T = 0.40       # 必须稳定站在最后一级至少 0.4 秒
+SUCCESS_X_MARGIN = 0.12     # base 到最后一级靠后区域，才算完整爬完
+SUCCESS_HEIGHT_TOL = 0.03   # 身体爬升高度允许 3cm 误差
+TOE_LINK_IDS = [3, 7, 11, 15]
+
+
+GAIT_PARAM_NAMES = [
+    'freq', 'lift', 'duty', 'stance_thigh', 'stance_calf',
+    'phase_lf', 'phase_rf', 'phase_lh', 'phase_rh',
+    'forward_bias', 'stride', 'calf_lift_gain', 'body_pitch_bias',
+    'hip_sway',
+]
+DEFAULT_GAIT_PARAMS = np.array([
+    1.40, 0.24, 0.65, 0.67, -1.18,
+    0.00, 0.50, 0.50, 0.00,
+    0.08, 0.24, 2.00, -0.03, 0.035,
+], dtype=float)
 
 
 def build_stairs(client_id, num_steps=STAIR_NUM_STEPS,
@@ -88,6 +107,8 @@ def build_stairs(client_id, num_steps=STAIR_NUM_STEPS,
             basePosition=pos,
             physicsClientId=client_id,
         )
+        p.changeDynamics(body, -1, lateralFriction=1.3, spinningFriction=0.03,
+                         rollingFriction=0.01, physicsClientId=client_id)
         stairs.append(body)
 
     # 起点标线（深绿）
@@ -102,6 +123,58 @@ def build_stairs(client_id, num_steps=STAIR_NUM_STEPS,
                       basePosition=[0, 0, 0.005],
                       physicsClientId=client_id)
     return stairs
+
+
+def _smoothstep(s):
+    """0..1 平滑插值，减少腿部目标角突变。"""
+    s = min(1.0, max(0.0, s))
+    return s * s * (3.0 - 2.0 * s)
+
+
+def decode_gait_params(params):
+    """兼容旧 10 维日志，同时支持新的 14 维优雅爬楼参数。"""
+    decoded = DEFAULT_GAIT_PARAMS.copy()
+    params = np.asarray(params, dtype=float)
+    decoded[:min(len(params), len(decoded))] = params[:len(decoded)]
+    return decoded
+
+
+def gait_targets(params, t, leg_name, nominal_thigh, nominal_calf):
+    """根据参数化 trot 生成单条腿的 hip/thigh/calf 目标角。"""
+    (
+        freq, lift, duty, stance_thigh, stance_calf,
+        phase_lf, phase_rf, phase_lh, phase_rh,
+        forward_bias, stride, calf_lift_gain, body_pitch_bias, hip_sway,
+    ) = decode_gait_params(params)
+
+    leg_phases = {'LF': phase_lf, 'RF': phase_rf, 'LH': phase_lh, 'RH': phase_rh}
+    phase = leg_phases[leg_name]
+    phi = (t * freq + phase) % 1.0
+
+    if phi < duty:
+        s = _smoothstep(phi / max(duty, 1e-3))
+        # 支撑相：Laikago 此姿态下 thigh 增大时会产生向前推进。
+        thigh_sway = stride * (s - 0.5)
+        foot_lift = 0.0
+    else:
+        s = _smoothstep((phi - duty) / max(1.0 - duty, 1e-3))
+        # 摆动相：先收腿抬高，再向前迈到下一阶台阶。
+        foot_lift = lift * math.sin(math.pi * s)
+        thigh_sway = stride * (0.5 - s)
+
+    is_left = 1.0 if leg_name in ('LF', 'LH') else -1.0
+    is_front = 1.0 if leg_name in ('LF', 'RF') else -1.0
+    hip = is_left * hip_sway * math.sin(2.0 * math.pi * phi)
+    thigh = (
+        stance_thigh + thigh_sway + forward_bias + body_pitch_bias * is_front
+        + 0.85 * foot_lift
+    )
+    calf = stance_calf - calf_lift_gain * foot_lift
+
+    thigh = float(np.clip(thigh, nominal_thigh - 0.45, nominal_thigh + 0.55))
+    calf = float(np.clip(calf, nominal_calf - 0.45, nominal_calf + 0.35))
+    hip = float(np.clip(hip, -0.18, 0.18))
+    return hip, thigh, calf
 
 
 # ============================================================
@@ -127,8 +200,11 @@ class StairsEnv:
                                   physicsClientId=self.client_id)
         p.setGravity(0, 0, -9.81, physicsClientId=self.client_id)
         p.setTimeStep(self.SIM_DT, physicsClientId=self.client_id)
-        p.loadURDF('plane.urdf', physicsClientId=self.client_id)
-        build_stairs(self.client_id)
+        plane = p.loadURDF('plane.urdf', physicsClientId=self.client_id)
+        p.changeDynamics(plane, -1, lateralFriction=1.2, spinningFriction=0.02,
+                         rollingFriction=0.01, physicsClientId=self.client_id)
+        self.stairs = build_stairs(self.client_id)
+        self.final_stair = self.stairs[-1]
         self.robot = None
         self.leg_joints = {
             'RF': [0, 1, 2], 'LF': [4, 5, 6],
@@ -144,6 +220,11 @@ class StairsEnv:
         self.robot = p.loadURDF('laikago/laikago_toes.urdf',
                                 start_pos, start_orn,
                                 physicsClientId=self.client_id)
+        for link_id in range(-1, p.getNumJoints(self.robot, physicsClientId=self.client_id)):
+            p.changeDynamics(self.robot, link_id, lateralFriction=1.1,
+                             spinningFriction=0.03, rollingFriction=0.01,
+                             linearDamping=0.02, angularDamping=0.02,
+                             physicsClientId=self.client_id)
         for joint_ids in self.leg_joints.values():
             for joint_id, target in zip(joint_ids,
                                         [0.0, self.NOMINAL_THIGH, self.NOMINAL_CALF]):
@@ -165,47 +246,31 @@ class StairsEnv:
                                                   physicsClientId=self.client_id)
         self.start_x = pos[0]
         self.start_z = pos[2]
+        self.prev_x = pos[0]
+        self.prev_z = pos[2]
+        self.best_x = pos[0]
+        self.best_climb = 0.0
+        self.best_step = 0
+        self.success_timer = 0.0
+        self.ever_on_final_tread = False
         self.t = 0.0
 
     def reset(self):
         self._spawn_robot()
 
     def step(self, params):
-        freq, lift, duty, stance_thigh, stance_calf = params[:5]
-        phase_lf, phase_rf, phase_lh, phase_rh = params[5:9]
-        forward_bias = params[9]
-        leg_phases = {
-            'LF': phase_lf, 'RF': phase_rf,
-            'LH': phase_lh, 'RH': phase_rh,
-        }
         sub_steps = int(self.CTRL_DT / self.SIM_DT)
         for _ in range(sub_steps):
             self.t += self.SIM_DT
             for leg_name, joint_ids in self.leg_joints.items():
-                phase = leg_phases[leg_name]
-                phi = (self.t * freq + phase) % 1.0
-                stride = 0.30
-                # 注意 Laikago thigh 关节方向：增大 = 大腿往前摆（推机身向前）
-                if phi < duty:
-                    # 支撑相：脚已经着地，thigh 从后往前扫，推机身前进
-                    s = phi / duty
-                    thigh_sway = stride * (s - 0.5)  # -stride/2 → +stride/2
-                    z_lift = 0.0
-                else:
-                    # 摆动相：抬脚 + thigh 往后摆（准备下一步）
-                    s = (phi - duty) / max(1.0 - duty, 1e-3)
-                    z_lift = lift * math.sin(math.pi * s)
-                    thigh_sway = stride * (0.5 - s)  # +stride/2 → -stride/2
-                hip = 0.0
-                # 摆动时把腿收紧（thigh +z_lift），同时小腿弯曲
-                thigh = stance_thigh + thigh_sway + z_lift * 1.2 + forward_bias
-                calf = stance_calf - z_lift * 1.5
-
+                hip, thigh, calf = gait_targets(
+                    params, self.t, leg_name, self.NOMINAL_THIGH, self.NOMINAL_CALF
+                )
                 for joint_id, target in zip(joint_ids, [hip, thigh, calf]):
                     p.setJointMotorControl2(
                         self.robot, joint_id, p.POSITION_CONTROL,
-                        targetPosition=target, force=200,
-                        positionGain=1.2, velocityGain=0.6,
+                        targetPosition=target, force=170,
+                        positionGain=0.95, velocityGain=0.55,
                         physicsClientId=self.client_id,
                     )
             p.stepSimulation(physicsClientId=self.client_id)
@@ -219,6 +284,23 @@ class StairsEnv:
                                                     physicsClientId=self.client_id)
         forward_dist = pos[0] - self.start_x
         climbed_height = max(0, pos[2] - self.start_z)
+        delta_x = pos[0] - self.prev_x
+        climb_gain = max(0.0, climbed_height - self.best_climb)
+        self.best_climb = max(self.best_climb, climbed_height)
+        self.prev_x = pos[0]
+        self.prev_z = pos[2]
+        self.best_x = max(self.best_x, pos[0])
+
+        spatial_step = int(np.clip(
+            math.floor((pos[0] - STAIR_X_START) / STAIR_STEP_DEPTH) + 1,
+            0, STAIR_NUM_STEPS,
+        ))
+        expected_climb = spatial_step * STAIR_STEP_HEIGHT
+        if pos[0] < STAIR_X_START:
+            expected_climb = 0.0
+        stable_step = spatial_step
+        while stable_step > 0 and climbed_height < stable_step * STAIR_STEP_HEIGHT - 0.035:
+            stable_step -= 1
 
         # 用 base 的"上方向"判断翻车（更准确，不依赖 Euler）
         rot_mat = p.getMatrixFromQuaternion(orn)
@@ -226,23 +308,105 @@ class StairsEnv:
         # （因为初始 orn = [π/2, 0, π/2]，机器人 y 轴朝上）
         body_up_world_z = rot_mat[7]  # 第 7 个元素 = Y-axis 在世界 Z 上的分量
         tilt = 1.0 - body_up_world_z  # 0 = 直立，2 = 完全倒立
+        lateral_drift = abs(pos[1])
+        backward_slip = max(0.0, self.best_x - pos[0] - 0.04)
+        toe_contacts = self._count_final_tread_toe_contacts()
+        bad_body_contact = self._has_non_toe_support_contact()
+        lin_vel, ang_vel = p.getBaseVelocity(self.robot, physicsClientId=self.client_id)
+        speed = math.sqrt(sum(v * v for v in lin_vel))
+        spin = math.sqrt(sum(v * v for v in ang_vel))
 
-        # 奖励：前进 + 爬升 + 直立
-        reward = forward_dist * 1.0 + climbed_height * 5.0
-        reward -= tilt * 1.0
+        # 奖励采用“增量进度 + 阶梯课程”的形式，减少靠累计距离刷分的情况。
+        reward = 0.03                         # 活着且保持控制的微小奖励
+        reward += 8.0 * max(delta_x, -0.02)    # 稳定向前
+        reward += 45.0 * climb_gain            # 只奖励新的最高爬升，避免原地蹦跳刷分
+        reward += 2.2 * stable_step            # 必须身体高度跟上，才算踏上该阶
+        reward += 4.0 * min(climbed_height, STAIR_TOP_HEIGHT)
+        reward -= 2.5 * tilt
+        reward -= 0.9 * lateral_drift
+        reward -= 3.0 * backward_slip
+
+        # 到台阶附近但身体高度不够，说明在撞台阶/拖脚，降低得分。
+        climb_deficit = max(0.0, expected_climb - climbed_height - 0.03)
+        reward -= 12.0 * climb_deficit
 
         done = False
+        on_final_tread = (
+            stable_step == STAIR_NUM_STEPS
+            and STAIR_TOP_X - SUCCESS_X_MARGIN <= pos[0] <= STAIR_TOP_X + 0.08
+            and climbed_height >= STAIR_TOP_HEIGHT - SUCCESS_HEIGHT_TOL
+            and body_up_world_z > 0.88
+            and toe_contacts >= 2
+            and not bad_body_contact
+            and lateral_drift < 0.35
+            and speed < 0.55
+            and spin < 1.2
+        )
+        if on_final_tread:
+            self.ever_on_final_tread = True
+            self.success_timer += self.CTRL_DT
+            reward += 8.0 + 20.0 * self.success_timer
+        else:
+            self.success_timer = 0.0
+
         info = {'forward_dist': forward_dist, 'climbed_height': climbed_height,
-                'height': pos[2], 'tilt': tilt}
+                'height': pos[2], 'tilt': tilt, 'step_idx': stable_step,
+                'spatial_step': spatial_step,
+                'body_up_world_z': body_up_world_z,
+                'toe_contacts': toe_contacts,
+                'bad_body_contact': bad_body_contact,
+                'on_final_tread': on_final_tread,
+                'success_timer': self.success_timer}
+        success = self.success_timer >= SUCCESS_HOLD_T
+        if success:
+            done = True
+            reward += 250.0
+            info['terminated'] = 'success'
         # 翻车 = 上方向偏离 > 60°（cos60°=0.5，tilt=0.5）
-        if pos[2] < 0.20 or tilt > 0.7:
+        if not done and (pos[2] < 0.20 or tilt > 0.7 or abs(pos[1]) > 1.2):
             done = True
-            reward -= 3.0
+            reward -= 3000.0 + 80.0 * tilt
+            if self.ever_on_final_tread:
+                reward -= 2000.0
+            if pos[0] > STAIR_TOP_X + 0.08:
+                reward -= 1000.0
             info['terminated'] = 'fell'
-        if self.t >= self.EPISODE_T:
+        if not done and self.t >= self.EPISODE_T:
             done = True
+            if self.ever_on_final_tread and self.success_timer < SUCCESS_HOLD_T:
+                reward -= 1200.0
             info['terminated'] = 'timeout'
         return reward, done, info
+
+    def _count_final_tread_toe_contacts(self):
+        """成功必须是脚趾真实踩在最后一级，而不是身体或腿翻上去。"""
+        contacts = p.getContactPoints(
+            bodyA=self.robot, bodyB=self.final_stair,
+            physicsClientId=self.client_id,
+        )
+        toe_links = set()
+        for contact in contacts:
+            link_a = contact[3]
+            link_b = contact[4]
+            normal_force = contact[9]
+            if normal_force <= 0.5:
+                continue
+            if link_a in TOE_LINK_IDS or link_b in TOE_LINK_IDS:
+                toe_links.add(link_a if link_a in TOE_LINK_IDS else link_b)
+        return len(toe_links)
+
+    def _has_non_toe_support_contact(self):
+        """最终判定时禁止身体/大腿/小腿把机器人撑在台阶或地面上。"""
+        contacts = p.getContactPoints(bodyA=self.robot, physicsClientId=self.client_id)
+        for contact in contacts:
+            other_body = contact[2]
+            link_a = contact[3]
+            normal_force = contact[9]
+            if other_body == self.robot or normal_force <= 1.0:
+                continue
+            if link_a not in TOE_LINK_IDS:
+                return True
+        return False
 
     def close(self):
         if p.isConnected(self.client_id):
@@ -268,7 +432,9 @@ class SwarmStairsEnv:
                                   physicsClientId=self.client_id)
         p.setGravity(0, 0, -9.81, physicsClientId=self.client_id)
         p.setTimeStep(self.SIM_DT, physicsClientId=self.client_id)
-        p.loadURDF('plane.urdf', physicsClientId=self.client_id)
+        plane = p.loadURDF('plane.urdf', physicsClientId=self.client_id)
+        p.changeDynamics(plane, -1, lateralFriction=1.2, spinningFriction=0.02,
+                         rollingFriction=0.01, physicsClientId=self.client_id)
         # 楼梯加宽以容纳多个机器人
         build_stairs(self.client_id, width=max(2.0, num_robots * y_spacing + 1.0))
 
@@ -288,6 +454,11 @@ class SwarmStairsEnv:
                            p.getQuaternionFromEuler([math.pi / 2, 0, math.pi / 2]),
                            physicsClientId=self.client_id)
             self.robots.append(r)
+            for link_id in range(-1, p.getNumJoints(r, physicsClientId=self.client_id)):
+                p.changeDynamics(r, link_id, lateralFriction=1.1,
+                                 spinningFriction=0.03, rollingFriction=0.01,
+                                 linearDamping=0.02, angularDamping=0.02,
+                                 physicsClientId=self.client_id)
             # 初始关节
             for joint_ids in self.leg_joints.values():
                 for jid, target in zip(joint_ids,
@@ -348,34 +519,15 @@ class SwarmStairsEnv:
         for _ in range(sub_steps):
             self.t += self.SIM_DT
             for r_idx, (robot, params) in enumerate(zip(self.robots, params_list)):
-                freq, lift, duty, stance_thigh, stance_calf = params[:5]
-                phase_lf, phase_rf, phase_lh, phase_rh = params[5:9]
-                forward_bias = params[9]
-                leg_phases = {
-                    'LF': phase_lf, 'RF': phase_rf,
-                    'LH': phase_lh, 'RH': phase_rh,
-                }
                 for leg_name, joint_ids in self.leg_joints.items():
-                    phase = leg_phases[leg_name]
-                    phi = (self.t * freq + phase) % 1.0
-                    stride = 0.30
-                    if phi < duty:
-                        s = phi / duty
-                        thigh_sway = stride * (s - 0.5)
-                        z_lift = 0.0
-                    else:
-                        s = (phi - duty) / max(1.0 - duty, 1e-3)
-                        z_lift = lift * math.sin(math.pi * s)
-                        thigh_sway = stride * (0.5 - s)
-                    hip = 0.0
-                    thigh = stance_thigh + thigh_sway + z_lift * 1.2 + forward_bias
-                    calf = stance_calf - z_lift * 1.5
-
+                    hip, thigh, calf = gait_targets(
+                        params, self.t, leg_name, self.NOMINAL_THIGH, self.NOMINAL_CALF
+                    )
                     for joint_id, target in zip(joint_ids, [hip, thigh, calf]):
                         p.setJointMotorControl2(
                             robot, joint_id, p.POSITION_CONTROL,
-                            targetPosition=target, force=200,
-                            positionGain=1.2, velocityGain=0.6,
+                            targetPosition=target, force=170,
+                            positionGain=0.95, velocityGain=0.55,
                             physicsClientId=self.client_id,
                         )
             p.stepSimulation(physicsClientId=self.client_id)
@@ -386,12 +538,12 @@ class SwarmStairsEnv:
             p.COV_ENABLE_SHADOWS, 1, physicsClientId=self.client_id
         )
 
-        # 视角：从机器人左后方斜俯视，能看清楼梯阶梯感和机器狗群
+        # 视角：从机器人左后方斜俯视，能看清完整楼梯和到顶动作
         view = p.computeViewMatrixFromYawPitchRoll(
-            cameraTargetPosition=[1.0, 0, 0.25],   # 看机器人和楼梯起点
-            distance=4.0,
+            cameraTargetPosition=[1.35, 0, 0.30],
+            distance=3.5,
             yaw=40,                                # 左后方角度
-            pitch=-28,                             # 偏俯视
+            pitch=-25,                             # 偏俯视
             roll=0,
             upAxisIndex=2,
             physicsClientId=self.client_id,
@@ -434,14 +586,18 @@ def evaluate_policy(env, params, max_steps=300):
     total_reward = 0.0
     last_dist = 0.0
     last_height = 0.0
+    last_step = 0
+    terminated = 'timeout'
     for _ in range(max_steps):
         reward, done, info = env.step(params)
         total_reward += reward
         last_dist = info.get('forward_dist', last_dist)
         last_height = info.get('climbed_height', last_height)
+        last_step = info.get('step_idx', last_step)
+        terminated = info.get('terminated', terminated)
         if done:
             break
-    return total_reward, last_dist, last_height
+    return total_reward, last_dist, last_height, last_step, terminated
 
 
 _worker_env = None
@@ -476,23 +632,32 @@ def train(generations=50, sigma=0.3, popsize=12, num_envs=1,
         import cma
     except ImportError:
         print("❌ 缺少 cma: pip install cma")
-        return None
+        return None, []
 
-    # 参数空间（更保守，避免狂跳）
-    bounds_low = np.array([1.0, 0.05, 0.5, 0.5, -1.4, 0.0, 0.0, 0.0, 0.0, -0.1])
-    bounds_high = np.array([2.2, 0.18, 0.7, 0.85, -0.9, 1.0, 1.0, 1.0, 1.0, 0.3])
+    # 参数空间：保守但给足台阶抬脚余量，搜索对象见 GAIT_PARAM_NAMES。
+    bounds_low = np.array([
+        0.85, 0.12, 0.52, 0.55, -1.35,
+        0.0, 0.0, 0.0, 0.0,
+        -0.04, 0.16, 1.20, -0.12, 0.00,
+    ])
+    bounds_high = np.array([
+        1.80, 0.42, 0.72, 0.82, -0.95,
+        1.0, 1.0, 1.0, 1.0,
+        0.22, 0.38, 2.20, 0.06, 0.08,
+    ])
 
     def unnormalize(z):
         z = np.clip(z, -1, 1)
         return bounds_low + (z + 1) / 2 * (bounds_high - bounds_low)
 
-    # 初始：稳定的 Trot 步态
-    init_params = np.array([1.4, 0.10, 0.60, 0.65, -1.20, 0.0, 0.5, 0.5, 0.0, 0.1])
+    # 初始：稳定 diagonal trot。新参数让机器人更像“抬脚上台阶”，而不是撞台阶。
+    init_params = DEFAULT_GAIT_PARAMS.copy()
     z0 = (init_params - bounds_low) / (bounds_high - bounds_low) * 2 - 1
 
     es = cma.CMAEvolutionStrategy(
         z0.tolist(), sigma,
-        {'popsize': popsize, 'verbose': -9, 'bounds': [[-1] * 10, [1] * 10]}
+        {'popsize': popsize, 'verbose': -9,
+         'bounds': [[-1] * len(init_params), [1] * len(init_params)]}
     )
 
     pool = None
@@ -511,6 +676,7 @@ def train(generations=50, sigma=0.3, popsize=12, num_envs=1,
     history = []
     best_params = None
     best_reward = -np.inf
+    elite_z = z0.copy()
 
     t_start = time.time()
     record_every = max(1, generations // 25)
@@ -518,26 +684,45 @@ def train(generations=50, sigma=0.3, popsize=12, num_envs=1,
     try:
         for gen in range(generations):
             solutions = es.ask()
+            # 保留当前精英候选，避免一代采样全是摔倒动作时丢掉已知可行步态。
+            solutions[0] = elite_z.tolist()
             params_list = [unnormalize(np.array(z)) for z in solutions]
             results = parallel_evaluate(pool, params_list)
-            rewards = [-r for r, _, _ in results]
-            dists = [d for _, d, _ in results]
-            heights = [h for _, _, h in results]
+            rewards = [-r for r, _, _, _, _ in results]
+            dists = [d for _, d, _, _, _ in results]
+            heights = [h for _, _, h, _, _ in results]
+            steps = [s for _, _, _, s, _ in results]
+            terminations = [term for _, _, _, _, term in results]
+            successes = [term == 'success' for term in terminations]
             es.tell(solutions, rewards)
 
             best_idx = int(np.argmin(rewards))
+            worst_idx = int(np.argmax(rewards))
             gen_best_reward = -rewards[best_idx]
             gen_best_dist = dists[best_idx]
             gen_best_height = heights[best_idx]
+            gen_best_step = steps[best_idx]
+            gen_worst_reward = -rewards[worst_idx]
             if gen_best_reward > best_reward:
                 best_reward = gen_best_reward
                 best_params = params_list[best_idx]
+                elite_z = np.array(solutions[best_idx])
 
             history.append({
                 'gen': gen,
                 'best_reward': float(gen_best_reward),
                 'best_dist': float(gen_best_dist),
                 'best_height': float(gen_best_height),
+                'best_step': int(gen_best_step),
+                'best_terminated': terminations[best_idx],
+                'best_params': params_list[best_idx].tolist(),
+                'worst_reward': float(gen_worst_reward),
+                'worst_dist': float(dists[worst_idx]),
+                'worst_height': float(heights[worst_idx]),
+                'worst_step': int(steps[worst_idx]),
+                'worst_terminated': terminations[worst_idx],
+                'worst_params': params_list[worst_idx].tolist(),
+                'success_rate': float(np.mean(successes)),
                 'mean_reward': float(-np.mean(rewards)),
                 'mean_dist': float(np.mean(dists)),
             })
@@ -545,6 +730,8 @@ def train(generations=50, sigma=0.3, popsize=12, num_envs=1,
             print(f"Gen {gen+1:3d}/{generations} | "
                   f"best dist = {gen_best_dist:5.2f}m  "
                   f"best climbed = {gen_best_height:.2f}m  "
+                  f"step = {gen_best_step}/{STAIR_NUM_STEPS}  "
+                  f"success = {np.mean(successes):.0%}  "
                   f"reward = {gen_best_reward:6.2f}  "
                   f"t = {elapsed:.0f}s")
 
@@ -581,7 +768,8 @@ def train(generations=50, sigma=0.3, popsize=12, num_envs=1,
             'best_params': best_params.tolist() if best_params is not None else None,
             'best_reward': float(best_reward),
             'config': {'generations': generations, 'popsize': popsize,
-                       'num_envs': num_envs, 'sigma': sigma},
+                       'num_envs': num_envs, 'sigma': sigma,
+                       'param_names': GAIT_PARAM_NAMES},
         }, f, indent=2)
     print(f"💾 日志: {log_file}")
 
@@ -611,6 +799,157 @@ def _add_label(frame, gen, climbed, dist, popsize=None):
     return np.array(img)
 
 
+def _add_highlight_label(frame, title, subtitle):
+    from PIL import Image, ImageDraw, ImageFont
+    img = Image.fromarray(frame)
+    draw = ImageDraw.Draw(img)
+    try:
+        font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 22)
+        font_s = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 14)
+    except OSError:
+        font = font_s = ImageFont.load_default()
+    h, w = frame.shape[:2]
+    draw.rectangle([(0, 0), (w, 58)], fill=(255, 255, 255, 238))
+    draw.text((12, 7), title, fill=(20, 30, 80), font=font)
+    draw.text((12, 35), subtitle, fill=(70, 70, 80), font=font_s)
+    return np.array(img)
+
+
+def _pick_highlight_entries(history, max_entries=10):
+    """从训练历史里挑约 10 个失败、过渡和成功片段，尽量去重。"""
+    picks = []
+    used = set()
+
+    def add(kind, item, title):
+        if item is None or len(picks) >= max_entries:
+            return
+        key = (kind, item['gen'])
+        if key in used:
+            return
+        used.add(key)
+        picks.append((kind, item, title))
+
+    early = history[:min(20, len(history))]
+    if early:
+        failure = min(
+            early,
+            key=lambda h: (
+                h.get('worst_terminated') != 'fell',
+                h.get('worst_step', STAIR_NUM_STEPS),
+                h.get('worst_reward', 0.0),
+            ),
+        )
+        add('worst', failure, 'Obvious mistake')
+
+    late_failures = [
+        h for h in history[:min(80, len(history))]
+        if h.get('worst_terminated') == 'fell'
+    ]
+    if late_failures:
+        add('worst', min(late_failures, key=lambda h: h.get('worst_reward', 0.0)),
+            'Another failed candidate')
+
+    for target_step in (1, 2, 3, 4):
+        candidates = [
+            h for h in history
+            if h.get('best_step', 0) >= target_step
+            and h.get('best_terminated') != 'success'
+        ]
+        if candidates:
+            add('best', candidates[0], f'Learning progress: step {target_step}')
+
+    successes = [h for h in history if h.get('best_terminated') == 'success']
+    if successes:
+        add('best', successes[0], 'Seed policy success')
+        trained = next((h for h in successes if h['gen'] >= 20), None)
+        add('best', trained, 'Trained policy reaches the top')
+
+    if history:
+        best = max(history, key=lambda h: h.get('best_reward', -np.inf))
+        add('best', best, 'Best policy after training')
+        add('best', history[-1], 'Final generation: complete climb')
+
+    high_success = sorted(
+        history, key=lambda h: (h.get('success_rate', 0.0), h.get('best_reward', 0.0)),
+        reverse=True,
+    )
+    for item in high_success:
+        if item.get('success_rate', 0.0) > 0:
+            add('best', item, 'Higher population success rate')
+
+    if history and len(picks) < max_entries:
+        spread = np.linspace(0, len(history) - 1, max_entries, dtype=int)
+        for idx in spread:
+            add('best', history[int(idx)], 'Training timeline sample')
+
+    return picks
+
+
+def render_highlight_video(log_file, output_path, width=720, height=400,
+                           seconds_per_clip=6.0, fps=25, max_clips=10):
+    """根据训练日志挑选失败和成功片段，重放并保存为 MP4/GIF。"""
+    with open(log_file) as f:
+        data = json.load(f)
+    history = data.get('history', [])
+    picks = _pick_highlight_entries(history, max_entries=max_clips)
+    if not picks:
+        print("⚠️  没有可用于剪辑的训练历史")
+        return []
+
+    import imageio.v2 as imageio
+    frames = []
+    steps_per_clip = int(seconds_per_clip / SwarmStairsEnv.CTRL_DT)
+    capture_every = max(1, int(1.0 / (fps * SwarmStairsEnv.CTRL_DT)))
+
+    env = SwarmStairsEnv(num_robots=1)
+    try:
+        for clip_idx, (kind, item, title) in enumerate(picks, start=1):
+            params = np.array(item[f'{kind}_params'])
+            env.respawn()
+            for step in range(steps_per_clip):
+                env.step_all([params])
+                if step % capture_every == 0:
+                    climbed = item.get(f'{kind}_height', 0.0)
+                    dist = item.get(f'{kind}_dist', 0.0)
+                    terminated = item.get(f'{kind}_terminated', 'unknown')
+                    subtitle = (
+                        f"Gen {item['gen'] + 1} | step {item.get(f'{kind}_step', 0)}/"
+                        f"{STAIR_NUM_STEPS} | climb {climbed:.2f}m | "
+                        f"forward {dist:.2f}m | {terminated}"
+                    )
+                    frames.append(_add_highlight_label(
+                        env.render(width=width, height=height),
+                        f"Case {clip_idx}/{len(picks)}: {title}", subtitle
+                    ))
+            for _ in range(fps // 2):
+                frames.append(frames[-1])
+    finally:
+        env.close()
+
+    if output_path.lower().endswith('.gif'):
+        imageio.mimsave(output_path, frames, fps=fps, loop=0)
+    else:
+        try:
+            imageio.mimsave(output_path, frames, fps=fps, quality=8)
+        except ValueError:
+            try:
+                import cv2
+                fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+                h, w = frames[0].shape[:2]
+                writer = cv2.VideoWriter(output_path, fourcc, fps, (w, h))
+                if not writer.isOpened():
+                    raise RuntimeError('cv2 VideoWriter failed to open')
+                for frame in frames:
+                    writer.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+                writer.release()
+            except Exception:
+                fallback = os.path.splitext(output_path)[0] + '.gif'
+                imageio.mimsave(fallback, frames, fps=fps, loop=0)
+                output_path = fallback
+    print(f"🎞️  高光视频保存: {output_path} ({len(frames)} 帧)")
+    return picks
+
+
 # ============================================================
 # 6. Demo（一群机器狗）
 # ============================================================
@@ -618,13 +957,15 @@ def _add_label(frame, gen, climbed, dist, popsize=None):
 def demo_swarm(params, num_robots=9, record_path=None):
     """让 N 个机器人用同一组参数（或加点噪声）爬楼梯，可录 GIF"""
     env = SwarmStairsEnv(num_robots=num_robots)
+    params = decode_gait_params(params)
     # 给每个机器人加点小噪声让动作不完全同步（更有趣）
     rng = np.random.default_rng(42)
     params_list = []
     for i in range(num_robots):
-        noise = rng.normal(0, 0.05, size=10)
+        noise = rng.normal(0, 0.035, size=len(DEFAULT_GAIT_PARAMS))
         noise[5:9] = rng.normal(0, 0.1, size=4)  # 相位噪声大点
-        p_i = np.array(params) + noise
+        noise[10:] *= 0.5
+        p_i = params + noise
         params_list.append(p_i)
 
     frames = []
@@ -655,6 +996,8 @@ def main():
     parser.add_argument('mode', choices=['train', 'demo'])
     parser.add_argument('--generations', type=int, default=50)
     parser.add_argument('--popsize', type=int, default=12)
+    parser.add_argument('--sigma', type=float, default=0.25,
+                        help='CMA-ES 初始探索幅度')
     parser.add_argument('--num_envs', type=int, default=1,
                         help='并行 worker 数（建议 = CPU 核数）')
     parser.add_argument('--num_robots', type=int, default=9,
@@ -664,6 +1007,8 @@ def main():
     parser.add_argument('--params_file', default='train_log_stairs.json')
     parser.add_argument('--record', help='演示 GIF 输出路径')
     parser.add_argument('--record_progress', help='训练过程 GIF 路径')
+    parser.add_argument('--record_highlights',
+                        help='训练后自动剪辑失败/进步/成功片段视频，如 highlights.mp4')
     args = parser.parse_args()
 
     if args.gpu:
@@ -677,12 +1022,15 @@ def main():
             generations=args.generations,
             popsize=args.popsize,
             num_envs=args.num_envs,
+            sigma=args.sigma,
             log_file=args.params_file,
             record_progress=args.record_progress,
         )
         if best_params is not None:
             print(f"\n✅ 训练完成！climbed {history[-1]['best_height']:.2f}m, "
                   f"forward {history[-1]['best_dist']:.2f}m")
+            if args.record_highlights:
+                render_highlight_video(args.params_file, args.record_highlights)
 
     elif args.mode == 'demo':
         if not os.path.exists(args.params_file):
