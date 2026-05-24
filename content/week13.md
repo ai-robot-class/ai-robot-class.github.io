@@ -865,53 +865,245 @@ Sim2Real的挑战：
 
 ---
 
-### 13.7.4 🚀 实战代码：PPO + Residual Controller 训练机器狗爬楼梯
+### 13.7.4 🎯 课堂作业：用 AI 辅助编程让机器狗小跑前进
 
+> 📦 起点代码：[`examples/quadruped_walk_starter.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_walk_starter.py)
+>
+> ✅ 参考实现：[`examples/quadruped_walk_reference.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_walk_reference.py)
+>
+> ⏱️ 课堂时长：60–90 分钟（在教室电脑上即可完成，**无需 GPU、无需训练**）
+
+#### 🧭 任务说明
+
+我把一段"看起来很合理"的机器狗 trot 步态代码（[`quadruped_walk_starter.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_walk_starter.py)）发给大家。你只要拷贝下来直接运行：
+
+```bash
+pip install pybullet numpy
+python3 quadruped_walk_starter.py
+```
+
+你会看到机器狗启动后**瞬间扑街**。本次作业就是：
+
+> **用 AI 辅助编程工具（Cursor / Copilot / ChatGPT / Claude / Gemini ...），
+> 把这段代码改成机器狗能在地面上稳定向前小跑的版本。**
+
+不允许直接抄参考实现，但是允许（鼓励）你"边运行边和 AI 对话，根据机器狗实际表现给出反馈"。
+
+#### 🎓 为什么这是个好的 AI 辅助编程练习？
+
+机器狗仿真同时混合了三类知识，**任何一类单独看都不算难，但叠在一起就会让 AI 给出大量"看着合理但跑不通"的方案**——这正是真实工程中 AI 辅助编程最常见的场景：
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│   设计空间 ──┐                                           │
+│   ・步态选什么（trot / creep / pace / bound）            │
+│   ・频率、步长、抬腿高度                                  │
+│   ・摆动相 vs 支撑相的相位安排                            │
+│                                                          │
+│              ├──→  AI 给你一段代码                       │
+│   物理知识 ──┘     运行 → 摔倒 / 走错方向 / 软脚         │
+│   ・刚体动力学、重心、支撑多边形                          │
+│   ・PID 整定（force / positionGain）                     │
+│   ・摩擦力、惯量、URDF 关节顺序                          │
+│                                                          │
+│   仿真坑   ──→  observe（看视频）→ describe（描述现象）   │
+│   ・启动 PID 爆炸                                        │
+│   ・坐标系被 Euler 角颠倒                                │
+│   ・关节索引硬编码错位                                   │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
+
+> 💡 **AI 辅助编程的核心能力，不是"会写提示词"，而是"会把你眼睛看到的物理现象用准确的语言告诉 AI"**——这就是这次作业要训练的能力。
+
+#### 🐶 起点代码的 4 个坑（先不告诉学生）
+
+| # | 隐藏问题 | 表面现象 |
+|---|---------|---------|
+| 1 | 启动瞬间所有关节从 0 度被 PID 拉到目标角度，相当于一次脉冲冲击 | 机器狗一启动就被弹飞 |
+| 2 | 关节 id `0~11` 硬编码，但 Laikago URDF 里夹杂了 fixed 关节和脚趾 | 半数电机指令打到了错误的部件上 |
+| 3 | `force=20` 远不够撑住 24 kg 的 Laikago | 即使站住，膝盖会瞬间软掉 |
+| 4 | 慢速 trot 意味着任何瞬间只有两条对角腿撑地，**动力学上不稳定** | 站住也走不动，走两步就倒 |
+| 5 | `start_orientation` 里的 `π/2` 旋转交换了机身坐标轴 | 即使代码"按教科书"前进，机器狗实际是在倒着走 |
+
+让学生通过和 AI 反复对话，**逐个发现并修复**这些问题。
+
+---
+
+#### 📝 一次真实的 AI 辅助调试过程（教学案例）
+
+下面是教师本人在准备这节课时与 Gemini 的完整对话过程。**重点不是结论，而是每次"机器狗具体怎么坏"的描述**：
+
+| 轮次 | 学生（你）说什么 | AI 给出的方向 | 结果 |
+|------|----------------|--------------|------|
+| 1 | "让这只机器狗走慢一点" | 降低 frequency 和 step_length | 还是摔 |
+| 2 | "look, 机器狗刚启动就 face-plant 了"（**贴图**） | 改 start_orientation + 给 thigh/calf 加偏置 | 学生坚持："orientation 不能改，是环境要求" |
+| 3 | "保留这个 orientation 不能动" | 切换到关节空间正弦轨迹，绕开坐标问题 | 不工作 |
+| 4 | "It cannot stand for 2s" | 诊断是 PID explosion + creep gait + warmup | 站住了 2 秒，但走两步就倒 |
+| 5 | "好了一点，能站 2s 走一下然后倒" | 动态扫描关节、提高 force 到 150 | 站稳了，但走不远 |
+| 6 | "yes, it stands but doesn't walk forward, it walks back" | 翻转 thigh 摆动方向的正负号 | ✅ 终于向前走 |
+| 7 | "can this walk a little faster?" | frequency 0.4→1.0、step_length 0.08→0.16 | ✅ 速度提升 |
+
+**关键观察**：每一次"前进"的关键，都不是 AI 给出更聪明的算法，而是**你给 AI 提供了一个新的物理观察**。例如：
+
+- 第 2 轮：贴出"扑街"的截图  →  AI 才知道是初始朝向问题
+- 第 4 轮："2 秒就倒"这个时间窗口  →  AI 才能定位 PID 启动冲击
+- 第 6 轮："向前走"和"向后走"的区别  →  AI 才能定位坐标轴翻转
+
+> 🧠 **第一性原理**：AI 看不到你的屏幕，它只能根据你给的语言重建一个"想象中的世界"。
+> 你给的物理观察越具体、越能区分"哪些假设可以被证伪"，AI 就越能命中真正的 bug。
+
+---
+
+#### 🛠️ 你需要做的事
+
+##### 步骤 1：把起点代码拷到你自己的作业仓库
+
+```bash
+# 在你的 ai-robot-XXX 作业仓库里
+mkdir -p week13_walk
+curl -O https://raw.githubusercontent.com/ai-robot-class/ai-robot-class.github.io/main/examples/quadruped_walk_starter.py
+mv quadruped_walk_starter.py week13_walk/
+cd week13_walk
+pip install pybullet numpy
+python3 quadruped_walk_starter.py     # 先看一下机器狗怎么扑街
+```
+
+##### 步骤 2：与 AI 对话，逐步迭代
+
+推荐使用 **Cursor**（IDE 里直接对话）或 **Claude/ChatGPT/Gemini**（浏览器）。流程建议：
+
+```
+1. 运行代码 → 观察机器狗行为（站住？摔倒？走哪个方向？）
+2. 用自然语言描述给 AI 听，越具体越好
+   ✅ 好："机器狗启动 0.5 秒内就 face-plant 了，身体往前栽"
+   ❌ 差："代码不工作，帮我修一下"
+3. 把 AI 给的修改贴回代码，重新跑
+4. 重复 1-3 直到机器狗稳定前进
+```
+
+> 💡 **小技巧**：
+> - 录一段 5–10 秒的屏幕录像 / GIF 截图给 AI（多模态模型可以看图）
+> - 每一轮把 AI 的修改"逐条解释"给它听，让 AI 解释**为什么这么改**
+> - 如果连续 3 轮没进展，**主动换一个方向**（例如"我觉得不是 IK 的问题，让我们试试 creep gait"）
+
+##### 步骤 3：评估你的最终结果
+
+把你最终调通的代码保存为 `quadruped_walk.py`，运行：
+
+```bash
+python3 quadruped_walk.py
+```
+
+合格标准（任选其一即可，越多分越高）：
+
+| 等级 | 标准 |
+|------|------|
+| 🥉 **D 级（60 分）** | 机器狗能站住 ≥ 5 秒不倒 |
+| 🥈 **C 级（75 分）** | 机器狗能向某个方向前进 ≥ 1 m |
+| 🥇 **B 级（85 分）** | 机器狗能**稳定**前进 ≥ 3 m 且 20 秒不倒 |
+| 🏆 **A 级（95 分+）** | 在 B 级基础上，能**走直线**（横向漂移 < 1 m）或**速度可调** |
+
+##### 步骤 4：提交三样东西
+
+在你的作业仓库 `week13_walk/` 目录下提交：
+
+```
+week13_walk/
+├── quadruped_walk.py            # 最终调通的代码
+├── ai_chat_log.md               # 与 AI 的完整对话记录（截图 or 文本，>= 5 轮）
+└── reflection.md                # 反思（>= 300 字）
+```
+
+##### 反思（reflection.md）必答 3 个问题
+
+1. 你向 AI 提供的**哪一个具体的物理观察**让它命中了一个 bug？请贴出来。
+2. AI 给你的方案里，有没有出现"看着合理但跑不通"的情况？为什么？
+3. 如果不用 AI，纯靠你自己读 PyBullet 文档 + 调试，你估计需要多久？
+
+---
+
+#### 🆘 实在搞不定怎么办？
+
+不要直接看参考代码，先按下面的 hint 顺序尝试。每个 hint 都对应一个真实的坑：
+
+<details>
+<summary>💡 Hint 1：「机器狗一启动就被弹飞」</summary>
+
+仔细看 PyBullet 文档：`p.loadURDF` 之后所有关节默认是 0 度，但你的代码立刻要求它们到达 `0.7` / `-1.4`。这相当于一次脉冲冲击。
+关键词：`p.resetJointState`、`init_pose`、warmup phase。
+</details>
+
+<details>
+<summary>💡 Hint 2：「关节角度发到错了部位」</summary>
+
+打印一下 `p.getNumJoints(robot_id)` 看看 Laikago 实际有多少关节？再用 `p.getJointInfo(robot_id, i)[2]` 看每个关节的类型（`p.JOINT_REVOLUTE` / `p.JOINT_FIXED`）。
+关键词：动态扫描 revolute joints、自动分腿。
+</details>
+
+<details>
+<summary>💡 Hint 3：「站住了 2 秒就倒」</summary>
+
+慢速 trot 步态有 50% 时间是"两条对角腿撑地"，这在动力学上是不稳定的，需要靠惯性维持。
+关键词：creep gait（爬行步态）、4 拍循环、单腿轮换、25% 摆动 / 75% 支撑。
+</details>
+
+<details>
+<summary>💡 Hint 4：「走错方向 / 转圈圈」</summary>
+
+`start_orientation = p.getQuaternionFromEuler([math.pi/2, 0, math.pi/2])` 把机身的局部坐标轴和世界坐标轴打乱了。
+关键词：翻转步态里 thigh 摆动的正负号，或用 `getBasePositionAndOrientation` 实测前进方向。
+</details>
+
+<details>
+<summary>💡 Hint 5：「想跑快一点」</summary>
+
+调整 `frequency`（步态周期）和 `step_length`（步长），但**两者要一起涨**——光涨频率不涨步长会变成原地踏步。同时 `force` 和 `positionGain` 也要相应提高。
+</details>
+
+如果用完所有 hint 还不行，再去看 [`examples/quadruped_walk_reference.py`](https://github.com/ai-robot-class/ai-robot-class.github.io/blob/main/examples/quadruped_walk_reference.py)。**但请在 `reflection.md` 里写明你看了参考代码的哪些部分、为什么自己没想到。**
+
+---
+
+#### 🎬 课堂演示流程（教师参考）
+
+| 时间 | 内容 |
+|------|------|
+| 0–5 min | 演示 `quadruped_walk_starter.py`，让全班看机器狗扑街 |
+| 5–15 min | 师生共同分析"为什么会扑街"，列出可能的原因（设计空间 + 物理） |
+| 15–60 min | 学生 2 人一组，独立用 AI 工具迭代 |
+| 60–80 min | 选 3 组上台演示自己的版本 + 复盘对话过程 |
+| 80–90 min | 教师演示参考实现，对照 5 个坑做技术复盘 |
+
+> 🎯 **课堂教学目标不是让所有人都把机器狗调通**——能调通的同学享受成就感，没调通的同学通过对照参考代码反思自己的提示词哪里不够具体，**两种收获都很重要**。
+
+---
+
+### 13.7.5 🚀 选修挑战：用强化学习（PPO + Residual）训练机器狗爬楼梯
+
+> ⚠️ **本节为选修**。需要 GPU 或耐心（CPU 训练 6+ 小时），上课时间不要求所有学生完成。
 > 完整代码：[`week13/quadruped_ppo_residual_stairs.py`](https://github.com/ai-robot-class/week13/blob/main/quadruped_ppo_residual_stairs.py)
 >
-> 本节采用 **PPO + residual controller**。它不是让神经网络从零发明走路，而是先给机器人一个稳定的 trot 基础步态，再让 PPO 学习每个关节的小幅修正。
+> 本节采用 **PPO + residual controller**。它不是让神经网络从零发明走路，而是先给机器人一个稳定的 trot 基础步态（就是 §13.7.4 你和 AI 一起调出来的那种），再让 PPO 学习每个关节的小幅修正。
+>
+> 💡 **这一节展示了 §13.7.4 之后的下一个阶梯**：当手写步态遇到楼梯、跳跃等复杂场景就力不从心了，必须让算法自己学。
 
-#### 本节课代码使用
+#### 本节代码使用（仅供选修）
 
-先 fork 第 13 周代码仓库：
-
-```text
-https://github.com/ai-robot-class/week13
-```
-
-fork 后，学生账号下会有一个自己的 `week13` 仓库，例如：
-
-```text
-https://github.com/<your-github-name>/week13
-```
-
-然后进入自己的作业仓库根目录：
+如果你想尝试本节，按下面顺序把 `week13` 强化学习仓库加入你的作业：
 
 ```bash
-cd <student-homework-repo>
-```
-
-把自己 fork 出来的 `week13` 仓库添加为 submodule：
-
-```bash
+# 1. fork https://github.com/ai-robot-class/week13 到你自己账号
+# 2. 在你自己的作业仓库根目录：
 git submodule add https://github.com/<your-github-name>/week13.git week13
-```
-
-准备作业报告和结果目录：
-
-```bash
 mkdir -p reports results
-```
-
-提交 submodule 记录和作业目录：
-
-```bash
 git add .gitmodules week13 reports results
-git commit -m "Add week13 submodule"
+git commit -m "Add week13 RL submodule (optional)"
 git push
 ```
 
-以后换电脑或重新 clone 作业仓库时，再初始化 submodule：
+以后换电脑时初始化 submodule：
 
 ```bash
 git submodule update --init --recursive
