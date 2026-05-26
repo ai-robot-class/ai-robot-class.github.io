@@ -67,12 +67,39 @@
       line-height: 1.6;
       white-space: pre-wrap;
     }
+    .map-card {
+      margin-top: 14px;
+      background: #020617;
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .map-card h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+    canvas {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      background: #e2e8f0;
+      display: block;
+    }
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .button-row button {
+      flex: 1;
+      min-height: 52px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
   <div class="panel">
     <h1>turtlesim 手机遥控器</h1>
-    <p>手机和电脑进入同一个 Tailscale 网络后，用浏览器打开这个页面。长按方向键持续控制乌龟，松开后停止。</p>
+    <p>手机和电脑进入同一个 Tailscale 网络后，用浏览器打开这个页面。长按方向键持续控制乌龟，松开后停止。边界和障碍物规则已经内置，学生只需要体验迷宫探索。</p>
     <div id="status" class="status disconnected">未连接</div>
 
     <div class="pad">
@@ -87,14 +114,26 @@
       <div></div>
     </div>
 
+    <div class="button-row">
+      <button id="reset">重置到起点</button>
+    </div>
+
+    <div class="map-card">
+      <h2>二维迷宫预览</h2>
+      <canvas id="mazeCanvas" width="360" height="360"></canvas>
+    </div>
+
     <div id="telemetry" class="telemetry">等待乌龟状态...</div>
   </div>
 
   <script>
     const statusEl = document.getElementById("status");
     const telemetryEl = document.getElementById("telemetry");
+    const mazeCanvas = document.getElementById("mazeCanvas");
+    const mazeCtx = mazeCanvas.getContext("2d");
     const wsScheme = location.protocol === "https:" ? "wss" : "ws";
     const socket = new WebSocket(`${wsScheme}://${location.host}/ws`);
+    let latestState = null;
 
     socket.onopen = () => {
       statusEl.textContent = "已连接";
@@ -110,12 +149,19 @@
       const payload = JSON.parse(event.data);
       if (payload.type !== "state") return;
       const state = payload.data;
+      latestState = state;
       telemetryEl.textContent =
         `x: ${state.pose.x}\n` +
         `y: ${state.pose.y}\n` +
         `theta: ${state.pose.theta}\n` +
         `linear: ${state.command.linear}\n` +
-        `angular: ${state.command.angular}`;
+        `angular: ${state.command.angular}\n` +
+        `applied linear: ${state.applied_command.linear}\n` +
+        `applied angular: ${state.applied_command.angular}\n` +
+        `blocked: ${state.rule.blocked}\n` +
+        `reason: ${state.rule.reason}\n` +
+        `goal reached: ${state.rule.goal_reached}`;
+      drawMaze(state);
     };
 
     function sendCommand(linear, angular) {
@@ -126,6 +172,11 @@
     function stopTurtle() {
       if (socket.readyState !== WebSocket.OPEN) return;
       socket.send(JSON.stringify({ type: "stop" }));
+    }
+
+    function resetMaze() {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      socket.send(JSON.stringify({ type: "reset" }));
     }
 
     function bindHold(button) {
@@ -147,8 +198,86 @@
       button.addEventListener("touchcancel", stop, { passive: false });
     }
 
+    function worldToCanvasX(x, bounds) {
+      const usableWidth = mazeCanvas.width - 40;
+      return 20 + ((x - bounds.min_x) / (bounds.max_x - bounds.min_x)) * usableWidth;
+    }
+
+    function worldToCanvasY(y, bounds) {
+      const usableHeight = mazeCanvas.height - 40;
+      return mazeCanvas.height - 20 - ((y - bounds.min_y) / (bounds.max_y - bounds.min_y)) * usableHeight;
+    }
+
+    function drawMaze(state) {
+      const bounds = state.maze.bounds;
+      mazeCtx.clearRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+
+      mazeCtx.fillStyle = "#f8fafc";
+      mazeCtx.fillRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+
+      const x0 = worldToCanvasX(bounds.min_x, bounds);
+      const x1 = worldToCanvasX(bounds.max_x, bounds);
+      const y0 = worldToCanvasY(bounds.max_y, bounds);
+      const y1 = worldToCanvasY(bounds.min_y, bounds);
+
+      mazeCtx.strokeStyle = "#0f172a";
+      mazeCtx.lineWidth = 3;
+      mazeCtx.strokeRect(x0, y0, x1 - x0, y1 - y0);
+
+      mazeCtx.fillStyle = "#475569";
+      state.maze.obstacles.forEach((obstacle) => {
+        const ox = worldToCanvasX(obstacle.x, bounds);
+        const oy = worldToCanvasY(obstacle.y + obstacle.h, bounds);
+        const ow = worldToCanvasX(obstacle.x + obstacle.w, bounds) - ox;
+        const oh = worldToCanvasY(obstacle.y, bounds) - oy;
+        mazeCtx.fillRect(ox, oy, ow, oh);
+      });
+
+      const start = state.maze.start;
+      mazeCtx.fillStyle = "#16a34a";
+      mazeCtx.beginPath();
+      mazeCtx.arc(
+        worldToCanvasX(start.x, bounds),
+        worldToCanvasY(start.y, bounds),
+        8,
+        0,
+        Math.PI * 2
+      );
+      mazeCtx.fill();
+
+      const goal = state.maze.goal;
+      mazeCtx.fillStyle = "#f59e0b";
+      mazeCtx.beginPath();
+      mazeCtx.arc(
+        worldToCanvasX(goal.x, bounds),
+        worldToCanvasY(goal.y, bounds),
+        goal.radius * 20,
+        0,
+        Math.PI * 2
+      );
+      mazeCtx.fill();
+
+      const turtleX = worldToCanvasX(state.pose.x, bounds);
+      const turtleY = worldToCanvasY(state.pose.y, bounds);
+      mazeCtx.fillStyle = state.rule.blocked ? "#dc2626" : "#2563eb";
+      mazeCtx.beginPath();
+      mazeCtx.arc(turtleX, turtleY, state.maze.turtle_radius * 18, 0, Math.PI * 2);
+      mazeCtx.fill();
+
+      mazeCtx.strokeStyle = "#0f172a";
+      mazeCtx.lineWidth = 3;
+      mazeCtx.beginPath();
+      mazeCtx.moveTo(turtleX, turtleY);
+      mazeCtx.lineTo(
+        turtleX + Math.cos(state.pose.theta) * 22,
+        turtleY - Math.sin(state.pose.theta) * 22
+      );
+      mazeCtx.stroke();
+    }
+
     document.querySelectorAll("[data-linear]").forEach(bindHold);
     document.getElementById("stop").addEventListener("click", stopTurtle);
+    document.getElementById("reset").addEventListener("click", resetMaze);
   </script>
 </body>
 </html>
