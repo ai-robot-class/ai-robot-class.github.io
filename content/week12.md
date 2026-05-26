@@ -95,6 +95,18 @@ Tailscale 的作用就是给 **手机** 和 **WSL** 都分配一个同一虚拟�
 
 ### 12.1.4 在 WSL 中命令行安装 Tailscale
 
+在开始 WSL 端安装之前，手机端也要先做一个很简短的准备：
+
+- **iPhone / iPad**：在 `App Store` 安装 `Tailscale`
+- **Android**：在应用商店安装 `Tailscale`
+- 手机端登录时，使用和电脑端 **同一个账号**
+- 第一次打开时允许 `VPN` 或网络扩展权限
+
+手机端这一步不需要复杂配置，先保证两件事即可：
+
+1. 手机上已经安装并登录 `Tailscale`
+2. 后面能和 WSL 出现在同一个 Tailnet 中
+
 本课程统一使用 **WSL 命令行** 安装，不依赖图形界面。
 
 ```bash
@@ -104,6 +116,8 @@ sudo tailscale up
 ```
 
 执行 `sudo tailscale up` 后，按照终端提示登录自己的账号。
+
+这里登录的账号应当与手机端保持一致。
 
 查看当前网络状态：
 
@@ -332,14 +346,43 @@ ssh robot@100.88.77.66
 
 ---
 
-#### 第三步：运行老师提供的相机接收脚本
+#### 第三步：先安装本周需要的 Python 库
+
+在运行相机桥接程序之前，先安装本周需要的依赖。
+
+如果系统里还没有 `pip3`，先安装：
+
+```bash
+sudo apt update
+sudo apt install python3-pip -y
+```
+
+然后安装本周起始代码依赖：
+
+```bash
+pip3 install -r week12_starters/requirements.txt
+```
+
+这一步完成后，再运行桥接程序。
+
+如果直接运行程序时看到下面这类报错：
+
+```text
+No module named 'flask'
+```
+
+通常就说明依赖还没有安装完成。
+
+---
+
+#### 第四步：运行老师提供的相机接收脚本
 
 接下来不要求学生先看懂服务端代码，而是先把脚本运行起来。
 
 例如：
 
 ```bash
-python3 camera_bridge.py
+python3 week12_starters/camera_bridge.py
 ```
 
 此时学生只需要知道两件事：
@@ -363,14 +406,14 @@ python3 camera_bridge.py
 
 运行顺序统一为：
 
-1. 先启动 `camera_bridge.py`
+1. 先启动 `week12_starters/camera_bridge.py`
 2. 再让手机浏览器接入
 3. 程序持续接收最新一帧
 4. 在同一个程序内部直接完成显示和识别
 
 --- 
 
-#### 第四步：用手机浏览器访问页面
+#### 第五步：用手机浏览器访问页面
 
 在手机浏览器中打开：
 
@@ -388,7 +431,7 @@ https://100.88.77.66:5000
 
 ---
 
-#### 第五步：允许浏览器使用摄像头
+#### 第六步：允许浏览器使用摄像头
 
 打开页面后，浏览器会请求摄像头权限。
 
@@ -399,6 +442,34 @@ https://100.88.77.66:5000
 - 保持页面停留在前台
 
 如果一切正常，此时 WSL 端应该已经能收到图像。
+
+---
+
+#### 本节课的最小成功流程
+
+学生先装依赖：
+
+```bash
+pip3 install -r week12_starters/requirements.txt
+```
+
+再启动程序：
+
+```bash
+python3 week12_starters/camera_bridge.py
+```
+
+手机浏览器打开：
+
+```text
+https://<WSL的Tailscale_IP>:5000
+```
+
+成功标志是同时看到下面三件事：
+
+1. **手机本地画面**
+2. **服务端处理结果**
+3. **ArUco ID 6 被识别**
 
 ---
 
@@ -447,6 +518,18 @@ ss -tlnp | grep 5000
 - Python 是否成功解码
 - OpenCV 是否成功显示
 
+最常见的基础报错之一是：
+
+```text
+No module named 'flask'
+```
+
+这通常不是程序逻辑问题，而是还没有先执行：
+
+```bash
+pip3 install -r week12_starters/requirements.txt
+```
+
 #### 最推荐的课堂拆分验证法
 
 把这一步拆成四个最小成功点：
@@ -468,10 +551,16 @@ ss -tlnp | grep 5000
 
 #### 学生层面
 
-学生只需要会运行：
+学生先安装依赖：
 
 ```bash
-python3 camera_bridge.py
+pip3 install -r week12_starters/requirements.txt
+```
+
+然后运行：
+
+```bash
+python3 week12_starters/camera_bridge.py
 ```
 
 然后在手机浏览器中打开：
@@ -777,7 +866,7 @@ cv2.destroyAllWindows()
 
 - `get_latest_frame()` 表示“从 HTML5 摄像头接收端拿到最新一帧图像”
 - 本周课堂直接把 HTML5 接收、ArUco 检测和结果显示写在同一个 Python 程序里
-- `camera_bridge.py` 在实时识别期间保持运行，识别逻辑就在这个运行中的程序内部完成
+- `week12_starters/camera_bridge.py` 在实时识别期间保持运行，识别逻辑就在这个运行中的程序内部完成
 - 这样整条输入链路始终只有一套，不会出现两个程序重复接收视频流的冲突
 
 ---
