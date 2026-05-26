@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyBullet 机器狗遥控器</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      background: #111827;
+      color: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .panel {
+      width: min(420px, 100%);
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+    p {
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .status {
+      margin: 14px 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #0f172a;
+      font-size: 14px;
+    }
+    .status.connected { color: #86efac; }
+    .status.disconnected { color: #fca5a5; }
+    .pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+    button {
+      min-height: 72px;
+      border: none;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      background: #2563eb;
+      color: white;
+      touch-action: manipulation;
+    }
+    button.secondary { background: #475569; }
+    button.danger { background: #dc2626; }
+    .telemetry {
+      font-family: Consolas, monospace;
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>PyBullet 机器狗遥控器</h1>
+    <p>手机和电脑进入同一个 Tailscale 网络后，直接在手机浏览器打开这个页面。长按方向键持续控制，松开后停止。</p>
+    <div id="status" class="status disconnected">未连接</div>
+
+    <div class="pad">
+      <div></div>
+      <button data-move="1" data-turn="0">↑</button>
+      <div></div>
+      <button data-move="0" data-turn="1">←</button>
+      <button id="stop" class="danger">■</button>
+      <button data-move="0" data-turn="-1">→</button>
+      <div></div>
+      <button data-move="-1" data-turn="0">↓</button>
+      <div></div>
+    </div>
+
+    <button id="reset" class="secondary" style="width:100%; margin-bottom: 16px;">重置位置</button>
+    <div id="telemetry" class="telemetry">等待状态数据...</div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const telemetryEl = document.getElementById("telemetry");
+    const wsScheme = location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket(`${wsScheme}://${location.host}/ws`);
+
+    socket.onopen = () => {
+      statusEl.textContent = "已连接";
+      statusEl.className = "status connected";
+    };
+
+    socket.onclose = () => {
+      statusEl.textContent = "连接断开";
+      statusEl.className = "status disconnected";
+    };
+
+    socket.onmessage = (event) => {
+      const payload = JSON.parse(event.data);
+      if (payload.type !== "state") return;
+      const state = payload.data;
+      telemetryEl.textContent =
+        `x: ${state.position.x}\n` +
+        `y: ${state.position.y}\n` +
+        `z: ${state.position.z}\n` +
+        `yaw: ${state.yaw}\n` +
+        `move: ${state.command.move}\n` +
+        `turn: ${state.command.turn}`;
+    };
+
+    function sendCommand(move, turn) {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      socket.send(JSON.stringify({ type: "command", move, turn }));
+    }
+
+    function stopRobot() {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      socket.send(JSON.stringify({ type: "stop" }));
+    }
+
+    function bindHold(button) {
+      const move = Number(button.dataset.move);
+      const turn = Number(button.dataset.turn);
+      const start = (event) => {
+        event.preventDefault();
+        sendCommand(move, turn);
+      };
+      const stop = (event) => {
+        event.preventDefault();
+        stopRobot();
+      };
+      button.addEventListener("mousedown", start);
+      button.addEventListener("mouseup", stop);
+      button.addEventListener("mouseleave", stop);
+      button.addEventListener("touchstart", start, { passive: false });
+      button.addEventListener("touchend", stop, { passive: false });
+      button.addEventListener("touchcancel", stop, { passive: false });
+    }
+
+    document.querySelectorAll("[data-move]").forEach(bindHold);
+    document.getElementById("stop").addEventListener("click", stopRobot);
+    document.getElementById("reset").addEventListener("click", () => {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      socket.send(JSON.stringify({ type: "reset" }));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>turtlesim 遥控器</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+    }
+    .panel {
+      width: min(420px, 100%);
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+    p {
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .status {
+      margin: 14px 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #020617;
+      font-size: 14px;
+    }
+    .status.connected { color: #86efac; }
+    .status.disconnected { color: #fca5a5; }
+    .pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+    button {
+      min-height: 72px;
+      border: none;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      background: #0ea5e9;
+      color: white;
+      touch-action: manipulation;
+    }
+    button.danger { background: #dc2626; }
+    .telemetry {
+      font-family: Consolas, monospace;
+      background: #020617;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>turtlesim 手机遥控器</h1>
+    <p>手机和电脑进入同一个 Tailscale 网络后，用浏览器打开这个页面。长按方向键持续控制乌龟，松开后停止。</p>
+    <div id="status" class="status disconnected">未连接</div>
+
+    <div class="pad">
+      <div></div>
+      <button data-linear="2.0" data-angular="0.0">↑</button>
+      <div></div>
+      <button data-linear="0.0" data-angular="2.0">←</button>
+      <button id="stop" class="danger">■</button>
+      <button data-linear="0.0" data-angular="-2.0">→</button>
+      <div></div>
+      <button data-linear="-2.0" data-angular="0.0">↓</button>
+      <div></div>
+    </div>
+
+    <div id="telemetry" class="telemetry">等待乌龟状态...</div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const telemetryEl = document.getElementById("telemetry");
+    const wsScheme = location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket(`${wsScheme}://${location.host}/ws`);
+
+    socket.onopen = () => {
+      statusEl.textContent = "已连接";
+      statusEl.className = "status connected";
+    };
+
+    socket.onclose = () => {
+      statusEl.textContent = "连接断开";
+      statusEl.className = "status disconnected";
+    };
+
+    socket.onmessage = (event) => {
+      const payload = JSON.parse(event.data);
+      if (payload.type !== "state") return;
+      const state = payload.data;
+      telemetryEl.textContent =
+        `x: ${state.pose.x}\n` +
+        `y: ${state.pose.y}\n` +
+        `theta: ${state.pose.theta}\n` +
+        `linear: ${state.command.linear}\n` +
+        `angular: ${state.command.angular}`;
+    };
+
+    function sendCommand(linear, angular) {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      socket.send(JSON.stringify({ type: "command", linear, angular }));
+    }
+
+    function stopTurtle() {
+      if (socket.readyState !== WebSocket.OPEN) return;
+      socket.send(JSON.stringify({ type: "stop" }));
+    }
+
+    function bindHold(button) {
+      const linear = Number(button.dataset.linear);
+      const angular = Number(button.dataset.angular);
+      const start = (event) => {
+        event.preventDefault();
+        sendCommand(linear, angular);
+      };
+      const stop = (event) => {
+        event.preventDefault();
+        stopTurtle();
+      };
+      button.addEventListener("mousedown", start);
+      button.addEventListener("mouseup", stop);
+      button.addEventListener("mouseleave", stop);
+      button.addEventListener("touchstart", start, { passive: false });
+      button.addEventListener("touchend", stop, { passive: false });
+      button.addEventListener("touchcancel", stop, { passive: false });
+    }
+
+    document.querySelectorAll("[data-linear]").forEach(bindHold);
+    document.getElementById("stop").addEventListener("click", stopTurtle);
+  </script>
+</body>
+</html>

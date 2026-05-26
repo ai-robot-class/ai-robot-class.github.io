@@ -1,0 +1,2 @@
+aiohttp>=3.9
+pybullet>=3.2
