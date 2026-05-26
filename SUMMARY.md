@@ -19,5 +19,5 @@
 - [Week 9：机器人与机器视觉数学基础（网课）](content/week9.md)
 - [Week 10：Docker 概念与 OpenCV 实验](content/week10.md)
 - [Week 11：Docker 进阶与 GitHub Pages 网页部署](content/week11.md)
-- [Week 12：视觉与语音入门 + 期末项目启动](content/week12.md)
+- [Week 12：手机摄像头、ArUco 识别与距离测量](content/week12.md)
 - [Week 13：四足机器人入门 + 期末项目实施](content/week13.md)

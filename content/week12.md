@@ -1,1058 +1,1383 @@
-# 第12周：视觉与语音入门 + 期末项目启动
+# 第12周：手机摄像头、ArUco 识别与距离测量
 
-**课时**: 3小时（一次课）
-
----
-
-## 📋 本周课程大纲
-
-| 模块 | 时间 | 主题 | 内容 |
-|------|------|------|------|
-| 模块1 | 60分钟 | OpenCV视觉处理 | 图像处理+颜色检测 |
-| 模块2 | 40分钟 | 语音技术入门 | 识别与合成 |
-| 茶歇 | 10分钟 | 休息 | - |
-| 模块3 | 70分钟 | 期末项目启动 | 分组选题+计划 |
+**课时**：3 小时（一次课）
 
 ---
 
-## 第一模块：OpenCV视觉处理（60分钟）
+## 📋 本周课程目标
 
-### ⏱️ 时间分配
+本周我们不再停留在“看懂图像”层面，而是围绕一个机器人真实问题展开：
 
-| 环节 | 时间 | 内容 |
-|------|------|------|
-| 讲解+演示 | 30分钟 | OpenCV基础快速入门 |
-| 实践 | 30分钟 | 颜色检测与追踪实战 |
+> 机器人如何知道一个目标离自己有多远、在什么方向？
 
----
+为了让大家用最低成本完成这个闭环实验，本周使用：
 
-## 12.1 OpenCV快速入门
+- **手机摄像头** 作为视觉输入
+- **WSL Ubuntu** 作为开发环境
+- **Tailscale** 作为手机与 WSL 之间的网络桥梁
+- **OpenCV + ArUco** 完成识别与测距
 
-> OpenCV是最流行的计算机视觉库，简单易用！
+课堂必做部分完成后，可以先打通下面这条基础链路：
 
-### 12.1.1 安装与验证
-
-```bash
-# 安装OpenCV
-pip install opencv-python opencv-contrib-python
-
-# 验证
-python3 -c "import cv2; print(f'OpenCV版本: {cv2.__version__}')"
+```text
+手机摄像头 -> WSL 视频输入 -> ArUco 识别
 ```
 
-### 12.1.2 图像基本操作（15分钟掌握）
+进一步的选做拓展链路是：
+
+```text
+手机摄像头 -> WSL 视频输入 -> ArUco 识别 -> 相机标定 -> 距离计算
+```
+
+---
+
+## 🧭 本周课程结构
+
+| 部分 | 时间 | 主题 | 核心内容 |
+|------|------|------|----------|
+| Part 1 | 50 分钟 | 手机摄像头接入 WSL | Tailscale 组网、SSH 登录测试、手机视频流、OpenCV 接收 |
+| Part 2 | 35 分钟 | ArUco 识别 | ArUco 原理、OpenCV 检测、标记 ID 与角点 |
+| Part 3 | 45 分钟 | 相机标定（选做） | 棋盘格、内参矩阵、畸变系数、标定数据保存 |
+| Part 4 | 40 分钟 | 利用标定数据测距（选做） | solvePnP、rvec/tvec、距离计算与实时显示 |
+| 收尾 | 10 分钟 | 总结与作业 | 环境检查、报告要求、延伸方向 |
+
+---
+
+## 第一部分：将手机摄像头作为输入，连入 WSL 系统
+
+### 12.1.1 为什么不用笔记本内置摄像头？
+
+这节课故意使用手机，是因为它更接近机器人开发中的真实工程思路：
+
+- 学生人手一台，硬件成本几乎为零
+- 后续可以直接迁移到“远程摄像头 / 网络摄像头 / 机器人相机”
+- 能顺带理解网络视频流、设备接入和系统桥接问题
+
+我们真正要解决的问题不是“打开摄像头”，而是：
+
+> 如何让 **手机** 的视频画面，稳定地进入 **WSL** 里的 Python / OpenCV？
+
+---
+
+### 12.1.2 为什么使用 Tailscale？
+
+在校园网、实验室或者机房环境中，普通局域网方案经常失败，原因通常有两个：
+
+1. **校园网 AP 隔离**
+   - 手机和电脑虽然连的是同一个 Wi-Fi
+   - 但出于安全考虑，设备之间禁止互相访问
+
+2. **WSL2 NAT 隔离**
+   - WSL2 相当于 Windows 内部的一个独立虚拟子网
+   - 手机很难直接访问 WSL 的内部地址
+
+Tailscale 的作用就是给 **手机** 和 **WSL** 都分配一个同一虚拟网段下的地址（通常是 `100.x.y.z`），从而绕过校园网限制与 WSL 转发麻烦。
+
+---
+
+### 12.1.3 推荐课堂模式：一人一网（Tailnet）
+
+不要让全班登录同一个 Tailscale 账号。
+
+推荐方式：
+
+- 每位同学使用自己的 **GitHub** 或 **Google** 账号注册 Tailscale
+- 每个学生有自己的 Tailnet
+- 这个虚拟网络里只包含自己的电脑和自己的手机
+
+这样做的优点：
+
+- IP 不会混乱
+- 排错更直接
+- 每个学生的实验环境互不干扰
+
+---
+
+### 12.1.4 在 WSL 中命令行安装 Tailscale
+
+本课程统一使用 **WSL 命令行** 安装，不依赖图形界面。
+
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo service tailscaled start
+sudo tailscale up
+```
+
+执行 `sudo tailscale up` 后，按照终端提示登录自己的账号。
+
+查看当前网络状态：
+
+```bash
+tailscale status
+tailscale ip -4
+```
+
+---
+
+### 12.1.4.1 加上 SSH 登录学习测试
+
+既然手机和 WSL 已经通过 Tailscale 进入同一个虚拟网络，本周可以顺手做一个很有工程味的验证：
+
+> 除了“拉视频流”，这个网络还能不能让我们对 WSL 进行远程登录？
+
+这一步的目的不是让手机作为主要开发终端，而是让大家理解：
+
+- Tailscale 不只是给摄像头用
+- 它本质上是在打通设备与设备之间的网络连接
+- 打通之后，视频流、SSH、HTTP 服务都可以复用这条链路
+
+先在 WSL 里安装 SSH 服务：
+
+```bash
+sudo apt update
+sudo apt install openssh-server -y
+sudo service ssh start
+```
+
+确认 SSH 服务正在监听：
+
+```bash
+sudo service ssh status
+ss -tlnp | grep :22
+```
+
+然后查看 WSL 在 Tailscale 中的地址：
+
+```bash
+tailscale ip -4
+```
+
+假设输出为：
+
+```text
+100.88.77.66
+```
+
+那么在另外一台已经登录同一 Tailnet 的设备上，可以测试：
+
+```bash
+ssh robot@100.88.77.66
+```
+
+如果只有一台电脑和一部手机，也可以把这一步当作“理解型实验”：
+
+- 先在 WSL 中把 SSH 服务装起来
+- 确认 22 端口正常
+- 理解 Tailscale 地址可以直接用于远程登录
+
+建议直接使用手机上的 SSH 登录软件，从手机远程登录自己的电脑 / WSL，这样更容易直观理解：
+
+- 手机不仅能当摄像头
+- 也能当网络终端
+- 同一个 Tailscale 网络既能传视频，也能做远程登录
+
+推荐按手机系统区分：
+
+| 系统 | 推荐 SSH 客户端 | 说明 |
+|------|----------------|------|
+| iPhone / iPad | **Termius** | 界面友好，比较容易上手 |
+| Android | **Termius** / **JuiceSSH** | 都比较常见，连接和保存主机信息方便 |
+
+建议学生在手机端新建一个连接项：
+
+- Host：WSL 的 Tailscale IP，例如 `100.88.77.66`
+- Username：自己的 WSL 用户名，例如 `robot`
+- Port：`22`
+
+连接命令本质上就是：
+
+```bash
+ssh robot@100.88.77.66
+```
+
+课堂提示：
+
+- **iPhone / iPad**：先打开 Tailscale，再打开 SSH 客户端，避免 VPN 没连上
+- **Android**：注意有些系统会限制后台网络权限，若连接超时，先确认 Tailscale 和 SSH 客户端都没有被系统省电策略挂起
+- 第一次连接时看到主机指纹确认提示，选择接受即可
+
+如果学生手机上安装了 SSH 客户端并成功登录，这会是一个很好的加分体验：说明他们已经真正把“手机、网络、WSL、Linux 服务”串起来了。
+
+这一步的意义在于：
+
+- 让大家理解机器人系统经常不是“单机程序”
+- 而是多个设备通过网络协同
+- 今天的摄像头输入，和将来的远程调试、远程部署，本质上是同一类问题
+
+---
+
+### 12.1.5 WSL 里最容易踩的坑
+
+#### 坑 1：`tailscaled` 没启动
+
+如果出现：
+
+```text
+failed to connect to local tailscaled; is tailscaled running?
+```
+
+说明守护进程没启动，先执行：
+
+```bash
+sudo service tailscaled start
+```
+
+#### 坑 2：每次开 WSL 都忘了启动
+
+WSL 默认不像完整 Linux 服务器那样自然地托管所有后台服务。很多同学关掉终端再打开时，Tailscale 服务其实已经没了。
+
+所以课堂习惯应该是：
+
+```bash
+sudo service tailscaled start
+tailscale status
+```
+
+先确认服务和设备可见，再开始视觉实验。
+
+#### 坑 3：Tailscale 通了，但 SSH 没开
+
+很多同学会误以为：
+
+> 只要 `tailscale status` 里看得到设备，就一定能 `ssh` 登录。
+
+但并不是这样。Tailscale 只是把网络打通，SSH 还依赖：
+
+- `openssh-server` 已安装
+- `ssh` 服务已启动
+- 用户名填写正确，例如 `robot`
+
+所以 SSH 登录测试的最小检查顺序应该是：
+
+```bash
+tailscale status
+sudo service ssh start
+ss -tlnp | grep :22
+```
+
+---
+
+### 12.1.6 手机端视频方案：统一使用 HTML5 相机
+
+本周课堂统一采用：
+
+- **手机浏览器**
+- **HTML5 摄像头**
+- **Tailscale**
+- **老师提供的 WSL 接收脚本**
+
+这样安排的目的，是让学生先把整条链路跑通，再逐步理解代码内部发生了什么。
+
+换句话说，本节课前半段的重点不是先讲 Flask、SocketIO 或 WebSocket 细节，而是先让大家完成一个非常明确的操作目标：
+
+> 让手机浏览器打开摄像头，并把画面送到 WSL 里的 OpenCV 窗口。
+
+这样做的好处是：
+
+- iPhone 和 Android 用的是同一套方案
+- 学生不需要安装额外的摄像头 App
+- 课堂操作步骤更统一
+- 更适合先运行，再逐步理解
+
+---
+
+### 12.1.7 学生视角的课堂操作顺序
+
+这一节按下面顺序操作，不必一开始就展开服务端代码细节。
+
+#### 第一步：先把网络打通
+
+在 WSL 中执行：
+
+```bash
+sudo service tailscaled start
+tailscale status
+tailscale ip -4
+```
+
+目标：
+
+- 确认 Tailscale 已启动
+- 记下 WSL 的 Tailscale IP
+
+例如：
+
+```text
+100.88.77.66
+```
+
+---
+
+#### 第二步：完成 SSH 学习测试
+
+在 WSL 中确保 SSH 服务已经装好并启动：
+
+```bash
+sudo apt update
+sudo apt install openssh-server -y
+sudo service ssh start
+ss -tlnp | grep :22
+```
+
+然后鼓励学生用手机上的 SSH 客户端测试连接：
+
+```bash
+ssh robot@100.88.77.66
+```
+
+这一小步的目的，是让学生先建立一个非常清楚的感受：
+
+- Tailscale 确实把手机和 WSL 放进了同一个网络
+- 手机不仅能当摄像头，也能做远程终端
+
+---
+
+#### 第三步：运行老师提供的相机接收脚本
+
+接下来不要求学生先看懂服务端代码，而是先把脚本运行起来。
+
+例如：
+
+```bash
+python3 camera_bridge.py
+```
+
+此时学生只需要知道两件事：
+
+1. 这个脚本会在 WSL 中启动一个网页服务
+2. 这个脚本会接收手机浏览器传回来的图像帧
+
+至于 Flask、SocketIO、HTTPS、自签名证书这些实现细节，可以等链路跑通后再解释。
+
+这一程序在实时实验阶段需要持续运行：
+
+- 只要手机浏览器还在发送视频帧，WSL 端这个程序就不要关闭
+- 关闭它之后，手机页面虽然还在，但后端已经没有程序接收图像
+- 只有在结束本次实时实验，或者已经把需要的图片保存完毕后，才可以停止
+
+本周课堂统一采用最简单的协调方式：
+
+- **相机接收、图像显示、ArUco 检测写在同一个 Python 程序里**
+- 不再额外启动第二个 Python 程序去“再读一次摄像头”
+- 这样可以避免多个程序同时争抢同一条实时视频流
+
+运行顺序统一为：
+
+1. 先启动 `camera_bridge.py`
+2. 再让手机浏览器接入
+3. 程序持续接收最新一帧
+4. 在同一个程序内部直接完成显示和识别
+
+--- 
+
+#### 第四步：用手机浏览器访问页面
+
+在手机浏览器中打开：
+
+```text
+https://100.88.77.66:5000
+```
+
+注意：
+
+- 这里的地址是 **WSL 的 Tailscale IP**
+- 不是校园网地址
+- 也不是 `192.168.x.x`
+
+如果端口不是 `5000`，就替换成实际端口。
+
+---
+
+#### 第五步：允许浏览器使用摄像头
+
+打开页面后，浏览器会请求摄像头权限。
+
+学生此时要做的是：
+
+- 允许浏览器访问摄像头
+- 将后置摄像头对准 ArUco 或棋盘格
+- 保持页面停留在前台
+
+如果一切正常，此时 WSL 端应该已经能收到图像。
+
+---
+
+### 12.1.8 推荐调试顺序
+
+在这一步里，最常见的问题不是算法，而是链路没有打通。建议统一按下面顺序排查：
+
+```text
+先查网络 -> 再查服务 -> 再查浏览器权限 -> 最后查代码
+```
+
+#### 1. 先查网络
+
+```bash
+tailscale status
+tailscale ip -4
+ping <手机的Tailscale_IP>
+```
+
+目标：
+
+- 看得到手机
+- WSL 和手机在同一个 Tailnet 中
+
+#### 2. 再查服务
+
+确认老师提供的脚本是否真的启动了网页服务：
+
+```bash
+ss -tlnp | grep 5000
+```
+
+#### 3. 再查手机浏览器
+
+看这三件事：
+
+- 页面能不能打开
+- 摄像头权限有没有给
+- 页面是否保持在前台
+
+#### 4. 最后再查代码
+
+只有在网络、端口、权限都正常后，才去怀疑：
+
+- 帧是否真的发出去了
+- Python 是否成功解码
+- OpenCV 是否成功显示
+
+#### 最推荐的课堂拆分验证法
+
+把这一步拆成四个最小成功点：
+
+1. 手机能访问 WSL 页面
+2. 手机浏览器能成功打开摄像头
+3. WSL 能收到一帧图像
+4. OpenCV 能成功显示这一帧图像
+
+---
+
+### 12.1.9 OpenCV 测试手机视频流
+
+这一小节要确认的是：
+
+> 手机画面能够稳定出现在 WSL 的 OpenCV 窗口里。
+
+这一部分可以分成两层理解：
+
+#### 学生层面
+
+学生只需要会运行：
+
+```bash
+python3 camera_bridge.py
+```
+
+然后在手机浏览器中打开：
+
+```text
+https://<WSL的Tailscale_IP>:5000
+```
+
+看到画面成功进入 WSL，就说明这一段链路已经打通。
+
+#### 进一步理解
+
+等链路跑通之后，再向学生解释老师提供的接收端脚本在做什么。下面给一个极简的参考实现。思路是：
+
+- WSL 中起一个 HTTPS 页面
+- 手机浏览器打开页面
+- 页面调用摄像头
+- 页面把 JPEG 帧通过 WebSocket 发回 Python
+- Python 用 OpenCV 解码并显示
 
 ```python
 import cv2
 import numpy as np
+from flask import Flask, render_template_string
+from flask_socketio import SocketIO
 
-# 1. 读取图像
-img = cv2.imread('robot.jpg')
-print(f"图像形状: {img.shape}")  # (高, 宽, 通道)
+app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-# 2. 显示图像
-cv2.imshow('Original', img)
-cv2.waitKey(0)  # 按任意键关闭
-cv2.destroyAllWindows()
+HTML = """
+<!doctype html>
+<html>
+<body>
+  <h3>HTML5 Camera Bridge</h3>
+  <video id="video" autoplay playsinline style="width: 90vw;"></video>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const socket = io();
 
-# 3. 颜色空间转换
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 灰度图
-hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)    # HSV颜色空间
+    async function main() {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: 1280,
+          height: 720,
+          facingMode: "environment"
+        },
+        audio: false
+      });
+      video.srcObject = stream;
 
-# 4. 图像缩放
-resized = cv2.resize(img, (640, 480))
-
-# 5. 图像裁剪（数组切片）
-cropped = img[100:300, 200:400]
-
-# 6. 绘制图形
-cv2.rectangle(img, (50, 50), (200, 200), (0, 255, 0), 2)  # 绿色矩形
-cv2.circle(img, (320, 240), 50, (0, 0, 255), -1)         # 红色实心圆
-cv2.putText(img, 'Robot', (100, 100), 
-            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-
-# 7. 保存图像
-cv2.imwrite('output.jpg', img)
-```
-
-### 12.1.3 边缘检测（5分钟掌握）
-
-```python
-# Canny边缘检测
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-edges = cv2.Canny(gray, 50, 150)
-
-cv2.imshow('Edges', edges)
-cv2.waitKey(0)
-```
-
----
-
-## 12.2 颜色检测与追踪
-
-> 最实用的入门技术：通过颜色追踪物体！
-
-### 12.2.1 HSV颜色空间
-
-```
-为什么用HSV而不是RGB？
-
-RGB: 受光照影响大
-HSV: 颜色、亮度分离
-     H (Hue): 色调 (0-180)
-     S (Saturation): 饱和度 (0-255)
-     V (Value): 明度 (0-255)
-
-常见颜色HSV范围：
-• 红色: [0, 120, 70] ~ [10, 255, 255]
-• 绿色: [40, 40, 40] ~ [80, 255, 255]
-• 蓝色: [100, 43, 46] ~ [124, 255, 255]
-```
-
-### 12.2.2 颜色检测实战
-
-```python
-import cv2
-import numpy as np
-
-# 打开摄像头
-cap = cv2.VideoCapture(0)
-
-# 定义红色范围（HSV）
-lower_red = np.array([0, 120, 70])
-upper_red = np.array([10, 255, 255])
-
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-    
-    # 转HSV
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    
-    # 颜色过滤（创建mask）
-    mask = cv2.inRange(hsv, lower_red, upper_red)
-    
-    # 形态学操作（去噪）
-    mask = cv2.erode(mask, None, iterations=2)
-    mask = cv2.dilate(mask, None, iterations=2)
-    
-    # 找轮廓
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, 
-                                    cv2.CHAIN_APPROX_SIMPLE)
-    
-    # 处理最大轮廓（追踪最大红色物体）
-    if contours:
-        largest = max(contours, key=cv2.contourArea)
-        
-        # 计算外接矩形
-        x, y, w, h = cv2.boundingRect(largest)
-        
-        # 计算中心点
-        cx, cy = x + w//2, y + h//2
-        
-        # 绘制结果
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
-        cv2.putText(frame, f'Red Object ({cx}, {cy})', (x, y-10),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-    
-    # 显示
-    cv2.imshow('Original', frame)
-    cv2.imshow('Mask', mask)
-    
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
-```
-
-### 12.2.3 实践练习：颜色调节工具
-
-```python
-def nothing(x):
-    pass
-
-# 创建窗口和滑块
-cv2.namedWindow('HSV Tuner')
-cv2.createTrackbar('H_min', 'HSV Tuner', 0, 180, nothing)
-cv2.createTrackbar('H_max', 'HSV Tuner', 180, 180, nothing)
-cv2.createTrackbar('S_min', 'HSV Tuner', 0, 255, nothing)
-cv2.createTrackbar('S_max', 'HSV Tuner', 255, 255, nothing)
-cv2.createTrackbar('V_min', 'HSV Tuner', 0, 255, nothing)
-cv2.createTrackbar('V_max', 'HSV Tuner', 255, 255, nothing)
-
-cap = cv2.VideoCapture(0)
-
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-    
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    
-    # 读取滑块值
-    h_min = cv2.getTrackbarPos('H_min', 'HSV Tuner')
-    h_max = cv2.getTrackbarPos('H_max', 'HSV Tuner')
-    s_min = cv2.getTrackbarPos('S_min', 'HSV Tuner')
-    s_max = cv2.getTrackbarPos('S_max', 'HSV Tuner')
-    v_min = cv2.getTrackbarPos('V_min', 'HSV Tuner')
-    v_max = cv2.getTrackbarPos('V_max', 'HSV Tuner')
-    
-    # 创建mask
-    lower = np.array([h_min, s_min, v_min])
-    upper = np.array([h_max, s_max, v_max])
-    mask = cv2.inRange(hsv, lower, upper)
-    
-    # 应用mask
-    result = cv2.bitwise_and(frame, frame, mask=mask)
-    
-    cv2.imshow('Original', frame)
-    cv2.imshow('Mask', mask)
-    cv2.imshow('Result', result)
-    
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
-```
-
----
-
-## 第二模块：语音技术入门（40分钟）
-
-### ⏱️ 时间分配
-
-| 环节 | 时间 | 内容 |
-|------|------|------|
-| 讲解+演示 | 20分钟 | 语音识别入门 |
-| 讲解+演示 | 20分钟 | 语音合成入门 |
-
----
-
-## 12.3 语音识别入门
-
-> 让机器人"听懂"人话
-
-### 12.3.1 安装语音库
-
-```bash
-# 语音识别
-pip install SpeechRecognition pyaudio
-
-# 中文语音识别（可选）
-pip install paddlespeech
-
-# 文字转语音
-pip install pyttsx3 gTTS
-```
-
-### 12.3.2 简单语音识别
-
-```python
-import speech_recognition as sr
-
-# 创建识别器
-recognizer = sr.Recognizer()
-
-# 使用麦克风
-with sr.Microphone() as source:
-    print("请说话...")
-    
-    # 调整环境噪音
-    recognizer.adjust_for_ambient_noise(source)
-    
-    # 录音
-    audio = recognizer.listen(source)
-    
-    print("识别中...")
-    
-    try:
-        # 使用Google语音识别（需要网络）
-        text = recognizer.recognize_google(audio, language='zh-CN')
-        print(f"你说的是: {text}")
-        
-    except sr.UnknownValueError:
-        print("听不清楚")
-    except sr.RequestError:
-        print("识别服务出错")
-```
-
-### 12.3.3 语音命令识别
-
-```python
-import speech_recognition as sr
-
-def recognize_command():
-    """识别语音命令"""
-    recognizer = sr.Recognizer()
-    
-    # 定义命令词
-    commands = {
-        '前进': 'forward',
-        '后退': 'backward',
-        '左转': 'left',
-        '右转': 'right',
-        '停止': 'stop'
+      setInterval(() => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        canvas.toBlob(async (blob) => {
+          const arrayBuffer = await blob.arrayBuffer();
+          socket.emit("video_frame", arrayBuffer);
+        }, "image/jpeg", 0.8);
+      }, 100);
     }
-    
-    with sr.Microphone() as source:
-        print("等待命令...")
-        recognizer.adjust_for_ambient_noise(source)
-        audio = recognizer.listen(source)
-        
-        try:
-            text = recognizer.recognize_google(audio, language='zh-CN')
-            print(f"识别到: {text}")
-            
-            # 匹配命令
-            for cmd, action in commands.items():
-                if cmd in text:
-                    print(f"执行: {action}")
-                    return action
-            
-            print("未识别到有效命令")
-            return None
-            
-        except:
-            print("识别失败")
-            return None
 
-# 测试
-while True:
-    cmd = recognize_command()
-    if cmd == 'stop':
-        break
+    main();
+  </script>
+</body>
+</html>
+"""
+
+@app.route("/")
+def index():
+    return render_template_string(HTML)
+
+@socketio.on("video_frame")
+def handle_frame(image_bytes):
+    nparr = np.frombuffer(image_bytes, np.uint8)
+    frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if frame is not None:
+        cv2.imshow("HTML5 Camera Test", frame)
+        cv2.waitKey(1)
+
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port=5000, ssl_context="adhoc")
+```
+
+运行后，手机浏览器访问：
+
+```text
+https://<WSL的Tailscale_IP>:5000
+```
+
+首次访问时如果浏览器提示证书风险，可以指导学生点击“继续访问”，因为这里使用的是临时自签名证书。
+
+---
+
+### 12.1.10 手机摄像头实验前的铁律
+
+做标定和测距之前，必须要求学生在手机浏览器侧尽量固定：
+
+- **分辨率**
+- **对焦模式**
+
+推荐设置：
+
+- 分辨率：`1280x720` 或 `1920x1080`
+- 对焦：尽量锁定，不要自动来回跳
+
+原因：
+
+1. **自动对焦会改变焦距**
+   - 相机标定默认认为焦距是固定的
+   - 如果手机自动变焦，前面算出的内参矩阵会失效
+
+2. **动态分辨率会破坏像素坐标系**
+   - 如果浏览器传回来的分辨率中途变化
+   - 角点位置和标定结果都不再对应
+
+这一步是后面“测距是否准确”的前提。
+
+---
+
+## 第二部分：ArUco 识别
+
+### 12.2.1 什么是 ArUco 码？
+
+ArUco 可以理解为：
+
+> 专门给机器人看的二维码 / 条形码。
+
+它由两部分组成：
+
+- **外圈粗黑边框**
+- **内部黑白二值编码**
+
+内部编码对应一个 **marker id**。本周课堂统一使用 `ID 6`。
+
+不同 ID 对应不同的图案。
+
+先建立一个非常直接的认识：
+
+- 机器人首先不是“理解图片内容”
+- 而是先找到一个**规则、可计算、容易稳定识别**的目标
+
+ArUco 正好就是这样的目标。
+
+---
+
+### 12.2.2 为什么不用普通二维码？
+
+普通二维码适合存很多信息，例如网址、文本、支付信息。
+
+但机器人视觉里更重要的是：
+
+- 检测快
+- 定位准
+- 抗干扰强
+- 姿态估计方便
+
+ArUco 的优势就在这里：
+
+- 边框规整，容易定位
+- 编码简单，识别速度快
+- 特别适合做位姿估计和导航地标
+
+这也是为什么 ArUco 在机器人、无人机降落、机械臂抓取引导里非常常见。
+
+---
+
+### 12.2.3 结合基础教程理解 ArUco 的读取与检测
+
+这一部分可以直接按一个很自然的四步流程讲：
+
+1. **生成 marker**
+2. **打印并拍摄 marker**
+3. **检测 marker**
+4. **读取检测结果**
+
+本周统一使用在线生成网站 [ArUco markers generator!](https://chev.me/arucogen/)。
+
+生成参数统一为：
+
+- `Dictionary`: `4x4 (50, 100, 250, 1000)`
+- `Marker ID`: `6`
+- `Marker size, mm`: `100`
+
+这里要特别注意一件事：
+
+> 识别程序里使用的字典，必须和生成 marker 时使用的具体字典完全一致。
+
+也就是说，`ID 6` 本身还不够，程序还必须知道这个 `ID 6` 是属于哪一个字典的。
+
+例如：
+
+- 如果生成时用的是 `DICT_4X4_50`，程序里也必须写 `DICT_4X4_50`
+- 如果生成时用的是 `DICT_4X4_250`，程序里就要改成 `DICT_4X4_250`
+
+不能只看到“4x4”就直接互相混用。
+
+这和基础教程里的思路是一致的：
+
+- 先选择一个字典
+- 再生成并打印 marker 图
+- 然后对真实照片做检测
+- 最后在图像中把 marker 框出来，并读取它的 id 和四个角点
+
+为了让课堂代码统一，本讲义下面的示例固定写成 `DICT_4X4_50`。如果实际生成的 marker 来自别的具体字典，就要把代码中的这一行改成对应字典：
+
+```python
+aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
+```
+
+这里的含义是：
+
+- `4X4`：内部编码矩阵是 4×4
+- `50`：这个字典里一共有 50 个可用 marker
+- `ID 6`：本周课堂要求识别出的就是 6 号 marker
+- 只有当 marker 本身也是按这个字典生成时，程序才能正确解码
+
+---
+
+### 12.2.4 OpenCV 中的识别思路
+
+ArUco 的检测过程可以拆成四步：
+
+1. **图像灰度化 / 二值化**
+   - 先把彩色图像变成更适合识别的黑白图
+
+2. **轮廓检测**
+   - 寻找可能的方形边框
+
+3. **透视变换**
+   - 把倾斜的方块“拉正”
+
+4. **查字典解码**
+   - 比对 ArUco 字典，例如 `DICT_4X4_50`
+   - 这里的字典必须与生成 marker 时的具体字典一致
+   - 判断这个方块对应哪个 ID
+
+---
+
+### 12.2.5 安装依赖
+
+ArUco 相关模块通常在 `opencv-contrib-python` 中。
+
+```bash
+pip install opencv-python opencv-contrib-python numpy
+```
+
+验证：
+
+```bash
+python3 -c "import cv2; print(cv2.__version__)"
 ```
 
 ---
 
-## 12.4 语音合成入门
-
-> 让机器人"说话"
-
-### 12.4.1 离线语音合成（pyttsx3）
+### 12.2.6 实时检测 ArUco
 
 ```python
-import pyttsx3
+import cv2
 
-# 创建引擎
-engine = pyttsx3.init()
+# 这一行必须与生成 marker 时使用的具体字典一致
+aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
+aruco_params = cv2.aruco.DetectorParameters()
+detector = cv2.aruco.ArucoDetector(aruco_dict, aruco_params)
 
-# 设置属性
-engine.setProperty('rate', 150)     # 语速
-engine.setProperty('volume', 0.9)   # 音量
+# 这里假设 frame 来自前面 HTML5 相机桥接程序收到的最新一帧
+while True:
+    frame = get_latest_frame()
+    if frame is None:
+        break
 
-# 朗读文本
-engine.say("你好，我是机器人")
-engine.say("Hello, I am a robot")
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    corners, ids, rejected = detector.detectMarkers(gray)
 
-# 等待完成
-engine.runAndWait()
+    if ids is not None:
+        cv2.aruco.drawDetectedMarkers(frame, corners, ids)
+
+        for i, marker_id in enumerate(ids.flatten()):
+            c = corners[i][0]
+            cx = int(c[:, 0].mean())
+            cy = int(c[:, 1].mean())
+            cv2.putText(
+                frame,
+                f"ID: {marker_id}",
+                (cx, cy),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (0, 255, 0),
+                2,
+            )
+
+    cv2.imshow("ArUco Detection", frame)
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+
+cv2.destroyAllWindows()
 ```
 
-### 12.4.2 在线语音合成（gTTS）
+说明：
+
+- `get_latest_frame()` 表示“从 HTML5 摄像头接收端拿到最新一帧图像”
+- 本周课堂直接把 HTML5 接收、ArUco 检测和结果显示写在同一个 Python 程序里
+- `camera_bridge.py` 在实时识别期间保持运行，识别逻辑就在这个运行中的程序内部完成
+- 这样整条输入链路始终只有一套，不会出现两个程序重复接收视频流的冲突
+
+---
+
+### 12.2.7 检测结果到底读到了什么？
+
+这一段除了跑通代码，还要理解三个输出：
+
+- `ids`
+  - 表示识别出了哪个 ArUco 标记
+
+- `corners`
+  - 表示这个标记在图像中的四个角点位置
+
+- `rejected`
+  - 表示“看起来像 marker，但最后没有通过字典验证”的候选框
+
+后面的标定和测距，全都要依赖这些角点。
+
+也就是说：
+
+> ArUco 的本质不只是“认出来了”，而是“把一个可计算的几何目标找出来了”。
+
+还有一个非常实用的小观察：
+
+- `corners[i][0]` 里有 4 个顶点
+- 取这 4 个顶点的平均值，就可以近似得到这个 marker 在图像中的中心位置
+
+这也是很多基础教程中会直接把 marker 中心点画出来的原因。
+
+---
+
+## 第三部分：相机标定（Calibration，选做）
+
+### 12.3.1 为什么要标定？
+
+这是本节数学味最重，但也是最关键的一部分。
+
+不标定，后面的测距通常不准，原因主要有两个：
+
+#### 1. 畸变（Distortion）
+
+手机摄像头为了获得更大视角，边缘通常会出现桶形畸变。
+
+直线在图像边缘可能会看起来向外鼓。
+
+如果不做畸变校正，几何计算会被系统性拉偏。
+
+#### 2. 内参矩阵（Intrinsic Matrix）
+
+我们必须知道：
+
+- 相机焦距在像素坐标里是多少
+- 光学中心在哪里
+
+这由内参矩阵 `K` 表示：
+
+```text
+K = [ fx   0  cx
+       0  fy  cy
+       0   0   1 ]
+```
+
+其中：
+
+- `fx`, `fy`：焦距（像素单位）
+- `cx`, `cy`：主点坐标
+
+---
+
+### 12.3.2 为什么手机相机尤其需要标定？
+
+这一点对本科生非常重要，要讲得直白一些：
+
+手机相机并不是一个“理想针孔相机”，它常常同时带着下面几种复杂因素：
+
+- 广角镜头，边缘畸变更明显
+- 自动对焦，焦距可能变化
+- 不同手机型号，镜头参数差异很大
+- 有些系统还会做额外的图像处理或电子防抖
+
+所以同样一个 ArUco：
+
+- 在一台手机上看起来可能更扁
+- 在另一台手机上可能边缘拉伸更明显
+- 如果不先标定，后面算出来的距离和姿态就很容易系统性偏掉
+
+这一句可以直接记住：
+
+> 相机标定不是“锦上添花”，而是把像素坐标变成可信几何测量的前提。
+
+---
+
+### 12.3.3 标定的直观理解
+
+可以这样理解：
+
+> 标定，就是给这台摄像头做一次“体检”，得到它的个体参数。
+
+输出结果主要有两类：
+
+1. **内参矩阵 K**
+2. **畸变系数 D**
+
+这相当于拿到了这台手机摄像头的“身份证”。
+
+---
+
+### 12.3.4 课堂里的标定方案：简单讲清楚就够
+
+本节课不需要把标定讲成一堂完整数学课，重点是让学生知道：
+
+1. 我们使用一个**已知几何结构**的棋盘格
+2. 从多个角度采集图像
+3. 在图像中找到棋盘格内角点
+4. 用这些“真实世界点 - 图像点”的对应关系反推出相机参数
+
+对应到 OpenCV，大致是：
+
+- `findChessboardCorners()`：找到角点
+- `cornerSubPix()`：把角点定位得更精细
+- `calibrateCamera()`：计算相机内参和畸变系数
+
+这一套流程已经足够让学生建立起“标定在做什么”的理解。
+
+---
+
+### 12.3.5 棋盘格标定法
+
+本课程使用最经典的 **张正友标定法**。
+
+需要准备：
+
+- 一张打印好的棋盘格
+- 或在平板 / iPad 上稳定显示棋盘格
+
+采集要求：
+
+- 从不同角度拍 10-20 张图
+- 棋盘格要覆盖画面不同区域
+- 远近都要有
+- 保持**固定焦距**和**固定分辨率**
+
+---
+
+### 12.3.6 采集棋盘格图片
+
+可以单独写一个小脚本，把 HTML5 摄像头桥接收到的当前帧保存下来。
 
 ```python
-from gtts import gTTS
+import cv2
 import os
 
-# 中文
-text_zh = "欢迎来到机器人课程"
-tts = gTTS(text=text_zh, lang='zh-cn')
-tts.save("welcome_zh.mp3")
+save_dir = "calib_images"
+os.makedirs(save_dir, exist_ok=True)
 
-# 英文
-text_en = "Welcome to robotics course"
-tts = gTTS(text=text_en, lang='en')
-tts.save("welcome_en.mp3")
+idx = 0
 
-# 播放
-os.system("mpg123 welcome_zh.mp3")  # Linux
-# os.system("start welcome_zh.mp3")  # Windows
+while True:
+    frame = get_latest_frame()
+    if frame is None:
+        break
+
+    cv2.imshow("Calibration Capture", frame)
+    key = cv2.waitKey(1) & 0xFF
+
+    if key == ord("s"):
+        path = os.path.join(save_dir, f"img_{idx:02d}.jpg")
+        cv2.imwrite(path, frame)
+        print(f"saved: {path}")
+        idx += 1
+    elif key == ord("q"):
+        break
+
+cv2.destroyAllWindows()
 ```
 
-### 12.4.3 简单对话机器人
+操作建议：
+
+- `s` 保存图片
+- `q` 退出
+- 每个学生至少采集 10 张
+
+---
+
+### 12.3.7 执行标定
+
+下面给出一个适合课堂的批量标定脚本。
 
 ```python
-import speech_recognition as sr
-import pyttsx3
+import cv2
+import numpy as np
+import glob
 
-class VoiceBot:
-    """简单语音机器人"""
-    
-    def __init__(self):
-        self.recognizer = sr.Recognizer()
-        self.engine = pyttsx3.init()
-        self.engine.setProperty('rate', 150)
-    
-    def listen(self):
-        """听"""
-        with sr.Microphone() as source:
-            print("机器人在听...")
-            self.recognizer.adjust_for_ambient_noise(source)
-            audio = self.recognizer.listen(source, timeout=5)
-            
-            try:
-                text = self.recognizer.recognize_google(audio, language='zh-CN')
-                print(f"用户: {text}")
-                return text
-            except:
-                return None
-    
-    def speak(self, text):
-        """说"""
-        print(f"机器人: {text}")
-        self.engine.say(text)
-        self.engine.runAndWait()
-    
-    def respond(self, user_input):
-        """简单回应"""
-        if '你好' in user_input:
-            return "你好，我是机器人"
-        elif '名字' in user_input:
-            return "我叫小机"
-        elif '天气' in user_input:
-            return "今天天气不错"
-        elif '再见' in user_input:
-            return "再见"
-        else:
-            return "我听不懂"
-    
-    def run(self):
-        """运行"""
-        self.speak("你好，我是语音机器人")
-        
-        while True:
-            user_input = self.listen()
-            
-            if user_input:
-                response = self.respond(user_input)
-                self.speak(response)
-                
-                if '再见' in user_input:
-                    break
+# 棋盘格内角点数量，例如 9x6
+pattern_size = (9, 6)
 
-# 运行
-if __name__ == '__main__':
-    bot = VoiceBot()
-    bot.run()
+# 世界坐标中的棋盘格点
+objp = np.zeros((pattern_size[0] * pattern_size[1], 3), np.float32)
+objp[:, :2] = np.mgrid[0:pattern_size[0], 0:pattern_size[1]].T.reshape(-1, 2)
+
+objpoints = []
+imgpoints = []
+
+images = glob.glob("calib_images/*.jpg")
+
+for fname in images:
+    img = cv2.imread(fname)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    ret, corners = cv2.findChessboardCorners(gray, pattern_size, None)
+
+    if ret:
+        objpoints.append(objp)
+        imgpoints.append(corners)
+
+        cv2.drawChessboardCorners(img, pattern_size, corners, ret)
+        cv2.imshow("Corners", img)
+        cv2.waitKey(200)
+
+cv2.destroyAllWindows()
+
+ret, K, D, rvecs, tvecs = cv2.calibrateCamera(
+    objpoints, imgpoints, gray.shape[::-1], None, None
+)
+
+print("RMS error:", ret)
+print("Intrinsic matrix K:\n", K)
+print("Distortion coefficients D:\n", D)
+
+np.savez("camera_calib.npz", K=K, D=D)
+print("saved to camera_calib.npz")
 ```
+
+这里要重点看三件事：
+
+1. `findChessboardCorners()` 找到的是**图像里的角点**
+2. `cornerSubPix()` 会继续提高角点精度
+3. `calibrateCamera()` 会输出 `K` 和 `D`
 
 ---
 
-## 第三模块：期末项目启动（70分钟）
+### 12.3.8 标定后要告诉学生什么？
 
-### 12.5.1 项目要求说明（20分钟）
+一定要强调：
 
-**项目时间线**：
-- **第12周**：分组、选题、制定计划
-- **第13周**：实施、调试、准备展示
-- **第14周**（如有）：项目展示与答辩
+- 标定结果**只对当前这台手机、当前分辨率、当前焦距设置有效**
+- 如果切换了浏览器请求分辨率
+- 或重新自动对焦、变焦
+- 或换了一台手机
 
-**项目要求**：
-1. **组队**：2-3人一组，或单人完成简单项目
-2. **选题**：从给定题目中选择，或自拟题目（需审批）
-3. **提交物**：
-   - 代码（GitHub仓库）
-   - 演示视频（2-5分钟）
-   - 项目报告（README.md）
-   - 现场演示（可选）
+那么之前的 `K` 和 `D` 可能就不适用了。
 
-**评分标准**：
-| 项目 | 占比 | 说明 |
-|------|------|------|
-| 功能完整度 | 40% | 是否实现核心功能 |
-| 技术难度 | 30% | 技术复杂度与创新性 |
-| 代码质量 | 15% | 代码规范、注释、可读性 |
-| 文档报告 | 15% | README、演示视频质量 |
+这也是机器人系统中“传感器一致性”非常重要的原因。
 
 ---
 
-### 12.5.2 项目选题（10个方向 · 默认无硬件可完成）
+## 第四部分：利用标定数据计算 ArUco 距离（选做）
 
-> 💯 **重要：所有项目重新设计为「无任何外设也能完成」！**
->
-> 不论你电脑是否有摄像头、麦克风、独显，都能用**课程提供的数据集 / ROS bag / 仿真环境**完成项目。
+### 12.4.1 已知什么？要算什么？
 
-#### 🎯 设计思路
+走到这一步，我们已经有了三类关键信息：
 
-| 数据源 | 项目数 | 来源 |
-|--------|-------|------|
-| 📹 视频 / 音频文件 | 3 个 | 课程组录制 |
-| 🗂️ ROS bag（KITTI 等）| 1 个 | 复用 Week 6 数据 |
-| 📊 公开数据集（MOT17、LFW）| 2 个 | 业界基准数据集 |
-| 🏗️ 纯仿真（Gazebo / PyBullet）| 4 个 | 完全 CPU 可跑 |
+#### 已知条件 1：ArUco 的真实大小
 
-每个项目同时提供 **🟢 默认（无硬件）** 和 **🟡 扩展（有硬件）** 两种模式，扩展模式作为加分项。
+例如我们打印出来的是：
 
-#### 📦 初级项目（适合单人或 2 人）
-
-**1. 基于视频的颜色追踪 → ROS bag 输出** 🟢
-- **难度**: ⭐⭐ · **数据源**: 课程提供 `colored_ball.mp4`
-- **任务**: 视频追踪彩色物体 → 生成 cmd_vel ROS bag → Turtlesim 回放
-- **技术**: OpenCV HSV + ROS2 bag
-- **模板**: [`p01-color-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p01-color-tracker)
-
-**2. 基于音频文件的语音命令解析** 🟢
-- **难度**: ⭐⭐ · **数据源**: 课程提供 5 个预录中文 `.wav`
-- **任务**: 离线语音识别（Vosk）→ 解析 Twist 序列 → 画轨迹 GIF
-- **技术**: SpeechRecognition + Vosk **离线**模型 + Turtlesim
-- **模板**: [`p02-voice-turtle/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p02-voice-turtle)
-
-**3. KITTI 数据集物体检测可视化** 🟢
-- **难度**: ⭐⭐⭐ · **数据源**: Week 6 用过的 KITTI ROS bag
-- **任务**: YOLO 检测 → 发布 ROS topic → 生成 CSV 统计报告
-- **技术**: YOLOv8 + ROS2 bag + KITTI
-- **模板**: [`p03-yolo-detector/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p03-yolo-detector)
-
-#### 🚀 中级项目（适合 2-3 人）
-
-**4. MOT17 多目标追踪 + 指标评估** 🟢
-- **难度**: ⭐⭐⭐ · **数据源**: MOT17 行人追踪基准数据集
-- **任务**: 实现 SORT 跟踪 → 计算 MOTA / IDF1 / FP / FN / IDsw 五项指标
-- **技术**: YOLO + SORT 卡尔曼跟踪 + motmetrics
-- **模板**: [`p04-object-tracker/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p04-object-tracker)
-
-**5. Gazebo 仿真 SLAM + Nav2 自主导航** 🟢
-- **难度**: ⭐⭐⭐⭐ · **数据源**: TurtleBot3 仿真环境（apt 自带）
-- **任务**: 自动建图 → 保存地图 → Nav2 穿越障碍 → 记录 5 次任务指标
-- **技术**: Gazebo Classic + slam_toolbox + Nav2
-- **模板**: [`p05-nav2-fusion/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p05-nav2-fusion)
-
-**6. 基于视频的手势识别命令** 🟢
-- **难度**: ⭐⭐⭐ · **数据源**: 课程提供 6 个手势演示视频
-- **任务**: MediaPipe 提取 21 关键点 → 几何分类 5 种手势 → 输出 ROS bag
-- **技术**: MediaPipe Hands + 几何规则 + ROS2
-- **模板**: [`p06-gesture-control/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p06-gesture-control)
-
-#### 🏆 高级项目（适合 3 人或有基础）
-
-**7. Gazebo 仿真 + YOLO 智能巡检** 🟢
-- **难度**: ⭐⭐⭐⭐ · **数据源**: aws_robomaker_hospital_world 仿真医院
-- **任务**: 自动巡检 10 个 waypoint → 发现异常停下 → 生成 PDF 报告
-- **技术**: Gazebo + Nav2 waypoint + YOLO + PDF 报告
-- **模板**: [`p07-patrol-robot/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p07-patrol-robot)
-
-**8. 基于人脸数据集的识别系统** 🟢
-- **难度**: ⭐⭐⭐⭐ · **数据源**: LFW 子集 / 课程提供照片
-- **任务**: 训练注册库 → 测试集评估 → 输出准确率/召回率/混淆矩阵
-- **技术**: face_recognition (dlib) + SQLite + 评估指标
-- **模板**: [`p08-face-access/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p08-face-access)
-
-**9. PyBullet 机械臂仿真抓取** 🟢
-- **难度**: ⭐⭐⭐⭐⭐ · **数据源**: 纯 PyBullet 仿真
-- **任务**: 视觉识别仿真方块 → 逆运动学规划 → 抓取放入箱子
-- **技术**: PyBullet + 内置 Kuka URDF + 视觉伺服
-- **模板**: [`p09-arm-grasp/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p09-arm-grasp)
-
-**10. PyBullet 四足机器人步态优化** 🟢
-- **难度**: ⭐⭐⭐⭐⭐ · **数据源**: PyBullet 自带 Laikago / A1 URDF
-- **任务**: 实现 Trot 步态 → 用 CMA-ES 优化步频/步长/抬腿高度
-- **技术**: PyBullet + Trot 步态 + CMA-ES
-- **模板**: [`p10-quadruped/`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/p10-quadruped)
-
-#### 💪 项目设计亮点
-
-- **复用本课程知识**：KITTI (Week 6)、YOLO (Week 10)、追踪 (Week 11)、Docker (Week 8)、运动学 (Week 5)、路径规划 (Week 9)
-- **公开基准数据集**：MOT17、LFW、KITTI 等，便于客观量化评分
-- **可量化指标**：mAP、MOTA、准确率、SLAM 误差等都能算出来
-- **零硬件门槛**：所有项目用一台普通笔记本（MacBook Air 也行）就能跑
-- **可扩展性**：有硬件的同学可以切换"实时模式"作为加分项
-
-#### 🎯 自动评分系统（学生可自查、教师可批量评分）
-
-> 📊 **每个项目都附带自动评分脚本**，可以一键查看自己的完成度！
->
-> 📂 详细文档：[`project-templates/grading/README.md`](https://github.com/ai-robot-class/ai-robot-class.github.io/tree/main/project-templates/grading)
-
-##### 学生自查（提交前必跑）
-
-```bash
-# 在项目目录下运行
-cd p01-color-tracker
-python3 ../grading/run_grading.py . --student YOUR_GITHUB_ID
+```text
+100 mm × 100 mm
 ```
 
-会自动打印 5 个维度的得分：
+即边长 `0.10 m`。
 
-```
-📋 评分报告
-  总分: 85.0/100  等级: A
-  - 项目结构完整      10.0/10  ✅
-  - TODO 函数实现     32.0/40  ⚠️
-  - 集成测试通过      28.0/30  ✅
-  - 代码质量          8.0/10   ✅
-  - 文档与提交       7.0/10    ✅
-```
+#### 已知条件 2：相机标定结果
 
-##### 评分维度说明（总分 100）
+也就是：
 
-| 维度 | 占比 | 自动检查内容 |
-|------|------|--------------|
-| 🗂️ 项目结构 | 10% | README/Dockerfile/docker-compose 是否齐全 |
-| ✅ TODO 函数实现 | 40% | 3 个 TODO 是否真的实现（不是 pass）|
-| 🔄 集成测试 | 30% | 跑通端到端流程，检查输出文件 |
-| 🎨 代码质量 | 10% | ruff lint 检查 |
-| 📄 文档与提交 | 10% | README 详细度 + Git 提交次数 + 演示输出 |
+- `K`
+- `D`
 
-##### GitHub Actions 自动评分
+#### 观测条件：图像中的四个角点
 
-学生可以在自己的项目仓库加上 `.github/workflows/grade.yml`，
-每次 push 都自动跑评分并生成 Markdown 报告（详见 grading/README.md）。
+这来自 ArUco 检测输出的 `corners`。
+
+到这里，信息关系可以概括成一句话：
+
+> ArUco 给我们提供了图像中的 4 个点，标定给我们提供了相机参数，而 marker 的真实尺寸提供了世界坐标尺度。
 
 ---
 
-### 12.5.3 📁 项目仓库与作业仓库分离（必读）
+### 12.4.2 核心问题：PnP
 
-> 💡 期末项目代码**必须独立存放在新的 GitHub 仓库**，然后在你**作业仓库的 `final-project/` 文件夹**中通过 Git Submodule 引用。
+这一部分的核心是 **Perspective-n-Point** 问题。
 
-#### 🎯 为什么这么设计？
+可以直观地说：
 
-| 痛点 | 解决方案 |
-|------|---------|
-| 多人协作时代码冲突 | 项目独立仓库，专门的协作场所 |
-| 个人作业仓库太杂 | 作业仓库只放各周习题，期末项目独立 |
-| 单人项目也要练习项目化思维 | 强制独立仓库 = 简历可直接用 |
-| 评分需要看个人贡献 | submodule + 个人 README 双重展示 |
+> 我知道这个正方形在真实世界里长什么样，也知道它在图像里看起来变成了什么样，那么我就能反推出它相对于摄像头的位置和姿态。
 
-#### 📂 推荐目录结构
+OpenCV 会输出两个非常重要的量：
 
-```
-你的作业仓库（如 ai-robot-homework-zhangsan）
-├── week2/
-├── week3/
-├── ...
-├── week12/
-├── week13/
-└── final-project/                # 期末项目展示文件夹
-    ├── README.md                 # ⭐ 个人贡献说明（你自己写）
-    ├── project-repo/             # 🔗 Git Submodule（指向项目仓库）
-    └── my_contributions.md       # 详细贡献清单（可选）
+- `rvec`：旋转向量
+- `tvec`：平移向量
 
-期末项目独立仓库（如 ai-robot-final-color-tracker-team1）
-├── README.md                     # 项目整体说明
-├── Dockerfile
-├── docker-compose.yml
-├── src/                          # 实际代码
-├── demo/
-└── test/
-```
-
-#### 🚀 Step-by-Step 创建流程
-
-##### Step 1：创建项目仓库（无论单人还是多人）
-
-```bash
-# 在 GitHub 网页创建一个新仓库，例如：
-# - 单人：     ai-robot-final-color-tracker-zhangsan
-# - 多人：     ai-robot-final-color-tracker-team1
-# - 推荐命名： ai-robot-final-<项目主题>-<组名或个人>
-
-# 克隆到本地
-git clone https://github.com/<your-org>/ai-robot-final-color-tracker-team1.git
-cd ai-robot-final-color-tracker-team1
-
-# 复制项目模板内容进来
-cp -r /path/to/ai-robot-class.github.io/project-templates/p01-color-tracker/* .
-
-# 提交初始代码
-git add . && git commit -m "🎉 初始化项目模板"
-git push
-```
-
-##### Step 2：在作业仓库中以 submodule 形式引用
-
-```bash
-# 切到你的作业仓库
-cd ai-robot-homework-zhangsan
-
-# 创建 final-project 文件夹
-mkdir -p final-project
-cd final-project
-
-# 添加 submodule（关键操作！）
-git submodule add https://github.com/<your-org>/ai-robot-final-color-tracker-team1.git project-repo
-
-# 写自己的 README（说明个人贡献，模板见下文）
-vim README.md
-# 编辑后保存
-
-# 提交
-cd ..
-git add final-project
-git commit -m "🔗 引用期末项目仓库 + 个人贡献说明"
-git push
-```
-
-##### Step 3：克隆带 submodule 的仓库（评分时教师使用）
-
-```bash
-# 教师评分时这样克隆，会同时拉取主仓库 + submodule
-git clone --recursive https://github.com/student/ai-robot-homework-zhangsan.git
-
-# 如果已经 clone 了，再拉取 submodule：
-git submodule update --init --recursive
-```
-
-#### 📝 个人贡献 README 模板
-
-> 把下面这个模板复制到 `final-project/README.md`，按提示填写。
-
-```markdown
-# 🎓 期末项目个人贡献说明
-
-## 📌 项目信息
-
-- **项目名称**：基于视频的颜色追踪机器人
-- **项目编号**：P01
-- **项目仓库**：[ai-robot-final-color-tracker-team1](https://github.com/xxx/ai-robot-final-color-tracker-team1)
-- **作业仓库本人路径**：`final-project/project-repo/`（submodule）
-
-## 👥 团队成员（如多人）
-
-| GitHub ID | 角色 | 主要负责 |
-|-----------|------|---------|
-| @alice | 组长 | 整体架构 + detect_color |
-| **@me（本人）** | 组员 | compute_twist + 集成测试 |
-| @bob | 组员 | 数据集准备 + README |
-
-> 单人完成填："独立完成所有任务"
-
-## 🎯 我在项目中的具体贡献
-
-### 📝 我负责实现的核心功能
-
-1. **`compute_twist()` 函数**
-   - 实现了 PID 式比例控制
-   - 代码位置：[`src/color_tracker/color_tracker/tracker_node.py#L45-L72`](https://github.com/xxx/ai-robot-final-color-tracker-team1/blob/main/src/color_tracker/color_tracker/tracker_node.py#L45-L72)
-   - 我的相关 commits：
-     - [`a1b2c3d`](https://github.com/xxx/ai-robot-final-color-tracker-team1/commit/a1b2c3d) - 初版 PID 实现
-     - [`d4e5f6g`](https://github.com/xxx/ai-robot-final-color-tracker-team1/commit/d4e5f6g) - 加入平滑滤波
-
-2. **集成测试**
-   - 设计了 5 个测试用例覆盖边界情况
-   - 代码位置：`test/test_compute_twist.py`
-
-3. **README 与演示视频**
-   - 编写项目 README 的"使用说明"部分
-   - 录制并剪辑演示视频
-
-### 📊 我的提交统计
-
-```bash
-# 在项目仓库目录运行：
-git log --author="<我的 GitHub 邮箱>" --oneline | wc -l
-# 输出：例如 12（我提交了 12 次）
-```
-
-我的 commit 列表（自动生成）：
-```
-a1b2c3d feat: PID 式 compute_twist 初版
-d4e5f6g fix: 加入平滑滤波避免抖动
-b7c8d9e test: 增加 5 个 compute_twist 测试用例
-... 
-```
-
-### 🧠 学习收获
-
-- 学到了 ROS2 节点的发布订阅模式
-- 理解了 PID 控制的基础原理
-- 体会到多人协作时分支管理的重要性
-
-### 🐛 遇到的问题与解决方案
-
-1. **问题**：Twist 命令导致小乌龟剧烈抖动
-   - **解决**：在 compute_twist 中加入滑动平均滤波（移动窗口 = 5）
-   
-2. **问题**：本地无法 import cv_bridge
-   - **解决**：用 Docker 容器跑，避免环境问题
-
-## 🎬 演示
-
-- 📹 [演示视频（B 站链接）](https://www.bilibili.com/video/xxx)
-- 📷 [运行截图](./screenshots/)
-
-## 📊 自评分
-
-```bash
-# 我用课程评分系统自查的结果：
-$ python3 ../grading/run_grading.py project-repo --student my_github_id
-总分: 87.5/100  等级: A
-```
-
-详细评分报告：[`grade_report.md`](./grade_report.md)
-
-## 🔗 相关链接
-
-- 项目主仓库：https://github.com/xxx/ai-robot-final-color-tracker-team1
-- 我的 PR 列表：https://github.com/xxx/ai-robot-final-color-tracker-team1/pulls?q=author:my_github_id
-- 我的所有 commit：https://github.com/xxx/ai-robot-final-color-tracker-team1/commits?author=my_github_id
-```
-
-#### 🔍 评分如何识别个人贡献？
-
-教师评分时会：
-
-1. **克隆作业仓库**（`--recursive` 自动拉 submodule）
-2. **看 `final-project/README.md`** 了解你的角色
-3. **跑评分脚本**：
-   ```bash
-   python3 grading/run_grading.py final-project/project-repo --student YOUR_ID
-   ```
-4. **检查 Git 提交记录**，看你在项目仓库中的实际贡献：
-   ```bash
-   cd final-project/project-repo
-   git log --author=YOUR_GITHUB_ID --oneline | wc -l
-   ```
-5. **核对 README 中的 commit 链接** 是否真的指向你的提交
-
-#### ❓ 常见问题
-
-**Q1：单人完成需要建独立仓库吗？**
-
-A：**需要**。理由：
-- 培养工程化思维（简历可直接用）
-- 期末项目 = 独立作品集 = 找工作神器
-- 命名建议：`ai-robot-final-<主题>-<github_id>`
-
-**Q2：多人项目，每个人都要在自己作业仓库放 submodule？**
-
-A：**是的**。每个组员的作业仓库都要：
-1. 引用同一个项目仓库（submodule）
-2. 写自己的 `final-project/README.md`（说明自己的具体贡献）
-
-这样评分时每个人都能被独立评估。
-
-**Q3：忘记加 `--recursive` 怎么办？**
-
-A：在已经克隆的仓库里跑：
-```bash
-git submodule update --init --recursive
-```
-
-**Q4：submodule 怎么更新？**
-
-A：项目仓库更新后：
-```bash
-cd final-project/project-repo
-git pull origin main
-cd ../..
-git add final-project/project-repo
-git commit -m "📌 更新项目仓库指针"
-git push
-```
-
-**Q5：能不能直接复制项目仓库代码而不用 submodule？**
-
-A：**不可以**。理由：
-- 代码会脱离原项目，无法追踪更新
-- 教师无法验证你的真实贡献（commit 历史丢失）
-- submodule 是工业界标准做法，必须掌握
+其中 `tvec = [x, y, z]^T` 就是 ArUco 相对于摄像头的三维位置。
 
 ---
 
-### 12.5.4 📦 项目 Docker 模板使用指南
+### 12.4.3 为什么标定之后就能算空间位置？
 
-每个选题都在 `project-templates/p01-...` 到 `p10-...` 准备好：
+这是本节课最关键的“融会贯通”处。
 
-```
-p0X-xxxxxx/
-├── README.md             # 项目说明 + 3 个核心 TODO 任务
-├── Dockerfile            # 容器镜像（ROS2 Humble + 全部依赖）
-├── docker-compose.yml    # 一键启动配置（GUI/摄像头/麦克风都准备好）
-├── src/                  # 代码骨架（已写好 ROS2 框架，留 TODO 给你）
-└── test/                 # 单元测试（提交前自测）
-```
+在没有标定之前，我们只有：
 
-#### 🚀 使用流程（每位同学只需 5 步）
+- 图像像素位置
 
-```bash
-# 1. Fork 课程仓库到自己 GitHub，clone 到本地
-git clone https://github.com/<你的用户名>/ai-robot-class.github.io.git
-cd ai-robot-class.github.io/project-templates/p01-color-tracker  # 选你的项目
+这只能说明“它在画面哪里”，不能可靠说明“它在空间哪里”。
 
-# 2. 启动容器（首次约 2-5 分钟拉镜像）
-docker compose up -d
+而在标定之后，我们又知道了：
 
-# 3. 进入容器开发
-docker compose exec dev bash
+- 相机的内参矩阵 `K`
+- 畸变系数 `D`
+- ArUco 的真实物理尺寸
 
-# 4. 在容器内编译运行
-colcon build && source install/setup.bash
-# 找到 src/xxxx_node.py 中的 # TODO，开始写代码！
+于是 OpenCV 可以把：
 
-# 5. 完成后提交自己的 GitHub 仓库
-git add . && git commit -m "完成 P01 颜色追踪核心" && git push
-```
+- **真实世界里的 4 个角点**
+- **图像中的 4 个角点**
 
-#### 🎯 评分聚焦在算法实现
+对应起来，求出 marker 相对于摄像头的三维位姿。
 
-容器配置和骨架代码**不计入评分**。评分点：
-
-| 项目 | 占比 |
-|------|------|
-| 3 个 TODO 函数实现正确 | 40% |
-| 实际运行效果（演示） | 30% |
-| 代码质量（注释/命名） | 15% |
-| 提供的单元测试通过 | 10% |
-| README 报告 + 演示视频 | 5% |
-
-#### 🛠️ 通用环境准备
-
-##### 学生宿主机要求
-
-- **Linux/WSL2**：`xhost +local:docker` 启用 GUI 转发
-- **Mac**：用 `XQuartz` + `host.docker.internal:0`
-- **Windows**：用 WSL2 + WSLg（Win11 自带）
-
-```bash
-# 一次性配置（Linux/WSL2）
-xhost +local:docker
-echo 'xhost +local:docker' >> ~/.bashrc
-```
-
-##### 验证 Docker 与 GUI
-
-```bash
-# 测试 X11 转发
-docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix \
-    osrf/ros:humble-desktop-full \
-    bash -c "apt update && apt install -y x11-apps && xeyes"
-
-# 应该弹出一对眼睛跟着鼠标转
-```
-
-#### 🐳 通用基础镜像
-
-所有项目都基于 `osrf/ros:humble-desktop-full`，包含：
-
-- **ROS2 Humble** 完整桌面版（RViz / Gazebo / rqt 全套）
-- **OpenCV** 4.x + opencv-contrib
-- **PyTorch** + Ultralytics YOLOv8
-- **语音**：SpeechRecognition / pyttsx3 / gTTS / pyaudio
-- **视觉**：MediaPipe / face_recognition / Open3D
-- **仿真**：PyBullet / 多机器人 URDF
-
-#### ⚙️ 如果想用 GPU 加速
-
-```yaml
-# 在 docker-compose.yml 中加入
-services:
-  dev:
-    runtime: nvidia
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
-```
-
-需要先在宿主机装好 `nvidia-container-toolkit`。
+所以标定之后，ArUco 不再只是一个“被识别出的图案”，而是一个真正带有空间意义的几何目标。
 
 ---
 
-### 12.5.5 项目分组与计划（30分钟）
+### 12.4.4 真实世界中的 ArUco 角点
 
-**分组流程**：
-1. 自由组队（2-3人）
-2. 选择项目方向
-3. 填写项目登记表
+假设 ArUco 边长为 `marker_size`，则它在自身坐标系中的四个角点可以写为：
 
-**项目登记表**：
-```markdown
-## 项目信息
-
-- **项目名称**: _______________
-- **项目编号**: (1-10)
-- **组长**: _______________
-- **组员**: _______________, _______________
-- **GitHub仓库**: _______________
-
-## 技术栈
-
-- [ ] ROS2
-- [ ] OpenCV
-- [ ] YOLO
-- [ ] 语音识别/合成
-- [ ] 其他: _______________
-
-## 时间计划
-
-- **Week 12**: 
-  - [ ] 完成环境搭建
-  - [ ] 完成基本框架
-  
-- **Week 13**:
-  - [ ] 实现核心功能
-  - [ ] 测试与调试
-  - [ ] 录制演示视频
-  
-- **Week 14** (如有):
-  - [ ] 完善文档
-  - [ ] 准备答辩
+```python
+obj_points = np.array([
+    [-marker_size/2,  marker_size/2, 0],
+    [ marker_size/2,  marker_size/2, 0],
+    [ marker_size/2, -marker_size/2, 0],
+    [-marker_size/2, -marker_size/2, 0],
+], dtype=np.float32)
 ```
 
----
+这些点是“真实世界坐标”。
 
-### 12.5.6 技术答疑与资源（20分钟）
+而 ArUco 检测得到的 `corners` 是“图像像素坐标”。
 
-**常见问题**：
-
-1. **Q**: 没有真实机器人怎么办？
-   **A**: 使用仿真环境（Gazebo/PyBullet/Webots）
-
-2. **Q**: 摄像头/麦克风不可用？
-   **A**: 使用录制的视频/音频文件测试
-
-3. **Q**: 项目太难怎么办？
-   **A**: 先实现简化版，逐步扩展功能
-
-**推荐资源**：
-- [ROS2官方教程](https://docs.ros.org/en/humble/Tutorials.html)
-- [OpenCV教程](https://docs.opencv.org/4.x/d9/df8/tutorial_root.html)
-- [YOLO文档](https://docs.ultralytics.com/)
-- [课程GitHub示例](https://github.com/ai-robot-class/)
+PnP 就是在把这两者对上。
 
 ---
 
-## 本周作业
+### 12.4.5 实时测距代码
 
-### ✅ 必做
+```python
+import cv2
+import numpy as np
 
-| 序号 | 任务 | 截止 | 完成 |
-|------|------|------|------|
-| 1 | 完成颜色检测实验 | 本周 | ☐ |
-| 2 | 测试语音识别/合成 | 本周 | ☐ |
-| 3 | 确定项目选题 | 本周五 | ☐ |
-| 4 | 提交项目登记表 | 本周五 | ☐ |
-| 5 | 创建GitHub仓库 | 本周日 | ☐ |
+data = np.load("camera_calib.npz")
+K = data["K"]
+D = data["D"]
 
-### 🌟 选做（加分）
+aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
+aruco_params = cv2.aruco.DetectorParameters()
+detector = cv2.aruco.ArucoDetector(aruco_dict, aruco_params)
 
-- 实现HSV颜色调节工具
-- 扩展语音对话功能
-- 完成项目原型（Prototype）
+marker_size = 0.10  # 100 mm
+obj_points = np.array([
+    [-marker_size/2,  marker_size/2, 0],
+    [ marker_size/2,  marker_size/2, 0],
+    [ marker_size/2, -marker_size/2, 0],
+    [-marker_size/2, -marker_size/2, 0],
+], dtype=np.float32)
+
+# 这里假设 frame 来自前面 HTML5 相机桥接程序收到的最新一帧
+while True:
+    frame = get_latest_frame()
+    if frame is None:
+        break
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    corners, ids, _ = detector.detectMarkers(gray)
+
+    if ids is not None:
+        cv2.aruco.drawDetectedMarkers(frame, corners, ids)
+
+        for i, marker_id in enumerate(ids.flatten()):
+            img_points = corners[i][0].astype(np.float32)
+
+            success, rvec, tvec = cv2.solvePnP(
+                obj_points, img_points, K, D
+            )
+
+            if success:
+                x, y, z = tvec.flatten()
+                distance = np.sqrt(x**2 + y**2 + z**2)
+
+                cv2.drawFrameAxes(frame, K, D, rvec, tvec, 0.05)
+
+                text = f"ID:{marker_id} Dist:{distance:.3f} m Z:{z:.3f} m"
+                px = int(img_points[0][0])
+                py = int(img_points[0][1]) - 10
+                cv2.putText(
+                    frame,
+                    text,
+                    (px, py),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.6,
+                    (0, 255, 0),
+                    2,
+                )
+
+    cv2.imshow("ArUco Distance", frame)
+
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+cv2.destroyAllWindows()
+```
+
+在实际代码里，可以把：
+
+- HTML5 相机接收
+- ArUco 检测
+- 距离计算
+
+写在同一个 Python 程序中，这样 `get_latest_frame()` 只是一个逻辑上的占位符，代表“取到手机浏览器刚刚发送来的最新图像”。
 
 ---
 
-## 参考文献
+### 12.4.6 如何理解 `tvec`
 
-[1] Bradski, G. (2000). The OpenCV Library. *Dr. Dobb's Journal*.
+`tvec = [x, y, z]^T` 表示：
 
-[2] SpeechRecognition Documentation. https://pypi.org/project/SpeechRecognition/
+- `x`：目标相对摄像头左右方向偏移
+- `y`：目标相对摄像头上下方向偏移
+- `z`：目标沿着摄像头朝前方向的深度
 
-[3] pyttsx3 Documentation. https://pyttsx3.readthedocs.io/
+如果只关心“正前方有多远”，很多时候直接看 `z` 就够了。
+
+如果要看真正的欧氏距离，则使用：
+
+```text
+distance = sqrt(x² + y² + z²)
+```
+
+这里可以直接记住：
+
+- 如果你主要关心“离镜头前后有多远”，最常看的是 `z`
+- 如果你关心“总体距离”，就看欧氏距离 `sqrt(x² + y² + z²)`
 
 ---
 
-## 下周预告
+### 12.4.7 选做部分的观察重点
 
-> **第13周：四足机器人入门 + 期末项目实施**
-> - 四足机器人基础概念
-> - PyBullet仿真实战
-> - 项目开发辅导
+这一部分的观察重点是：
+
+- 把 ArUco 靠近摄像头，距离数字变小
+- 把 ArUco 远离摄像头，距离数字变大
+- 改变角度时，姿态轴也会变化
+
+这时候学生会第一次真正意识到：
+
+> 机器人视觉不是“看图”，而是在从图像中恢复三维空间关系。
 
 ---
 
-*第12周结束！项目正式启动，加油！*
+## 12.5 HTML5 摄像头方案的工程意义
+
+本周课堂主线已经统一采用 HTML5 摄像头方案。
+
+从工程角度看，它的优势非常明显：
+
+- 手机浏览器调用 `getUserMedia()`
+- 通过 `WebSocket` 把帧推给 WSL
+- WSL 中 Python 服务器接收 JPEG 帧
+- OpenCV 继续做 ArUco / 标定 / 测距
+
+它的实际优点是：
+
+- 学生不必额外安装 App
+- iPhone / Android 统一性更强
+- 很适合做“浏览器 + 机器人”的全栈实验
+
+它仍然会带来一些工程约束：
+
+- HTTPS / 安全上下文
+- WebSocket 服务
+- 浏览器权限和兼容性
+
+但这些约束本身也是课程价值的一部分，因为它们正好能帮助学生理解：
+
+- 为什么现代设备权限越来越严格
+- 为什么机器人系统经常要跨前端、网络和后端
+- 为什么“能跑起来”和“能稳定使用”是两件不同的事
+
+---
+
+## 12.6 课堂避坑清单
+
+### 网络侧
+
+- 确认手机和 WSL 登录的是同一个 Tailscale 账号
+- 用的是 `100.x.y.z`，不是校园网 IP
+- 如果画面完全打不开，先检查手机浏览器页面是否还保持打开状态
+
+### 系统侧
+
+- 先执行 `sudo service tailscaled start`
+- 再执行 `tailscale status`
+- 浏览器访问前先确认 WSL 服务端口已经在监听
+
+### 摄像头侧
+
+- 固定分辨率
+- 固定对焦
+- 采集标定图时不要中途切换浏览器标签页或刷新设置
+
+### 数学侧
+
+- 标定结果只对当前摄像头配置有效
+- `marker_size` 单位要统一，建议用米
+- 测距误差往往来自：标定差、角点抖动、打印尺寸不准
+
+---
+
+## 12.7 本周总结
+
+本周的课堂必做部分完成的是：
+
+1. **手机摄像头接入 WSL**
+2. **ArUco 识别**
+
+在此基础上，讲义还给出了两个选做方向：
+
+3. **相机标定**
+4. **利用标定数据进行距离计算**
+
+这套流程并不是“课堂小玩具”，而是很多真实机器人任务的基础模块，例如：
+
+- 机械臂抓取前的目标定位
+- 无人机降落引导
+- 移动机器人近距离视觉导航
+- 相机辅助测量与校准
+
+换句话说：
+
+> 今天做的不是一个孤立实验，而是机器人视觉系统的基本骨架。
+
+---
+
+## 12.8 课后作业
+
+### 必做
+
+1. 在 WSL 中完成 Tailscale 安装与连接
+2. 使用手机浏览器成功打开 HTML5 相机页面，并将视频送入 WSL
+3. 完成至少一个 ArUco 的实时识别
+
+### 选做
+
+4. 完成相机标定，并保存 `camera_calib.npz`
+5. 在视频画面中实时显示 ArUco 距离或空间位置
+
+### 提交内容
+
+- GitHub 仓库代码
+- 一份 `README.md`
+- 至少 3 张截图：
+  - 手机视频流进入 WSL
+  - ArUco 检测结果
+  - 如果完成了选做，可附上距离实时显示结果
+
+### README 建议包含
+
+- 你的手机型号和系统
+- 使用的手机浏览器
+- Tailscale 连接方式
+- 必做部分的运行过程与结果
+- 如果完成了选做，再补充：
+  - 标定使用的棋盘格参数
+  - ArUco 实际尺寸
+  - 测得的距离结果与误差分析
+
+---
+
+## 12.9 延伸思考
+
+如果把本周内容继续往前推进，可以自然走向：
+
+- 多个 ArUco 的同时定位
+- 相机位姿估计
+- ArUco 引导机器人停靠
+- 与 ROS2 节点打通，发布目标相对位姿
+- 将 HTML5 摄像头页面做成专用机器人控制面板
+
+这也是从“视觉实验”走向“机器人系统集成”的关键一步。
+
+---
+
+*第 12 周结束！这一周我们第一次让机器人视觉真正落到“可计算的空间关系”上。*
