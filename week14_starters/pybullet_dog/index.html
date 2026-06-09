@@ -15,40 +15,44 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 16px;
     }
     .panel {
-      width: min(420px, 100%);
+      width: min(440px, 100%);
       background: #1f2937;
       border: 1px solid #374151;
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
     }
-    h1 {
-      margin: 0 0 10px;
-      font-size: 22px;
-    }
-    p {
-      color: #cbd5e1;
-      line-height: 1.5;
-    }
+    h1 { margin: 0 0 8px; font-size: 20px; }
+    p { color: #cbd5e1; line-height: 1.5; font-size: 14px; }
     .status {
-      margin: 14px 0;
-      padding: 10px 12px;
+      margin: 12px 0;
+      padding: 9px 12px;
       border-radius: 8px;
       background: #0f172a;
       font-size: 14px;
     }
     .status.connected { color: #86efac; }
     .status.disconnected { color: #fca5a5; }
+    #maze {
+      width: 100%;
+      background: #0b1220;
+      border-radius: 10px;
+      display: block;
+      margin: 8px 0 4px;
+    }
+    .badge { font-size: 13px; margin: 6px 0 2px; }
+    .badge .b { color: #fca5a5; font-weight: bold; }
+    .badge .g { color: #86efac; font-weight: bold; }
     .pad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin: 18px 0;
+      margin: 14px 0;
     }
     button {
-      min-height: 72px;
+      min-height: 66px;
       border: none;
       border-radius: 10px;
       font-size: 22px;
@@ -63,9 +67,9 @@
       font-family: Consolas, monospace;
       background: #0f172a;
       border-radius: 8px;
-      padding: 12px;
-      font-size: 14px;
-      line-height: 1.6;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.5;
       white-space: pre-wrap;
     }
   </style>
@@ -73,8 +77,11 @@
 <body>
   <div class="panel">
     <h1>PyBullet 机器狗遥控器</h1>
-    <p>手机和电脑进入同一个 Tailscale 网络后，直接在手机浏览器打开这个页面。长按方向键持续控制，松开后停止。</p>
+    <p>手机和电脑进入同一个 Tailscale 网络后打开本页。长按方向键持续控制，松开停止。</p>
     <div id="status" class="status disconnected">未连接</div>
+
+    <canvas id="maze" width="400" height="400"></canvas>
+    <div class="badge" id="badge"></div>
 
     <div class="pad">
       <div></div>
@@ -88,21 +95,25 @@
       <div></div>
     </div>
 
-    <button id="reset" class="secondary" style="width:100%; margin-bottom: 16px;">重置位置</button>
+    <button id="reset" class="secondary" style="width:100%; margin-bottom: 12px;">重置位置</button>
     <div id="telemetry" class="telemetry">等待状态数据...</div>
   </div>
 
   <script>
     const statusEl = document.getElementById("status");
     const telemetryEl = document.getElementById("telemetry");
+    const badgeEl = document.getElementById("badge");
+    const canvas = document.getElementById("maze");
+    const ctx = canvas.getContext("2d");
     const wsScheme = location.protocol === "https:" ? "wss" : "ws";
     const socket = new WebSocket(`${wsScheme}://${location.host}/ws`);
+
+    let trail = [];
 
     socket.onopen = () => {
       statusEl.textContent = "已连接";
       statusEl.className = "status connected";
     };
-
     socket.onclose = () => {
       statusEl.textContent = "连接断开";
       statusEl.className = "status disconnected";
@@ -111,37 +122,71 @@
     socket.onmessage = (event) => {
       const payload = JSON.parse(event.data);
       if (payload.type !== "state") return;
-      const state = payload.data;
+      const s = payload.data;
       telemetryEl.textContent =
-        `x: ${state.position.x}\n` +
-        `y: ${state.position.y}\n` +
-        `z: ${state.position.z}\n` +
-        `yaw: ${state.yaw}\n` +
-        `move: ${state.command.move}\n` +
-        `turn: ${state.command.turn}`;
+        `x: ${s.position.x}   y: ${s.position.y}\n` +
+        `yaw: ${s.yaw}\n` +
+        `move: ${s.command.move}   turn: ${s.command.turn}`;
+      let b = "";
+      if (s.goal_reached) b = '<span class="g">到达终点！</span>';
+      else if (s.blocked) b = '<span class="b">前方撞墙，已被挡住</span>';
+      else b = "探索中…";
+      badgeEl.innerHTML = b;
+      if (s.maze) drawMaze(s);
     };
+
+    function drawMaze(s) {
+      const m = s.maze;
+      const W = canvas.width, H = canvas.height;
+      const sc = W / m.size;             // 米 -> 像素
+      const toX = (x) => x * sc;
+      const toY = (y) => H - y * sc;     // y 轴翻转：让上为正
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = "#0b1220";
+      ctx.fillRect(0, 0, W, H);
+      // 墙
+      ctx.fillStyle = "#3a5a93";
+      for (const w of m.walls) {
+        const x = toX(w.cx - w.hx), y = toY(w.cy + w.hy);
+        ctx.fillRect(x, y, w.hx * 2 * sc, w.hy * 2 * sc);
+      }
+      // 终点 / 起点
+      ctx.fillStyle = "rgba(34,197,94,0.85)";
+      ctx.beginPath(); ctx.arc(toX(m.goal.x), toY(m.goal.y), m.goal.r * sc, 0, 7); ctx.fill();
+      ctx.fillStyle = "rgba(245,158,11,0.8)";
+      ctx.beginPath(); ctx.arc(toX(m.start.x), toY(m.start.y), m.goal.r * 0.7 * sc, 0, 7); ctx.fill();
+      // 轨迹
+      const px = toX(s.position.x), py = toY(s.position.y);
+      trail.push([px, py]);
+      if (trail.length > 600) trail.shift();
+      ctx.strokeStyle = "rgba(56,189,248,0.7)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      trail.forEach(([tx, ty], i) => i ? ctx.lineTo(tx, ty) : ctx.moveTo(tx, ty));
+      ctx.stroke();
+      // 机器狗（带朝向）
+      ctx.fillStyle = s.goal_reached ? "#22c55e" : (s.blocked ? "#ef4444" : "#e2e8f0");
+      ctx.beginPath(); ctx.arc(px, py, m.robot_radius * sc, 0, 7); ctx.fill();
+      ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(px, py);
+      ctx.lineTo(px + Math.cos(s.yaw) * m.robot_radius * sc * 1.8,
+                 py - Math.sin(s.yaw) * m.robot_radius * sc * 1.8);
+      ctx.stroke();
+    }
 
     function sendCommand(move, turn) {
       if (socket.readyState !== WebSocket.OPEN) return;
       socket.send(JSON.stringify({ type: "command", move, turn }));
     }
-
     function stopRobot() {
       if (socket.readyState !== WebSocket.OPEN) return;
       socket.send(JSON.stringify({ type: "stop" }));
     }
-
     function bindHold(button) {
       const move = Number(button.dataset.move);
       const turn = Number(button.dataset.turn);
-      const start = (event) => {
-        event.preventDefault();
-        sendCommand(move, turn);
-      };
-      const stop = (event) => {
-        event.preventDefault();
-        stopRobot();
-      };
+      const start = (e) => { e.preventDefault(); sendCommand(move, turn); };
+      const stop = (e) => { e.preventDefault(); stopRobot(); };
       button.addEventListener("mousedown", start);
       button.addEventListener("mouseup", stop);
       button.addEventListener("mouseleave", stop);
@@ -149,11 +194,11 @@
       button.addEventListener("touchend", stop, { passive: false });
       button.addEventListener("touchcancel", stop, { passive: false });
     }
-
     document.querySelectorAll("[data-move]").forEach(bindHold);
     document.getElementById("stop").addEventListener("click", stopRobot);
     document.getElementById("reset").addEventListener("click", () => {
       if (socket.readyState !== WebSocket.OPEN) return;
+      trail = [];
       socket.send(JSON.stringify({ type: "reset" }));
     });
   </script>

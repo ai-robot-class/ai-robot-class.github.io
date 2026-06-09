@@ -6,6 +6,81 @@
 
 ---
 
+## 🎬 配套资料：讲解 PPT 与配音视频
+
+本周配套了一份 **68 页教学级讲解 PPT**，逐节展开四大模块的公式推导、代码实现与动画图示，配合下方完整讲义即可作为一节自学网课。
+
+- 📊 讲解 PPT：`week9_project/week9_数学基础讲解.pptx`（68 页，16:9，含公式推导 / 代码 / 配图）
+- 📝 配音脚本：`week9_project/narration_script.md`（68 页逐页讲解词，全程约 50–60 分钟）
+- 🎬 讲解视频：配音由 [voicebox](https://github.com/jamiepine/voicebox) 的 Chatterbox 多语种引擎、以**授课老师本人录音克隆**生成。内容较多，已**按小节拆成 7 段**，可按需逐节观看；另附**独立书目导读视频**（见下文「参考书目推荐」）。
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:16px; margin:18px 0;">
+  <figure style="margin:0;">
+    <video src="../week9_project/videos/week9_0_导论与知识地图.mp4" controls style="width:100%; border-radius:8px;"></video>
+    <figcaption style="font-size:0.85em; color:#666;">0 · 导论与知识地图</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <video src="../week9_project/videos/week9_1_模块1_线性代数基础.mp4" controls style="width:100%; border-radius:8px;"></video>
+    <figcaption style="font-size:0.85em; color:#666;">1 · 模块1 线性代数基础</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <video src="../week9_project/videos/week9_2_模块1_李群与李代数.mp4" controls style="width:100%; border-radius:8px;"></video>
+    <figcaption style="font-size:0.85em; color:#666;">2 · 模块1 李群与李代数（重点）</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <video src="../week9_project/videos/week9_3_模块1_四元数与流形优化.mp4" controls style="width:100%; border-radius:8px;"></video>
+    <figcaption style="font-size:0.85em; color:#666;">3 · 模块1 四元数与流形优化应用</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <video src="../week9_project/videos/week9_4_模块2_机器人运动学.mp4" controls style="width:100%; border-radius:8px;"></video>
+    <figcaption style="font-size:0.85em; color:#666;">4 · 模块2 机器人运动学</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <video src="../week9_project/videos/week9_5_模块3_计算机视觉数学.mp4" controls style="width:100%; border-radius:8px;"></video>
+    <figcaption style="font-size:0.85em; color:#666;">5 · 模块3 计算机视觉数学</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <video src="../week9_project/videos/week9_6_模块4_路径规划.mp4" controls style="width:100%; border-radius:8px;"></video>
+    <figcaption style="font-size:0.85em; color:#666;">6 · 模块4 路径规划</figcaption>
+  </figure>
+</div>
+
+### 📚 参考书目推荐（独立视频）
+
+本周数学内容较深，建议配合参考书往下挖。下面这段**独立书目导读视频**介绍 6 本常用教材，并重点推荐两本：
+
+- **《现代机器人学：机构、规划与控制》** — 李群、李代数、螺旋理论讲得极好，**首尔大学本科生机器人课就用这本**，适合深入学习本周模块 1–2；
+- **《控制之美》** — 哔哩哔哩 UP 主 **DR CAN**（王天威）所著，控制理论讲得直观好懂，适合补齐控制直觉。
+
+<div style="max-width:720px; margin:16px 0;">
+  <video src="../week9_project/videos/week9_参考书目推荐.mp4" controls style="width:100%; border-radius:8px;"></video>
+  <p style="font-size:0.85em; color:#666; margin-top:8px;">
+    书目导读视频（约 5 分钟）。脚本见 <code>week9_project/books_narration_script.md</code>，幻灯片见 <code>images/course-ppt/week9_books/</code>。
+  </p>
+</div>
+
+| 书目 | 侧重 | 与本周关系 |
+|------|------|------------|
+| **现代机器人学** ★ | 运动/控制/李代数 | 模块 1–2 深入教材 |
+| **控制之美** ★ | 控制理论（UP 主 DR CAN） | 模块 2 控制直觉 |
+| 概率机器人 | 定位 / SLAM / 不确定性 | 模块 3–4 延伸 |
+| 机器人学·机器视觉与控制（Corke） | MATLAB 算法与视觉 | 模块 2–3 工程实现 |
+| ROS 2 机器人编程 | ROS2 实战 | 后续项目周 |
+| Python 编程：从入门到实践 | 编程基础 | 全课程前提 |
+
+PPT 部分页面预览（封面 / 知识地图 / 李代数指数映射推导 / 标准链路 / 雅可比 / A* 对比）：
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin:20px 0;">
+  <img src="../images/course-ppt/week9/slide01.png" alt="封面" style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+  <img src="../images/course-ppt/week9/slide04.png" alt="本周知识地图" style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+  <img src="../images/course-ppt/week9/slide29.png" alt="指数映射 Rodrigues 推导" style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+  <img src="../images/course-ppt/week9/slide37.png" alt="李群李代数四元数标准链路" style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+  <img src="../images/course-ppt/week9/slide50.png" alt="雅可比矩阵" style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+  <img src="../images/course-ppt/week9/slide63.png" alt="A* 与 BFS 对比" style="width:100%; border-radius:8px; box-shadow:0 4px 14px rgba(0,0,0,0.16);">
+</div>
+
+---
+
 ## 📋 本周课程大纲
 
 | 模块 | 时长 | 主题 | 内容 |

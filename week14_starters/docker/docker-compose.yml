@@ -1,0 +1,29 @@
+# 第 14 周小组项目 Docker 环境
+# 复用第 10/11 周用过的 ROS2 桌面镜像（带浏览器 noVNC 桌面），
+# turtlesim 与 PyBullet 的 GUI 窗口都能在浏览器桌面里显示。
+#
+# 用法：
+#   cd week14_starters/docker
+#   docker compose up -d
+#   浏览器打开 http://localhost:6080   （进入 Linux 桌面）
+#   桌面里打开终端，执行：  cd ~/week14_starters/docker && bash setup.sh
+#
+# 端口说明：
+#   6080 -> 容器内 noVNC 桌面（浏览器看仿真画面）
+#   8765 -> 方向 A（PyBullet 机器狗）网页控制器
+#   8080 -> 方向 B（turtlesim 乌龟）网页控制器
+services:
+  week14:
+    image: ghcr.io/tiryoh/ros2-desktop-vnc:humble
+    container_name: week14
+    security_opt:
+      - seccomp:unconfined
+    shm_size: "512m"
+    ports:
+      - "6080:80"     # 浏览器桌面 noVNC
+      - "8765:8765"   # 方向 A 网页控制器
+      - "8080:8080"   # 方向 B 网页控制器
+    volumes:
+      # 把整个 week14_starters 挂进容器，代码在宿主机改、容器里直接运行
+      - ../:/home/ubuntu/week14_starters
+    restart: unless-stopped

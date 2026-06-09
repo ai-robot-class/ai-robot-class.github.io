@@ -13,20 +13,19 @@ from turtlesim.msg import Pose
 from turtlesim.srv import TeleportAbsolute
 
 
+from maze import build_maze
+
 HOST = "0.0.0.0"
 PORT = 8080
 CONTROL_PERIOD = 0.1
 TURTLE_RADIUS = 0.45
-MAZE_BOUNDS = {"min_x": 1.0, "max_x": 10.0, "min_y": 1.0, "max_y": 10.0}
-START_POSE = {"x": 1.5, "y": 1.5, "theta": 0.0}
-GOAL_REGION = {"x": 9.2, "y": 9.2, "radius": 0.5}
-OBSTACLES = [
-    {"x": 3.0, "y": 1.0, "w": 0.6, "h": 5.0},
-    {"x": 5.2, "y": 4.0, "w": 0.6, "h": 5.0},
-    {"x": 7.4, "y": 1.0, "w": 0.6, "h": 5.0},
-    {"x": 1.0, "y": 5.8, "w": 3.0, "h": 0.6},
-    {"x": 5.8, "y": 7.8, "w": 3.2, "h": 0.6},
-]
+# 迷宫由 maze.py 生成：5x5 网格 + 随机环路，存在多条通路，必须用路径搜索
+# 算法（BFS / Dijkstra / A*）才能找到最优路线。想换地图就改 maze.py 的参数。
+_MAZE = build_maze()
+MAZE_BOUNDS = _MAZE["bounds"]
+START_POSE = _MAZE["start"]
+GOAL_REGION = _MAZE["goal"]
+OBSTACLES = _MAZE["obstacles"]
 
 
 class TurtleWebBridge(Node):
