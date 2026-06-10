@@ -6,6 +6,7 @@
 - [📊 学生作业评价总结](EVALUATION_SUMMARY.md)
 - [🔒 隐私保护说明](PRIVACY.md)
 - [👥 学生作业实时展示](students/README.md)
+- [📝 期末复习题库（中韩双语）](exam/review_bank.html)
 
 ## 实际教学内容
 
