@@ -72,9 +72,14 @@ def generate_student_card(student, week_keys):
                 cls = 'pass'
             else:
                 cls = 'weak'
-            week_cells.append(f'<span class="week-pill {cls}" title="{wk}: 原始分{raw}/100, 加权{wkd.get("final_score",0):.1f}">{wk[4:]}</span>')
+            final = wkd.get("final_score", 0)
+            week_cells.append(
+                f'<span class="week-pill {cls}" title="{wk}: 原始分{raw}/100, 加权{final:.1f}">'
+                f'<span class="pill-w">W{wk[4:]}</span><span class="pill-s">{final:.1f}</span></span>')
         else:
-            week_cells.append(f'<span class="week-pill empty" title="{wk}: 未提交">{wk[4:]}</span>')
+            week_cells.append(
+                f'<span class="week-pill empty" title="{wk}: 未提交">'
+                f'<span class="pill-w">W{wk[4:]}</span><span class="pill-s">—</span></span>')
 
     return f"""
     <div class="student-card">
@@ -142,7 +147,7 @@ def generate_week_table(students, week_keys, week_info):
     headers.append('<th>等级</th>')
 
     return f"""
-    <div class="week-table-wrapper">
+    <div class="week-table-wrapper" id="week-scores">
         <h2>📊 各周作业详情（按学生）</h2>
         <p style="text-align:center; color:#666; margin-bottom: 20px;">表格中显示加权得分（已乘以权重）。原始分见单元格 tooltip。</p>
         <div class="table-scroll">
@@ -519,16 +524,19 @@ def generate_html(data):
         }}
         .week-pill {{
             display: inline-flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 26px;
-            height: 26px;
-            padding: 0 6px;
-            font-size: 0.75em;
+            min-width: 38px;
+            height: 34px;
+            padding: 2px 4px;
             font-weight: 600;
             border-radius: 6px;
             color: white;
+            line-height: 1.1;
         }}
+        .week-pill .pill-w {{ font-size: 0.62em; opacity: 0.9; }}
+        .week-pill .pill-s {{ font-size: 0.78em; }}
         .week-pill.excellent {{ background: #10b981; }}
         .week-pill.good {{ background: #3b82f6; }}
         .week-pill.pass {{ background: #f59e0b; }}
@@ -553,9 +561,10 @@ def generate_html(data):
         }}
 
         .week-table-wrapper {{
-            margin-top: 50px;
-            padding-top: 30px;
+            margin: 28px 0 40px;
+            padding: 24px 0 10px;
             border-top: 2px solid #e5e7eb;
+            border-bottom: 2px solid #e5e7eb;
         }}
 
         .table-scroll {{
@@ -924,8 +933,10 @@ def generate_html(data):
         <div class="scoring-info">
             <p><strong>📊 评分制度</strong>：{data.get('scoring_system', '总分100分（内容70% + 态度30%）')}</p>
             <p><strong>🔒 隐私保护</strong>：仅显示 GitHub ID 与头像，不公开学生姓名、学号等敏感信息。</p>
-            <p><strong>ℹ️ 说明</strong>：每周得分按权重加权后计入总分。点击学生卡片可跳转 GitHub 仓库查看详情。</p>
+            <p><strong>ℹ️ 说明</strong>：每周得分按权重加权后计入总分。卡片上的彩色标签直接显示 W 周次 + 加权分；下方表格可看全员对比。<a href="#week-scores" style="color:#667eea;font-weight:600;">跳转到各周得分表 ↓</a></p>
         </div>
+
+        {table_html}
 
         {carousel_html}
 
@@ -933,8 +944,6 @@ def generate_html(data):
         <div class="students-grid">
             {cards_html}
         </div>
-
-        {table_html}
 
         <footer>
             <p>AI 机器人课程 · 信韩大学 软件学院 · 2026</p>
