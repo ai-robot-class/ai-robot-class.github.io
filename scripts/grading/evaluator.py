@@ -103,6 +103,7 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     weeks_result = {}
     weighted_sum = 0.0
     completed_weight = 0.0
+    ai_comment = None
     now = datetime.now(timezone.utc)
 
     for week_id, week_info in WEEKS.items():
@@ -146,7 +147,7 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
         print("  🤖 DeepSeek AI 评分中...")
         ai_result = score_student_with_ai(github_id, weeks_result)
         if ai_result:
-            apply_ai_scores(weeks_result, ai_result)
+            ai_comment = apply_ai_scores(weeks_result, ai_result)
             weighted_sum = 0.0
             completed_weight = 0.0
             for week_id, week_info in WEEKS.items():
@@ -166,7 +167,10 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     else:
         total_score = 0.0
 
-    submitted_weeks = [w for w in weeks_result.values() if w.get("submitted")]
+    submitted_weeks = [
+        w for w in weeks_result.values()
+        if isinstance(w, dict) and w.get("submitted")
+    ]
     if submitted_weeks:
         submitted_avg = sum(w["raw_score"] for w in submitted_weeks) / len(submitted_weeks)
         alt_score = submitted_avg * 0.8
@@ -188,8 +192,6 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
             bonus = 4
         total_score = min(total_score + bonus, 100)
         grade = _grade(total_score)
-
-    ai_comment = weeks_result.pop("_ai_overall_comment", None)
 
     result = {
         "github_id": github_id,

@@ -77,7 +77,7 @@ def score_student_with_ai(github_id: str, weeks_result: dict) -> dict | None:
     if not api_key:
         return None
 
-    submitted = [wk for wk, data in weeks_result.items() if data.get("submitted")]
+    submitted = [wk for wk, data in weeks_result.items() if isinstance(data, dict) and data.get("submitted")]
     if not submitted:
         return None
 
@@ -137,12 +137,22 @@ def score_student_with_ai(github_id: str, weeks_result: dict) -> dict | None:
     return None
 
 
-def apply_ai_scores(weeks_result: dict, ai_result: dict | None) -> None:
+def _iter_week_data(weeks_result: dict):
+    """只遍历各周评分 dict，跳过 AI 附加字段等非 dict 项。"""
+    for week_id, data in weeks_result.items():
+        if isinstance(data, dict):
+            yield week_id, data
+
+
+def apply_ai_scores(weeks_result: dict, ai_result: dict | None) -> str | None:
     if not ai_result:
-        return
+        return None
 
     ai_weeks = ai_result.get("weeks") or {}
-    for week_id, wk_data in weeks_result.items():
+    if not isinstance(ai_weeks, dict):
+        ai_weeks = {}
+
+    for week_id, wk_data in _iter_week_data(weeks_result):
         if not wk_data.get("submitted"):
             continue
         ai_wk = ai_weeks.get(week_id)
@@ -168,5 +178,4 @@ def apply_ai_scores(weeks_result: dict, ai_result: dict | None) -> None:
             wk_data["comments"].append(f"🤖 AI: {comment}")
 
     overall = str(ai_result.get("overall_comment", "")).strip()
-    if overall:
-        weeks_result["_ai_overall_comment"] = overall
+    return overall or None
