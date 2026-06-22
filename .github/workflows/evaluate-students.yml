@@ -9,8 +9,7 @@ on:
       - main
     paths:
       - 'students/roster.json'
-      - 'scripts/evaluate_students.py'
-      - 'scripts/generate_report.py'
+      - 'scripts/**'
       - '.github/workflows/evaluate-students.yml'
   workflow_dispatch:
 
@@ -20,12 +19,13 @@ permissions:
 jobs:
   evaluate:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
 
     steps:
       - name: 检查运行日期
         id: check_date
         run: |
-          END_DATE="2026-06-22"
+          END_DATE="${EVALUATION_END_DATE:-2026-07-31}"
           CURRENT_DATE=$(date +%Y-%m-%d)
           if [[ "$CURRENT_DATE" > "$END_DATE" ]]; then
             echo "⏰ 评价已结束（截止日期：$END_DATE）"
@@ -34,6 +34,8 @@ jobs:
             echo "✅ 继续运行评价（当前：$CURRENT_DATE，截止：$END_DATE）"
             echo "should_run=true" >> $GITHUB_OUTPUT
           fi
+        env:
+          EVALUATION_END_DATE: ${{ vars.EVALUATION_END_DATE }}
 
       - name: Checkout
         if: steps.check_date.outputs.should_run == 'true'
@@ -49,18 +51,15 @@ jobs:
 
       - name: 安装依赖
         if: steps.check_date.outputs.should_run == 'true'
-        run: |
-          pip install requests
+        run: pip install requests
 
       - name: 运行评价脚本
         if: steps.check_date.outputs.should_run == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          EVALUATION_END_DATE: ${{ vars.EVALUATION_END_DATE }}
         run: python scripts/evaluate_students.py
-
-      - name: 生成展示页面
-        if: steps.check_date.outputs.should_run == 'true'
-        run: python scripts/generate_report.py
 
       - name: 提交更新
         if: steps.check_date.outputs.should_run == 'true'

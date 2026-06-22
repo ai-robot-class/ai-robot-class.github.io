@@ -44,12 +44,6 @@ jobs:
           rm -f students/index.html students/roster.json
           rm -rf students/evaluations
 
-          # 临时移出 exam 静态 HTML，避免 honkit 解析失败
-          mkdir -p /tmp/exam-static
-          cp exam/review_bank.html /tmp/exam-static/review_bank.html
-          cp exam/build_review_bank.py /tmp/exam-static/build_review_bank.py 2>/dev/null || true
-          rm -f exam/review_bank.html exam/build_review_bank.py
-
           # 构建 honkit 站点
           npm run build
           touch _book/.nojekyll
@@ -60,18 +54,11 @@ jobs:
           cp /tmp/students-static/roster.json _book/students/roster.json
           cp -r /tmp/students-static/evaluations/. _book/students/evaluations/ 2>/dev/null || true
 
-          # 把复习题库复制到 _book/exam/
-          mkdir -p _book/exam
-          cp /tmp/exam-static/review_bank.html _book/exam/review_bank.html
-          cp /tmp/exam-static/build_review_bank.py _book/exam/build_review_bank.py 2>/dev/null || true
-
           # 恢复原始文件（以便后续 step 使用）
           cp /tmp/students-static/index.html students/index.html
           cp /tmp/students-static/roster.json students/roster.json
           mkdir -p students/evaluations
           cp -r /tmp/students-static/evaluations/. students/evaluations/ 2>/dev/null || true
-          cp /tmp/exam-static/review_bank.html exam/review_bank.html
-          cp /tmp/exam-static/build_review_bank.py exam/build_review_bank.py 2>/dev/null || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

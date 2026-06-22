@@ -1,3 +1,9 @@
+# 本地考试卷（不上传 GitHub）
+exam/
+
+# 本地密钥
+.env
+.env.local
 node_modules/
 _book/
 
