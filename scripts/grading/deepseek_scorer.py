@@ -68,6 +68,20 @@ def build_student_prompt(github_id: str, weeks_payload: list[dict]) -> str:
         if excerpt:
             lines.append("  README 摘要:")
             lines.append(excerpt[:1800])
+        if item.get("week_id") == "week14":
+            proj = item.get("week14_project") or {}
+            rubric = proj.get("rubric") or {}
+            if rubric:
+                lines.append(
+                    "  第14周项目rubric: 链路 {link}/30, 迷宫 {maze}/25, 进阶 {adv}/25, "
+                    "规范 {eng}/10, 报告 {rep}/10".format(
+                        link=rubric.get("link_chain", 0),
+                        maze=rubric.get("maze_explore", 0),
+                        adv=rubric.get("advanced", 0),
+                        eng=rubric.get("engineering", 0),
+                        rep=rubric.get("report_demo", 0),
+                    )
+                )
         lines.append("")
     return "\n".join(lines)
 
@@ -97,6 +111,7 @@ def score_student_with_ai(github_id: str, weeks_result: dict) -> dict | None:
                 "rule_attitude": data.get("rule_attitude_score", data.get("attitude_score", 0)),
                 "details": data.get("details", {}),
                 "readme_excerpt": data.get("readme_excerpt", ""),
+                "week14_project": data.get("week14_project"),
             }
         )
 

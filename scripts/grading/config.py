@@ -18,7 +18,7 @@ WEEKS = {
     "week10": {"title": "Docker与OpenCV", "weight": 10, "due_date": "2026-05-10"},
     "week11": {"title": "Docker进阶与Pages", "weight": 10, "due_date": "2026-05-17"},
     "week12": {"title": "视觉与语音", "weight": 10, "due_date": "2026-05-24"},
-    "week13": {"title": "期末项目", "weight": 15, "due_date": "2026-06-22"},
+    "week14": {"title": "小组项目（手机遥控迷宫）", "weight": 15, "due_date": "2026-06-22"},
 }
 
 IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", ".webp")

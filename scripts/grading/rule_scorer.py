@@ -181,11 +181,15 @@ def analyze_week(
         "ai_attitude_score": None,
         "readme_excerpt": "",
         "details": {},
+        "improvement_suggestions": [],
         "comments": [],
     }
 
     if not files:
         result["comments"].append("❌ 未提交作业")
+        result["improvement_suggestions"].append(
+            f"请在 week 对应目录提交当周作业（参考讲义 {week_id}）。"
+        )
         return result
 
     result["submitted"] = True
@@ -350,4 +354,23 @@ def analyze_week(
         "commit_count": commit_count,
         "total_files": sum(1 for f in files if f.get("type") == "blob"),
     }
+
+    suggestions = []
+    if not readme_blob:
+        suggestions.append("补充 README.md：写清操作步骤、遇到的问题与解决思路。")
+    elif readme_size < 500:
+        suggestions.append("README 偏短，建议增加截图引用、步骤清单与学习总结。")
+    if img_stats["total"] == 0:
+        suggestions.append("添加运行截图或效果图，便于展示作业完成情况。")
+    elif img_stats["meaningful"] < 2:
+        suggestions.append("截图较少，建议多放几张关键步骤或运行结果。")
+    if code_count == 0 and week_id not in {"week7"}:
+        suggestions.append("本周通常需要代码或配置文件，请检查是否遗漏提交。")
+    if video_count == 0 and week_id in {"week10", "week11", "week12"}:
+        suggestions.append("建议补充演示视频，展示功能运行过程。")
+    if commit_count <= 1:
+        suggestions.append("建议分阶段 commit，体现迭代过程。")
+    if content_score < 55:
+        suggestions.append("内容分偏低：对照当周讲义检查是否遗漏必做项。")
+    result["improvement_suggestions"] = suggestions[:6]
     return result

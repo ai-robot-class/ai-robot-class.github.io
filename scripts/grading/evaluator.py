@@ -8,6 +8,7 @@ from .config import ROOT, WEEKS, ai_scoring_enabled
 from .deepseek_scorer import apply_ai_scores, score_student_with_ai
 from .github_api import GitHubClient, GitHubRateLimitError, load_students, require_github_token
 from .rule_scorer import analyze_week, audit_pages_health, check_pages_alive
+from .week14_scorer import analyze_week14, build_week14_rankings
 from .week_utils import group_files_by_week
 
 
@@ -111,17 +112,30 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
         files = week_files.get(week_id, [])
         path_commits = gh.fetch_commits_for_path(owner, repo_name, anchor) if anchor and files else []
 
-        wk_result = analyze_week(
-            week_id,
-            week_info,
-            files,
-            anchor,
-            owner,
-            repo_name,
-            path_commits,
-            commits,
-            gh.fetch_file_content,
-            fetch_readme=use_ai,
+        wk_result = (
+            analyze_week14(
+                week_info,
+                files,
+                anchor,
+                owner,
+                repo_name,
+                path_commits,
+                commits,
+                gh.fetch_file_content,
+            )
+            if week_id == "week14"
+            else analyze_week(
+                week_id,
+                week_info,
+                files,
+                anchor,
+                owner,
+                repo_name,
+                path_commits,
+                commits,
+                gh.fetch_file_content,
+                fetch_readme=use_ai,
+            )
         )
         raw = wk_result["content_score"] + wk_result["attitude_score"]
         final = raw * week_info["weight"] / 100
@@ -269,6 +283,7 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
             wk: {"title": info["title"], "weight": info["weight"], "due_date": info["due_date"]}
             for wk, info in WEEKS.items()
         },
+        "week14_rankings": build_week14_rankings(results),
         "students": results,
     }
 
