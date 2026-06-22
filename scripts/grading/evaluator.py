@@ -6,7 +6,7 @@ from pathlib import Path
 
 from .config import ROOT, WEEKS, ai_scoring_enabled
 from .deepseek_scorer import apply_ai_scores, score_student_with_ai
-from .github_api import GitHubClient, load_students, require_github_token
+from .github_api import GitHubClient, GitHubRateLimitError, load_students, require_github_token
 from .rule_scorer import analyze_week, audit_pages_health, check_pages_alive
 from .week_utils import group_files_by_week
 
@@ -241,6 +241,8 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
             results.append(evaluate_student(student, gh, use_ai=use_ai))
         except Exception as exc:
             print(f"  ⚠️  评估异常: {exc}")
+            if isinstance(exc, GitHubRateLimitError):
+                raise
             results.append(
                 {
                     "github_id": student["github_id"],

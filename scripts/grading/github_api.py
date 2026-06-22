@@ -45,6 +45,10 @@ def require_github_token() -> str:
     raise SystemExit(1)
 
 
+class GitHubRateLimitError(RuntimeError):
+    pass
+
+
 class GitHubClient:
     def __init__(self, token: str | None = None, timeout: int = 30):
         self.token = token or require_github_token()
@@ -67,11 +71,9 @@ class GitHubClient:
                         msg = resp.text[:120]
                     if resp.status_code == 429 or "rate limit" in msg.lower():
                         if attempt == 2:
-                            print(
-                                "\n❌ GitHub API 配额已用尽或触发限流。"
-                                "请更换或充值 GITHUB_TOKEN 后重试。"
+                            raise GitHubRateLimitError(
+                                "GitHub API 配额已用尽或触发限流，请更换或充值 Token 后重试。"
                             )
-                            raise SystemExit(1)
                     elif resp.status_code == 403 and "rate limit" not in msg.lower():
                         return resp
                     wait = min(60, 2 ** attempt * 5)

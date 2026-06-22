@@ -38,7 +38,7 @@ DEEPSEEK_API_URL = os.environ.get(
     "DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions"
 )
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
-EVALUATION_END_DATE = os.environ.get("EVALUATION_END_DATE", "2026-07-31")
+EVALUATION_END_DATE = os.environ.get("EVALUATION_END_DATE") or "2026-07-31"
 
 
 def load_dotenv() -> None:

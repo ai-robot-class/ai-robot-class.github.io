@@ -15,6 +15,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 from grading.config import evaluation_should_run, load_dotenv  # noqa: E402
 from grading.evaluator import run_evaluation  # noqa: E402
+from grading.github_api import GitHubRateLimitError  # noqa: E402
 
 
 def main():
@@ -30,7 +31,14 @@ def main():
         return 0
 
     limit = args.limit or None
-    run_evaluation(use_ai=not args.no_ai, limit=limit)
+    try:
+        run_evaluation(use_ai=not args.no_ai, limit=limit)
+    except GitHubRateLimitError as exc:
+        print(f"\n❌ {exc}")
+        return 1
+    except Exception as exc:
+        print(f"\n❌ 评价脚本异常: {exc}")
+        raise
 
     if not args.skip_report:
         report_script = ROOT / "scripts" / "generate_report.py"
