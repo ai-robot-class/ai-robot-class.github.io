@@ -30,11 +30,15 @@ def require_github_token() -> str:
     token = get_github_token()
     if token:
         return token
+    in_ci = os.environ.get("GITHUB_ACTIONS") == "true"
+    hint = (
+        "GitHub Actions 会自动注入 GITHUB_TOKEN，若仍缺失请检查 workflow permissions。"
+        if in_ci
+        else "本地请在项目根目录 .env 中设置 GITHUB_TOKEN=..."
+    )
     print(
         "❌ 未检测到 GitHub Token，无法调用 GitHub API 评价学生仓库。\n"
-        "请配置后再运行：\n"
-        "  · 本地：在项目根目录 .env 中设置 GITHUB_TOKEN=...\n"
-        "  · CI：在 GitHub 仓库 Settings → Secrets 中添加 GITHUB_TOKEN\n"
+        f"{hint}\n"
         "若 Token 配额已用尽，请更换或充值后重试。"
     )
     raise SystemExit(1)
