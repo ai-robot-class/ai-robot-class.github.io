@@ -54,6 +54,7 @@ jobs:
       - name: 运行评价脚本
         if: steps.check_date.outputs.should_run == 'true'
         env:
+          GH_API_TOKEN: ${{ github.token }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           EVALUATION_END_DATE: ${{ vars.EVALUATION_END_DATE }}
         run: python scripts/evaluate_students.py

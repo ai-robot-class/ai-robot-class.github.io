@@ -11,9 +11,10 @@ from .config import ROOT
 
 
 def get_github_token() -> str | None:
-    token = os.environ.get("GITHUB_TOKEN")
-    if token:
-        return token
+    for key in ("GITHUB_TOKEN", "GH_API_TOKEN", "GH_TOKEN"):
+        token = os.environ.get(key)
+        if token:
+            return token
     try:
         hosts = Path.home() / ".config" / "gh" / "hosts.yml"
         if hosts.exists():
