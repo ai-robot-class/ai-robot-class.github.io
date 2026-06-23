@@ -8,6 +8,7 @@ from .config import ROOT, WEEKS, ai_scoring_enabled
 from .deepseek_scorer import apply_ai_scores, score_student_with_ai
 from .github_api import GitHubClient, GitHubRateLimitError, load_students, require_github_token
 from .rule_scorer import analyze_week, audit_pages_health, check_pages_alive
+from .week13_scorer import analyze_week13
 from .week14_scorer import analyze_week14, build_week14_rankings
 from .week_utils import group_files_by_week
 
@@ -124,6 +125,17 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
                 gh.fetch_file_content,
             )
             if week_id == "week14"
+            else analyze_week13(
+                week_info,
+                files,
+                anchor,
+                owner,
+                repo_name,
+                path_commits,
+                commits,
+                gh.fetch_file_content,
+            )
+            if week_id == "week13"
             else analyze_week(
                 week_id,
                 week_info,

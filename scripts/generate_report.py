@@ -120,114 +120,97 @@ def _escape_html(text: str) -> str:
     )
 
 
-def generate_week_improvements(students, week_keys, week_info):
-    """各周作业详情：按学生展开评语与改进建议。"""
-    blocks = []
-    active = [s for s in students if s.get("repo_exists")]
-    for s in active:
-        github_id = s["github_id"]
-        weeks = s.get("weeks") or {}
-        week_sections = []
+def build_student_week_detail_html(student, week_keys, week_info) -> str:
+    """生成单个学生的各周评分说明与改进建议（用于表格折叠栏）。"""
+    weeks = student.get("weeks") or {}
+    week_sections = []
 
-        for wk in week_keys:
-            wkd = weeks.get(wk, {})
-            info = week_info.get(wk, {})
-            title = info.get("title", wk)
-            weight = info.get("weight", 0)
+    for wk in week_keys:
+        wkd = weeks.get(wk, {})
+        info = week_info.get(wk, {})
+        title = info.get("title", wk)
+        weight = info.get("weight", 0)
 
-            if not wkd.get("submitted"):
-                week_sections.append(
-                    f'<div class="improve-week improve-missing">'
-                    f'<div class="improve-week-head"><strong>W{wk[4:]}</strong> {title} '
-                    f'<span class="improve-tag tag-missing">未提交</span></div>'
-                    f'<p class="improve-empty">暂无提交内容。权重 {weight} 分。</p>'
-                    f"</div>"
-                )
-                continue
-
-            raw = wkd.get("raw_score", 0)
-            final = wkd.get("final_score", 0)
-            comments = wkd.get("comments") or []
-            suggestions = wkd.get("improvement_suggestions") or []
-
-            if raw >= 75:
-                tag_cls, tag = "tag-excellent", "优秀"
-            elif raw >= 55:
-                tag_cls, tag = "tag-good", "良好"
-            elif raw >= 30:
-                tag_cls, tag = "tag-pass", "及格"
-            else:
-                tag_cls, tag = "tag-weak", "待加强"
-
-            comment_items = "".join(f"<li>{_escape_html(c)}</li>" for c in comments[:12])
-            suggest_items = "".join(
-                f"<li class='suggest-li'>{_escape_html(t)}</li>" for t in suggestions[:8]
-            )
-
-            extra = ""
-            if wk == "week14":
-                proj = wkd.get("week14_project") or {}
-                rubric = proj.get("rubric") or {}
-                if rubric:
-                    extra = (
-                        '<div class="week14-rubric-mini">'
-                        f'项目分 {proj.get("project_score", raw)}/100 · '
-                        f'链路 {rubric.get("link_chain", 0)}/30 · '
-                        f'迷宫 {rubric.get("maze_explore", 0)}/25 · '
-                        f'进阶 {rubric.get("advanced", 0)}/25 · '
-                        f'规范 {rubric.get("engineering", 0)}/10 · '
-                        f'报告 {rubric.get("report_demo", 0)}/10'
-                        "</div>"
-                    )
-                if not suggestions:
-                    suggest_items = (
-                        "<li class='suggest-li'>请对照讲义 14.10 节检查："
-                        "week14/ 目录、week14_XXXX.pdf、演示视频、自动探索（如适用）。</li>"
-                    )
-
+        if not wkd.get("submitted"):
             week_sections.append(
-                f'<details class="improve-week">'
-                f'<summary class="improve-week-head">'
-                f'<strong>W{wk[4:]}</strong> {title} '
-                f'<span class="improve-score">{final:.1f}/{weight}</span> '
-                f'<span class="improve-tag {tag_cls}">{tag} {raw:.0f}</span>'
-                f"</summary>"
-                f"{extra}"
-                f'<div class="improve-grid">'
-                f'<div><h4>📋 评分说明</h4><ul class="improve-list">{comment_items or "<li>暂无</li>"}</ul></div>'
-                f'<div><h4>💡 改进建议</h4><ul class="improve-list">{suggest_items or "<li>继续保持，可打磨进阶功能与报告质量。</li>"}</ul></div>'
-                f"</div></details>"
+                f'<div class="improve-week improve-missing">'
+                f'<div class="improve-week-head"><strong>W{wk[4:]}</strong> {title} '
+                f'<span class="improve-tag tag-missing">未提交</span></div>'
+                f'<p class="improve-empty">暂无提交内容。权重 {weight} 分。</p>'
+                f"</div>"
             )
+            continue
 
-        ai_overall = s.get("ai_overall_comment")
-        ai_block = ""
-        if ai_overall:
-            ai_block = f'<div class="ai-overall-comment">🤖 总评：{_escape_html(ai_overall)}</div>'
+        raw = wkd.get("raw_score", 0)
+        final = wkd.get("final_score", 0)
+        comments = wkd.get("comments") or []
+        suggestions = wkd.get("improvement_suggestions") or []
 
-        blocks.append(
-            f'<div class="improve-student-card" id="student-{github_id}">'
-            f'<div class="improve-student-head">'
-            f'<img src="https://github.com/{github_id}.png" alt="@{github_id}" class="improve-avatar" '
-            f'onerror="this.src=\'https://github.com/identicons/{github_id}.png\'">'
-            f'<div><h3><a href="{s["repo_url"]}" target="_blank">@{github_id}</a></h3>'
-            f'<span class="improve-meta">总分 {s.get("total_score", 0)} · {s.get("grade", "N/A")}</span></div>'
-            f"</div>{ai_block}{''.join(week_sections)}</div>"
+        if raw >= 75:
+            tag_cls, tag = "tag-excellent", "优秀"
+        elif raw >= 55:
+            tag_cls, tag = "tag-good", "良好"
+        elif raw >= 30:
+            tag_cls, tag = "tag-pass", "及格"
+        else:
+            tag_cls, tag = "tag-weak", "待加强"
+
+        comment_items = "".join(f"<li>{_escape_html(c)}</li>" for c in comments[:12])
+        suggest_items = "".join(
+            f"<li class='suggest-li'>{_escape_html(t)}</li>" for t in suggestions[:8]
         )
 
-    if not blocks:
-        return ""
+        extra = ""
+        if wk == "week13":
+            lab = wkd.get("week13_lab") or {}
+            extra = (
+                '<div class="week14-rubric-mini">'
+                f'walk代码 {"✅" if lab.get("has_walk_py") else "❌"} · '
+                f'AI对话 {"✅" if lab.get("has_ai_log") else "❌"} · '
+                f'反思 {"✅" if lab.get("has_reflection") else "❌"} · '
+                f'目录 {lab.get("anchor_kind") or "—"}'
+                "</div>"
+            )
+        elif wk == "week14":
+            proj = wkd.get("week14_project") or {}
+            rubric = proj.get("rubric") or {}
+            if rubric:
+                extra = (
+                    '<div class="week14-rubric-mini">'
+                    f'项目分 {proj.get("project_score", raw)}/100 · '
+                    f'链路 {rubric.get("link_chain", 0)}/30 · '
+                    f'迷宫 {rubric.get("maze_explore", 0)}/25 · '
+                    f'进阶 {rubric.get("advanced", 0)}/25 · '
+                    f'规范 {rubric.get("engineering", 0)}/10 · '
+                    f'报告 {rubric.get("report_demo", 0)}/10'
+                    "</div>"
+                )
+            if not suggestions:
+                suggest_items = (
+                    "<li class='suggest-li'>请对照讲义 14.10 节检查："
+                    "week14/ 目录、week14_XXXX.pdf、演示视频、自动探索（如适用）。</li>"
+                )
 
-    return f"""
-    <div class="week-improvements-section" id="week-improvements">
-        <h2>📝 各周作业详情（按学生 · 改进提示）</h2>
-        <p style="text-align:center; color:#666; margin-bottom: 20px;">
-            展开每位学生的各周卡片，查看评分说明与<strong>具体改进建议</strong>。第 14 周为小组项目专项评分。
-        </p>
-        <div class="improve-students-list">
-            {''.join(blocks)}
-        </div>
-    </div>
-    """
+        week_sections.append(
+            f'<details class="improve-week">'
+            f'<summary class="improve-week-head">'
+            f'<strong>W{wk[4:]}</strong> {title} '
+            f'<span class="improve-score">{final:.1f}/{weight}</span> '
+            f'<span class="improve-tag {tag_cls}">{tag} {raw:.0f}</span>'
+            f"</summary>"
+            f"{extra}"
+            f'<div class="improve-grid">'
+            f'<div><h4>📋 评分说明</h4><ul class="improve-list">{comment_items or "<li>暂无</li>"}</ul></div>'
+            f'<div><h4>💡 改进建议</h4><ul class="improve-list">{suggest_items or "<li>继续保持，可打磨进阶功能与报告质量。</li>"}</ul></div>'
+            f"</div></details>"
+        )
+
+    ai_overall = student.get("ai_overall_comment")
+    ai_block = ""
+    if ai_overall:
+        ai_block = f'<div class="ai-overall-comment">🤖 总评：{_escape_html(ai_overall)}</div>'
+
+    return f'{ai_block}<div class="detail-weeks">{"".join(week_sections)}</div>'
 
 
 def generate_week14_ranking(data):
@@ -311,7 +294,16 @@ def generate_week_table(students, week_keys, week_info):
                 cells.append('<td class="cell-empty">—</td>')
         cells.append(f'<td class="total-col"><strong>{s["total_score"]}</strong></td>')
         cells.append(f'<td class="grade-col" style="color:{grade_color(s["grade"])}"><strong>{s["grade"]}</strong></td>')
-        rows.append(f'<tr>{"".join(cells)}</tr>')
+
+        detail_html = build_student_week_detail_html(s, week_keys, week_info)
+        cells.append(
+            f'<td class="detail-col">'
+            f'<details class="student-detail">'
+            f'<summary class="detail-summary">📋 详细分析</summary>'
+            f'<div class="detail-panel">{detail_html}</div>'
+            f'</details></td>'
+        )
+        rows.append(f'<tr class="score-row">{"".join(cells)}</tr>')
 
     headers = ['<th>学生</th>']
     for wk in week_keys:
@@ -321,11 +313,15 @@ def generate_week_table(students, week_keys, week_info):
         headers.append(f'<th title="{title}（{weight}分）">W{wk[4:]}<br><small>{weight}</small></th>')
     headers.append('<th>总分</th>')
     headers.append('<th>等级</th>')
+    headers.append('<th class="detail-head">详细分析</th>')
 
     return f"""
     <div class="week-table-wrapper" id="week-scores">
         <h2>📊 各周作业详情（按学生）</h2>
-        <p style="text-align:center; color:#666; margin-bottom: 20px;">表格中显示加权得分（已乘以权重）。原始分见单元格 tooltip。</p>
+        <p style="text-align:center; color:#666; margin-bottom: 20px;">
+            表格中显示加权得分（已乘以权重），原始分见单元格 tooltip。
+            点击最右侧<strong>「详细分析」</strong>可展开各周评分说明与改进建议（第 14 周为小组项目专项评分）。
+        </p>
         <div class="table-scroll">
             <table class="week-table">
                 <thead><tr>{''.join(headers)}</tr></thead>
@@ -522,7 +518,6 @@ def generate_html(data):
     carousel_html = generate_pages_carousel(students_sorted)
     cards_html = "\n".join(generate_student_card(s, week_keys) for s in students_sorted)
     table_html = generate_week_table(students_sorted, week_keys, week_info)
-    improvements_html = generate_week_improvements(students_sorted, week_keys, week_info)
     week14_ranking_html = generate_week14_ranking(data)
 
     return f"""<!DOCTYPE html>
@@ -787,6 +782,56 @@ def generate_html(data):
         .total-col {{ background: #f3f4f6; font-size: 1.05em; }}
         .grade-col {{ background: #f3f4f6; font-size: 1.1em; }}
 
+        .detail-head {{ min-width: 88px; }}
+        .detail-col {{
+            text-align: center !important;
+            vertical-align: middle;
+            background: #fafbfc;
+            min-width: 100px;
+        }}
+
+        .student-detail {{
+            text-align: left;
+        }}
+
+        .detail-summary {{
+            cursor: pointer;
+            display: inline-block;
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.82em;
+            font-weight: 600;
+            white-space: nowrap;
+            user-select: none;
+            list-style: none;
+        }}
+        .student-detail > summary::-webkit-details-marker {{ display: none; }}
+        .student-detail[open] > .detail-summary {{
+            background: #4f46e5;
+            margin-bottom: 10px;
+        }}
+
+        .detail-panel {{
+            min-width: 520px;
+            max-width: 720px;
+            padding: 4px 0 8px;
+        }}
+
+        .detail-weeks {{
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }}
+
+        .score-row:has(.student-detail[open]) {{
+            background: #f8fafc;
+        }}
+        .score-row:has(.student-detail[open]) td {{
+            border-bottom: none;
+        }}
+
         .legend {{
             display: flex;
             justify-content: center;
@@ -805,45 +850,11 @@ def generate_html(data):
         .legend-weak {{ background: rgba(249, 115, 22, 0.15); color: #c2410c; }}
         .legend-empty {{ background: #f3f4f6; color: #6b7280; }}
 
-        .week-improvements-section, .week14-ranking-section {{
+        .week14-ranking-section {{
             margin: 40px 0;
             padding: 24px 0;
             border-top: 2px solid #e5e7eb;
         }}
-
-        .improve-students-list {{
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }}
-
-        .improve-student-card {{
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 16px 18px;
-            background: #fafbfc;
-        }}
-
-        .improve-student-head {{
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed #e5e7eb;
-        }}
-
-        .improve-avatar {{
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 2px solid #667eea;
-        }}
-
-        .improve-student-head h3 {{ font-size: 1.05em; margin-bottom: 2px; }}
-        .improve-student-head a {{ color: #1f2937; text-decoration: none; }}
-        .improve-student-head a:hover {{ color: #667eea; }}
-        .improve-meta {{ font-size: 0.85em; color: #6b7280; }}
 
         .ai-overall-comment {{
             background: #eff6ff;
@@ -1251,17 +1262,13 @@ def generate_html(data):
         <div class="scoring-info">
             <p><strong>📊 评分制度</strong>：{data.get('scoring_system', '总分100分（内容70% + 态度30%）')}</p>
             <p><strong>🔒 隐私保护</strong>：仅显示 GitHub ID 与头像，不公开学生姓名、学号等敏感信息。</p>
-            <p><strong>ℹ️ 说明</strong>：每周得分按权重加权后计入总分。卡片上的彩色标签直接显示 W 周次 + 加权分；下方表格可看全员对比。
-            <a href="#week-improvements" style="color:#667eea;font-weight:600;">改进提示 ↓</a> ·
-            <a href="#week14-ranking" style="color:#667eea;font-weight:600;">第14周排名 ↓</a> ·
-            <a href="#week-scores" style="color:#667eea;font-weight:600;">得分表 ↓</a></p>
+            <p><strong>ℹ️ 说明</strong>：每周得分按权重加权后计入总分。表格最右侧<strong>「详细分析」</strong>可展开各周评语与改进建议。
+            <a href="#week14-ranking" style="color:#667eea;font-weight:600;">第14周排名 ↓</a></p>
         </div>
 
         {table_html}
 
         {week14_ranking_html}
-
-        {improvements_html}
 
         {carousel_html}
 

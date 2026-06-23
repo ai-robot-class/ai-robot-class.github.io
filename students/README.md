@@ -45,7 +45,8 @@
 | Week 10 | 10 分 | YOLO 检测 |
 | Week 11 | 10 分 | 目标追踪 |
 | Week 12 | 10 分 | 视觉与语音 |
-| Week 13 | **15 分** | **期末项目** |
+| Week 13 | 8 分  | 四足机器人入门（`week13_walk/`） |
+| Week 14 | 7 分  | 小组项目（手机遥控迷宫，`week14/` + PDF） |
 | **总计** | **100 分** | |
 
 ### 等级评定
@@ -91,11 +92,14 @@ your-ai-robot-homework/
 │   ├── README.md
 │   └── ...
 ├── ...
-└── week13/
-    ├── README.md
-    ├── code/
-    ├── demo.mp4
-    └── docs/
+└── week13_walk/
+    ├── quadruped_walk.py
+    ├── ai_chat_log.md
+    └── reflection.md
+└── week14/
+    ├── week14_组名.pdf
+    ├── server.py / turtlesim_web_bridge.py
+    └── demo.mp4
 ```
 
 ## 🤖 自动评价工作流
