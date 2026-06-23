@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""学生作业自动评价入口（规则 + DeepSeek AI）。"""
+"""学生作业自动评价入口（规则 + DeepSeek AI）。
+
+变更 scripts/ 或 students/roster.json 并 push 到 main 时，GitHub Actions 会自动重新评价。
+"""
 
 from __future__ import annotations
 
