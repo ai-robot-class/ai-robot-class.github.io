@@ -14,12 +14,11 @@ WEEKS = {
     "week6": {"title": "KITTI实验", "weight": 8, "due_date": "2026-04-12"},
     "week7": {"title": "Markdown整理", "weight": 5, "due_date": "2026-04-19"},
     "week8": {"title": "Docker容器", "weight": 8, "due_date": "2026-04-26"},
-    "week9": {"title": "数学基础", "weight": 8, "due_date": "2026-05-03"},
-    "week10": {"title": "Docker与OpenCV", "weight": 10, "due_date": "2026-05-10"},
-    "week11": {"title": "Docker进阶与Pages", "weight": 10, "due_date": "2026-05-17"},
-    "week12": {"title": "视觉与语音", "weight": 10, "due_date": "2026-05-24"},
+    "week10": {"title": "Docker与OpenCV", "weight": 12, "due_date": "2026-05-10"},
+    "week11": {"title": "Docker进阶与Pages", "weight": 12, "due_date": "2026-05-17"},
+    "week12": {"title": "视觉与语音", "weight": 12, "due_date": "2026-05-24"},
     "week13": {"title": "四足机器人入门", "weight": 8, "due_date": "2026-05-31"},
-    "week14": {"title": "小组项目（手机遥控迷宫）", "weight": 7, "due_date": "2026-06-14"},
+    "week14": {"title": "小组项目（手机遥控迷宫）", "weight": 9, "due_date": "2026-06-14"},
 }
 
 IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", ".webp")

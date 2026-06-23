@@ -41,12 +41,12 @@
 | Week 6  | 8 分  | KITTI 实验 |
 | Week 7  | 5 分  | Markdown 整理 |
 | Week 8  | 8 分  | Docker 容器 |
-| Week 9  | 8 分  | 数学基础（网课）|
-| Week 10 | 10 分 | YOLO 检测 |
-| Week 11 | 10 分 | 目标追踪 |
-| Week 12 | 10 分 | 视觉与语音 |
+| Week 9  | — | 数学基础（网课，**不设作业、不计分**） |
+| Week 10 | 12 分 | Docker 与 OpenCV |
+| Week 11 | 12 分 | Docker 进阶与 Pages |
+| Week 12 | 12 分 | 视觉与语音 |
 | Week 13 | 8 分  | 四足机器人入门（`week13_walk/`） |
-| Week 14 | 7 分  | 小组项目（手机遥控迷宫，`week14/` + PDF） |
+| Week 14 | 9 分  | 小组项目（手机遥控迷宫，`week14/` + PDF） |
 | **总计** | **100 分** | |
 
 ### 等级评定
