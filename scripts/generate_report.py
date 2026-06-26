@@ -335,6 +335,16 @@ def generate_week_table(students, week_keys, week_info):
     headers.append('<th class="total-head">总分</th>')
     headers.append('<th class="grade-head">等级</th>')
     headers.append('<th class="detail-head">详细分析</th>')
+    colgroup = (
+        '<colgroup>'
+        '<col class="col-name">'
+        + ''.join('<col class="col-week">' for _ in week_keys)
+        + '<col class="col-submitted">'
+        + '<col class="col-total">'
+        + '<col class="col-grade">'
+        + '<col class="col-detail">'
+        + '</colgroup>'
+    )
 
     return f"""
     <div class="week-table-wrapper" id="week-scores">
@@ -342,6 +352,7 @@ def generate_week_table(students, week_keys, week_info):
         <p class="week-table-note">单元格显示加权得分，悬停可查看原始分；左侧学生列固定，横向滚动可查看全部周次。</p>
         <div class="table-scroll">
             <table class="week-table">
+                {colgroup}
                 <thead><tr>{''.join(headers)}</tr></thead>
                 <tbody>{''.join(rows)}</tbody>
             </table>
@@ -776,12 +787,19 @@ def generate_html(data):
         }}
 
         .week-table {{
-            width: max-content;
-            min-width: 100%;
-            border-collapse: collapse;
+            width: 1070px;
+            min-width: 1070px;
+            border-collapse: separate;
+            border-spacing: 0;
             table-layout: fixed;
             font-size: 0.86em;
         }}
+        .col-name {{ width: 220px; }}
+        .col-week {{ width: 48px; }}
+        .col-submitted {{ width: 58px; }}
+        .col-total {{ width: 70px; }}
+        .col-grade {{ width: 58px; }}
+        .col-detail {{ width: 88px; }}
 
         .week-table th {{
             background: #4f65d8;
@@ -795,8 +813,8 @@ def generate_html(data):
             border-bottom: 1px solid #4054bd;
         }}
         .week-head {{
-            width: 44px;
-            min-width: 44px;
+            width: 48px;
+            min-width: 48px;
         }}
         .week-head span {{
             display: block;
@@ -824,9 +842,9 @@ def generate_html(data):
             position: sticky !important;
             left: 0;
             z-index: 3;
-            width: 210px;
-            min-width: 210px;
-            max-width: 210px;
+            width: 220px;
+            min-width: 220px;
+            max-width: 220px;
             text-align: left !important;
         }}
         .name-head {{
@@ -853,8 +871,8 @@ def generate_html(data):
         .name-col a:hover {{ color: #667eea; }}
 
         .score-cell {{
-            width: 44px;
-            min-width: 44px;
+            width: 48px;
+            min-width: 48px;
             font-variant-numeric: tabular-nums;
             font-weight: 700;
         }}
@@ -867,7 +885,7 @@ def generate_html(data):
         .submitted-head,
         .submitted-col {{
             width: 56px;
-            min-width: 56px;
+            min-width: 58px;
         }}
         .submitted-col {{
             background: #f8fafc;
@@ -883,12 +901,12 @@ def generate_html(data):
         .total-head,
         .total-col {{
             width: 66px;
-            min-width: 66px;
+            min-width: 70px;
         }}
         .grade-head,
         .grade-col {{
             width: 54px;
-            min-width: 54px;
+            min-width: 58px;
         }}
         .total-col,
         .grade-col {{
@@ -900,7 +918,7 @@ def generate_html(data):
         .detail-head,
         .detail-col {{
             width: 74px;
-            min-width: 74px;
+            min-width: 88px;
         }}
         .detail-col {{
             text-align: center !important;
