@@ -245,6 +245,7 @@ def analyze_week13(
         "missing_core": missing_core,
         "video_count": len(videos),
         "image_count": img_stats["total"],
+        "image_paths": img_stats.get("paths", []),
     }
     result["details"] = {
         "anchor_kind": anchor_kind,
@@ -253,6 +254,7 @@ def analyze_week13(
         "has_reflection": has_reflection,
         "video_count": len(videos),
         "image_count": img_stats["total"],
+        "image_paths": img_stats.get("paths", []),
         "code_signals": code_signals,
         "commit_count": commit_count,
         "total_files": len(blobs),

@@ -15,6 +15,8 @@ RUBRIC = """
 - 内容 70：README 质量、截图/代码/视频/文档是否齐全、是否体现理解与思考
 - 态度 30：是否提交、commit 次数、是否接近截止日期完成
 宽松原则：只要提交了实质内容，内容分通常 >= 45；README+截图+代码齐全通常 >= 75。
+若目录没有按 weekX 命名，但文件夹名、图片路径、README 摘要能对应课程实验主题，应视为有效课程参与证据。
+注意：你只能根据提供的文件名、图片路径、README 摘要和统计信息判断；不要声称已经看到了图片像素内容。
 未提交的作业 content_score=0, attitude_score=0。
 """
 
@@ -64,6 +66,11 @@ def build_student_prompt(github_id: str, weeks_payload: list[dict]) -> str:
                 commit_count=details.get("commit_count", 0),
             )
         )
+        image_paths = details.get("image_paths") or []
+        if image_paths:
+            lines.append("  图片/截图路径样本（用于判断非标准目录下的课程参与证据）:")
+            for path in image_paths[:12]:
+                lines.append(f"    - {path}")
         excerpt = (item.get("readme_excerpt") or "").strip()
         if excerpt:
             lines.append("  README 摘要:")

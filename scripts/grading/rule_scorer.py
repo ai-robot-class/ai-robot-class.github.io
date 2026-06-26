@@ -123,6 +123,7 @@ def analyze_screenshots(files: list[dict]):
     meaningful_images = 0
     image_in_subdir = 0
     sizes = []
+    image_paths = []
 
     for f in files:
         if f.get("type") != "blob":
@@ -133,6 +134,7 @@ def analyze_screenshots(files: list[dict]):
         if not name.endswith(IMAGE_EXTS):
             continue
         total_images += 1
+        image_paths.append(path)
         sizes.append(size)
         if size > 10240:
             meaningful_images += 1
@@ -154,6 +156,7 @@ def analyze_screenshots(files: list[dict]):
         "meaningful": meaningful_images,
         "in_subdir": image_in_subdir,
         "avg_size_kb": round(avg_size / 1024, 1) if avg_size else 0,
+        "paths": image_paths[:20],
     }
 
 
@@ -348,6 +351,7 @@ def analyze_week(
         "total_images": img_stats["total"],
         "meaningful_images": img_stats["meaningful"],
         "images_in_subdir": img_stats["in_subdir"],
+        "image_paths": img_stats.get("paths", []),
         "code_count": code_count,
         "video_count": video_count,
         "doc_count": doc_count,

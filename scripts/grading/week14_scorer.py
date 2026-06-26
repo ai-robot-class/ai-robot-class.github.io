@@ -371,6 +371,7 @@ def analyze_week14(
         "pdf_count": len(pdf_in_week14),
         "video_count": len(videos),
         "image_count": img_stats["total"],
+        "image_paths": img_stats.get("paths", []),
         "code_count": len(code_files),
         "commit_count": commit_count,
         "total_files": len(blobs),

@@ -18,6 +18,13 @@ SCORING_SYSTEM = (
     "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；"
     "宽松评分：已提交周次给予额外完成度分；总分为各周加权得分之和）"
 )
+MANUAL_SCORE_REVIEWS = {
+    "yaokai0928-glitch": {
+        "score": 65.0,
+        "grade": "B-",
+        "reason": "人工复核：能确认参与课堂实验，但主要证据为日期截图和非标准目录，按最低 B- 记录。",
+    },
+}
 
 
 def _grade(total_score: float) -> str:
@@ -85,6 +92,49 @@ def weighted_total_from_weeks(weeks_result: dict, now: datetime) -> tuple[float,
             completed_weight += week_info["weight"]
     total_score = weighted_sum / completed_weight * 100 if completed_weight > 0 else 0.0
     return weighted_sum, completed_weight, total_score
+
+
+def apply_manual_score_review(result: dict) -> None:
+    review = MANUAL_SCORE_REVIEWS.get(result.get("github_id"))
+    if not review or not result.get("repo_exists"):
+        return
+    target = float(review["score"])
+    current = float(result.get("total_score", 0))
+    if current <= 0 or current <= target:
+        return
+
+    weeks = result.get("weeks") or {}
+    current_sum = sum(
+        w.get("final_score", 0)
+        for w in weeks.values()
+        if isinstance(w, dict) and w.get("submitted")
+    )
+    if current_sum <= 0:
+        return
+
+    factor = target / current_sum
+    submitted = [
+        (wk, w)
+        for wk, w in weeks.items()
+        if isinstance(w, dict) and w.get("submitted") and wk in WEEKS
+    ]
+    running = 0.0
+    for index, (week_id, week_data) in enumerate(submitted):
+        if index == len(submitted) - 1:
+            final = round(target - running, 2)
+        else:
+            final = round(week_data.get("final_score", 0) * factor, 2)
+            running += final
+        raw = round(final * 100 / WEEKS[week_id]["weight"])
+        week_data["raw_score"] = max(0, min(100, raw))
+        week_data["final_score"] = final
+        week_data["manual_review"] = review["reason"]
+
+    result["weighted_sum"] = round(sum(w.get("final_score", 0) for _, w in submitted), 1)
+    result["base_total_score"] = target
+    result["total_score"] = target
+    result["grade"] = review["grade"]
+    result["manual_review"] = review["reason"]
 
 
 def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) -> dict:
@@ -249,15 +299,6 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     grade = _grade(total_score)
     print(f"  🎯 基础总分: {total_score:.1f}/100  等级: {grade}")
 
-    if pages_alive:
-        bonus = 3
-        if pages_audit and pages_audit["score"] >= 85:
-            bonus = 5
-        elif pages_audit and pages_audit["score"] >= 70:
-            bonus = 4
-        total_score = min(total_score + bonus, 100)
-        grade = _grade(total_score)
-
     result = {
         "github_id": github_id,
         "repo_url": repo_url,
@@ -283,6 +324,7 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     }
     if ai_comment:
         result["ai_overall_comment"] = ai_comment
+    apply_manual_score_review(result)
     return result
 
 
