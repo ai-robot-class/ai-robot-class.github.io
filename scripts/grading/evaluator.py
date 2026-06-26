@@ -13,6 +13,14 @@ from .week14_scorer import analyze_week14, build_week14_rankings
 from .week_utils import group_files_by_week
 
 
+LENIENT_SUBMISSION_CREDIT = 20
+SUBMITTED_AVERAGE_FACTOR = 0.95
+SCORING_SYSTEM = (
+    "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；"
+    "宽松评分：已提交周次给予额外完成度分；已提交周次平均按 95% 折算）"
+)
+
+
 def _grade(total_score: float) -> str:
     if total_score >= 95:
         return "A+"
@@ -37,39 +45,47 @@ def _grade(total_score: float) -> str:
     return "F"
 
 
-def _has_submission(result: dict) -> bool:
-    weeks = result.get("weeks", {})
-    return any(isinstance(w, dict) and w.get("submitted") for w in weeks.values())
-
-
-def apply_score_curve(results: list[dict], *, bonus: float = 3.0, max_a_plus: int = 5) -> None:
-    """Apply the course display curve after individual scoring."""
-    eligible = [
-        r for r in results
-        if r.get("repo_exists") and _has_submission(r) and r.get("total_score", 0) > 0
-    ]
-    for result in eligible:
-        before = float(result.get("total_score", 0))
-        curved = min(before + bonus, 100.0)
-        result["total_score"] = round(curved, 1)
-        result["grade"] = _grade(curved)
-        result["score_curve_adjustment"] = f"课程曲线加分 +{bonus:g}。"
-
-    ranked = sorted(eligible, key=lambda x: x.get("total_score", 0), reverse=True)
-    for rank, result in enumerate(ranked, start=1):
-        if rank <= max_a_plus:
-            if result.get("total_score", 0) < 95:
-                result["total_score"] = 95.0
-            result["grade"] = "A+"
-            result["score_curve_adjustment"] = (
-                f"课程曲线加分 +{bonus:g}；总分前 {max_a_plus} 名保底 A+。"
+def apply_lenient_week_standard(weeks_result: dict, week_info_map: dict) -> None:
+    """Make the weekly rubric forgiving before weighted totals are computed."""
+    for week_id, wk_result in weeks_result.items():
+        if not isinstance(wk_result, dict) or not wk_result.get("submitted"):
+            continue
+        original_raw = wk_result.get(
+            "raw_score",
+            wk_result.get("content_score", 0) + wk_result.get("attitude_score", 0),
+        )
+        adjusted_raw = min(100, original_raw + LENIENT_SUBMISSION_CREDIT)
+        delta = adjusted_raw - original_raw
+        if delta > 0:
+            content_room = max(0, 70 - wk_result.get("content_score", 0))
+            content_delta = min(delta, content_room)
+            attitude_delta = min(delta - content_delta, max(0, 30 - wk_result.get("attitude_score", 0)))
+            wk_result["content_score"] = wk_result.get("content_score", 0) + content_delta
+            wk_result["attitude_score"] = wk_result.get("attitude_score", 0) + attitude_delta
+            wk_result["lenient_raw_before"] = original_raw
+            wk_result["lenient_raw_after"] = adjusted_raw
+            wk_result["lenient_scoring"] = (
+                f"宽松评分：已提交周次额外完成度分 +{LENIENT_SUBMISSION_CREDIT}。"
             )
-        elif result.get("grade") == "A+":
-            result["total_score"] = min(result.get("total_score", 0), 94.9)
-            result["grade"] = "A"
-            result["score_curve_adjustment"] = (
-                f"课程曲线加分 +{bonus:g}；A+ 名额上限为 {max_a_plus} 名。"
-            )
+        wk_result["raw_score"] = adjusted_raw
+        wk_result["final_score"] = round(adjusted_raw * week_info_map[week_id]["weight"] / 100, 2)
+
+
+def weighted_total_from_weeks(weeks_result: dict, now: datetime) -> tuple[float, float, float]:
+    weighted_sum = 0.0
+    completed_weight = 0.0
+    for week_id, week_info in WEEKS.items():
+        wk_result = weeks_result[week_id]
+        raw = wk_result.get("raw_score", wk_result.get("content_score", 0) + wk_result.get("attitude_score", 0))
+        final = raw * week_info["weight"] / 100
+        wk_result["raw_score"] = raw
+        wk_result["final_score"] = round(final, 2)
+        due = datetime.fromisoformat(week_info["due_date"]).replace(tzinfo=timezone.utc)
+        if due <= now or wk_result.get("submitted"):
+            weighted_sum += final
+            completed_weight += week_info["weight"]
+    total_score = weighted_sum / completed_weight * 100 if completed_weight > 0 else 0.0
+    return weighted_sum, completed_weight, total_score
 
 
 def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) -> dict:
@@ -228,22 +244,24 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     else:
         total_score = 0.0
 
+    apply_lenient_week_standard(weeks_result, WEEKS)
+    weighted_sum, completed_weight, total_score = weighted_total_from_weeks(weeks_result, now)
+
     submitted_weeks = [
         w for w in weeks_result.values()
         if isinstance(w, dict) and w.get("submitted")
     ]
     if submitted_weeks:
         submitted_avg = sum(w["raw_score"] for w in submitted_weeks) / len(submitted_weeks)
-        alt_score = submitted_avg * 0.8
+        alt_score = submitted_avg * SUBMITTED_AVERAGE_FACTOR
         if alt_score > total_score:
             total_score = alt_score
-            print(f"  📐 使用'已提交周次平均'打分: {submitted_avg:.0f}×0.8 = {alt_score:.1f}")
-        if total_score < 65:
-            total_score = 65.0
-            print("  🛟 保底 65 分（有提交内容，最低 B-）")
-
+            print(
+                f"  📐 使用'已提交周次平均'打分: "
+                f"{submitted_avg:.0f}×{SUBMITTED_AVERAGE_FACTOR:.2f} = {alt_score:.1f}"
+            )
     grade = _grade(total_score)
-    print(f"  🎯 总分: {total_score:.1f}/100  等级: {grade}")
+    print(f"  🎯 基础总分: {total_score:.1f}/100  等级: {grade}")
 
     if pages_alive:
         bonus = 3
@@ -269,6 +287,7 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
         "total_files": sum(1 for f in tree if f.get("type") == "blob"),
         "total_commits": len(commits),
         "weeks": weeks_result,
+        "base_total_score": round(total_score, 1),
         "total_score": round(total_score, 1),
         "weighted_sum": round(weighted_sum, 1),
         "completed_weight": completed_weight,
@@ -324,7 +343,7 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
 
     payload = {
         "evaluation_date": datetime.now().isoformat(),
-        "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；最低 B-，课程曲线 +3，A+ 最多 5 名）",
+        "scoring_system": SCORING_SYSTEM,
         "scoring_mode": "rule+deepseek" if use_ai and ai_scoring_enabled() else "rule",
         "weeks": {
             wk: {"title": info["title"], "weight": info["weight"], "due_date": info["due_date"]}
@@ -332,7 +351,6 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
         },
         "students": results,
     }
-    apply_score_curve(results)
     payload["week14_rankings"] = build_week14_rankings(results)
 
     latest = output_dir / "latest.json"
