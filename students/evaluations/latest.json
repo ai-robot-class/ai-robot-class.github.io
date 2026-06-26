@@ -1,5 +1,5 @@
 {
-  "evaluation_date": "2026-06-26T15:14:45.576567",
+  "evaluation_date": "2026-06-26T15:17:38.673793",
   "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合）",
   "scoring_mode": "rule+deepseek",
   "weeks": {
@@ -3983,13 +3983,14 @@
           "is_past": true
         }
       },
-      "total_score": 48.9,
+      "total_score": 50.0,
       "weighted_sum": 48.9,
       "completed_weight": 100.0,
-      "grade": "D",
+      "grade": "C-",
       "evaluation_date": "2026-06-25T16:13:49.932796",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "所有周次均缺少README和代码，仅靠少量图片支撑，内容分偏低；态度分因commit次数少且接近截止日期而较低，整体表现一般。"
+      "ai_overall_comment": "所有周次均缺少README和代码，仅靠少量图片支撑，内容分偏低；态度分因commit次数少且接近截止日期而较低，整体表现一般。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 C- / 50 分。"
     },
     {
       "github_id": "xiaozhuaichigua",
@@ -21954,13 +21955,14 @@
           "is_past": true
         }
       },
-      "total_score": 44.9,
+      "total_score": 50.0,
       "weighted_sum": 23.7,
       "completed_weight": 100.0,
-      "grade": "D",
+      "grade": "C-",
       "evaluation_date": "2026-06-26T15:13:26.251964",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "所有提交周次均缺少README和代码，仅提供图片，内容严重不足，建议补充完整。"
+      "ai_overall_comment": "所有提交周次均缺少README和代码，仅提供图片，内容严重不足，建议补充完整。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 C- / 50 分。"
     }
   ]
 }

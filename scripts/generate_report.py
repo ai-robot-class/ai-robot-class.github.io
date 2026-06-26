@@ -275,7 +275,15 @@ def generate_week_table(students, week_keys, week_info):
         if not s.get('repo_exists'):
             continue
         github_id = s['github_id']
-        cells = [f'<td class="name-col"><a href="{s["repo_url"]}" target="_blank">@{github_id}</a></td>']
+        submitted_count = sum(
+            1 for wk in week_keys
+            if s.get('weeks', {}).get(wk, {}).get('submitted')
+        )
+        cells = [
+            f'<td class="name-col" title="@{github_id}">'
+            f'<a href="{s["repo_url"]}" target="_blank">@{github_id}</a>'
+            f'</td>'
+        ]
         for wk in week_keys:
             wkd = s['weeks'].get(wk, {})
             if wkd.get('submitted'):
@@ -289,39 +297,49 @@ def generate_week_table(students, week_keys, week_info):
                     cls = 'cell-pass'
                 else:
                     cls = 'cell-weak'
-                cells.append(f'<td class="{cls}" title="原始{raw}/100">{final:.1f}</td>')
+                cells.append(
+                    f'<td class="score-cell {cls}" '
+                    f'title="{wk.upper()} · 原始 {raw}/100 · 加权 {final:.1f}/{week_info[wk]["weight"]}">'
+                    f'{final:.1f}</td>'
+                )
             else:
-                cells.append('<td class="cell-empty">—</td>')
-        cells.append(f'<td class="total-col"><strong>{s["total_score"]}</strong></td>')
+                cells.append('<td class="score-cell cell-empty" title="未提交">—</td>')
+        cells.append(
+            f'<td class="submitted-col">'
+            f'<span>{submitted_count}</span><small>/{len(week_keys)}</small>'
+            f'</td>'
+        )
+        cells.append(f'<td class="total-col"><strong>{s["total_score"]:.1f}</strong></td>')
         cells.append(f'<td class="grade-col" style="color:{grade_color(s["grade"])}"><strong>{s["grade"]}</strong></td>')
 
         detail_html = build_student_week_detail_html(s, week_keys, week_info)
         cells.append(
             f'<td class="detail-col">'
             f'<details class="student-detail">'
-            f'<summary class="detail-summary">📋 详细分析</summary>'
+            f'<summary class="detail-summary">详情</summary>'
             f'<div class="detail-panel">{detail_html}</div>'
             f'</details></td>'
         )
         rows.append(f'<tr class="score-row">{"".join(cells)}</tr>')
 
-    headers = ['<th>学生</th>']
+    headers = ['<th class="name-head">学生</th>']
     for wk in week_keys:
         info = week_info.get(wk, {})
         title = info.get('title', wk)
         weight = info.get('weight', 0)
-        headers.append(f'<th title="{title}（{weight}分）">W{wk[4:]}<br><small>{weight}</small></th>')
-    headers.append('<th>总分</th>')
-    headers.append('<th>等级</th>')
+        headers.append(
+            f'<th class="week-head" title="{title}（{weight}分）">'
+            f'<span>W{wk[4:]}</span><small>{weight}</small></th>'
+        )
+    headers.append('<th class="submitted-head">提交</th>')
+    headers.append('<th class="total-head">总分</th>')
+    headers.append('<th class="grade-head">等级</th>')
     headers.append('<th class="detail-head">详细分析</th>')
 
     return f"""
     <div class="week-table-wrapper" id="week-scores">
         <h2>📊 各周作业详情（按学生）</h2>
-        <p style="text-align:center; color:#666; margin-bottom: 20px;">
-            表格中显示加权得分（已乘以权重），原始分见单元格 tooltip。
-            点击最右侧<strong>「详细分析」</strong>可展开各周评分说明与改进建议（第 14 周为小组项目专项评分）。
-        </p>
+        <p class="week-table-note">单元格显示加权得分，悬停可查看原始分；左侧学生列固定，横向滚动可查看全部周次。</p>
         <div class="table-scroll">
             <table class="week-table">
                 <thead><tr>{''.join(headers)}</tr></thead>
@@ -739,70 +757,173 @@ def generate_html(data):
             border-top: 2px solid #e5e7eb;
             border-bottom: 2px solid #e5e7eb;
         }}
+        .week-table-note {{
+            max-width: 760px;
+            margin: 0 auto 18px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.92em;
+            line-height: 1.6;
+        }}
 
         .table-scroll {{
             overflow-x: auto;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #e5e7eb;
+            background: white;
+            box-shadow: inset 12px 0 12px -16px rgba(15, 23, 42, 0.35),
+                        inset -12px 0 12px -16px rgba(15, 23, 42, 0.35);
         }}
 
         .week-table {{
-            width: 100%;
+            width: max-content;
+            min-width: 100%;
             border-collapse: collapse;
-            font-size: 0.9em;
+            table-layout: fixed;
+            font-size: 0.86em;
         }}
 
         .week-table th {{
-            background: #667eea;
+            background: #4f65d8;
             color: white;
-            padding: 12px 6px;
+            padding: 10px 6px;
             text-align: center;
             font-weight: 600;
             position: sticky;
             top: 0;
+            z-index: 2;
+            border-bottom: 1px solid #4054bd;
         }}
-        .week-table th small {{ display: block; font-weight: 400; opacity: 0.85; font-size: 0.85em; }}
+        .week-head {{
+            width: 44px;
+            min-width: 44px;
+        }}
+        .week-head span {{
+            display: block;
+            font-size: 0.95em;
+            line-height: 1;
+        }}
+        .week-table th small {{
+            display: block;
+            margin-top: 3px;
+            font-weight: 500;
+            opacity: 0.78;
+            font-size: 0.72em;
+            line-height: 1;
+        }}
 
         .week-table td {{
-            padding: 10px 8px;
+            padding: 9px 6px;
             text-align: center;
             border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
         }}
-        .week-table tr:hover td {{ background: #f9fafb; }}
-        .name-col {{ text-align: left !important; padding-left: 14px !important; font-weight: 500; }}
-        .name-col a {{ color: #4b5563; text-decoration: none; }}
+        .week-table tr:hover td {{ background-color: #f8fafc; }}
+        .name-head,
+        .name-col {{
+            position: sticky !important;
+            left: 0;
+            z-index: 3;
+            width: 210px;
+            min-width: 210px;
+            max-width: 210px;
+            text-align: left !important;
+        }}
+        .name-head {{
+            background: #4054bd !important;
+            padding-left: 16px !important;
+            z-index: 5;
+        }}
+        .name-col {{
+            background: white;
+            padding-left: 16px !important;
+            padding-right: 12px !important;
+            font-weight: 600;
+            box-shadow: 10px 0 14px -16px rgba(15, 23, 42, 0.45);
+        }}
+        .week-table tr:hover .name-col {{ background-color: #f8fafc; }}
+        .name-col a {{
+            color: #374151;
+            display: block;
+            overflow: hidden;
+            text-decoration: none;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }}
         .name-col a:hover {{ color: #667eea; }}
 
-        .cell-excellent {{ background: rgba(16, 185, 129, 0.15); color: #047857; font-weight: 600; }}
-        .cell-good {{ background: rgba(59, 130, 246, 0.12); color: #1d4ed8; font-weight: 600; }}
-        .cell-pass {{ background: rgba(245, 158, 11, 0.15); color: #b45309; font-weight: 600; }}
-        .cell-weak {{ background: rgba(249, 115, 22, 0.15); color: #c2410c; font-weight: 600; }}
-        .cell-empty {{ color: #d1d5db; }}
+        .score-cell {{
+            width: 44px;
+            min-width: 44px;
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+        }}
+        .cell-excellent {{ background-color: #d9f5ed; color: #047857; }}
+        .cell-good {{ background-color: #e5efff; color: #1d4ed8; }}
+        .cell-pass {{ background-color: #fff2d8; color: #b45309; }}
+        .cell-weak {{ background-color: #ffe5d6; color: #c2410c; }}
+        .cell-empty {{ background-color: #fafafa; color: #cbd5e1; font-weight: 600; }}
 
-        .total-col {{ background: #f3f4f6; font-size: 1.05em; }}
-        .grade-col {{ background: #f3f4f6; font-size: 1.1em; }}
+        .submitted-head,
+        .submitted-col {{
+            width: 56px;
+            min-width: 56px;
+        }}
+        .submitted-col {{
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }}
+        .submitted-col small {{
+            color: #94a3b8;
+            font-size: 0.78em;
+            margin-left: 1px;
+        }}
+        .total-head,
+        .total-col {{
+            width: 66px;
+            min-width: 66px;
+        }}
+        .grade-head,
+        .grade-col {{
+            width: 54px;
+            min-width: 54px;
+        }}
+        .total-col,
+        .grade-col {{
+            background: #f1f5f9;
+            font-size: 1em;
+            font-variant-numeric: tabular-nums;
+        }}
 
-        .detail-head {{ min-width: 88px; }}
+        .detail-head,
+        .detail-col {{
+            width: 74px;
+            min-width: 74px;
+        }}
         .detail-col {{
             text-align: center !important;
             vertical-align: middle;
-            background: #fafbfc;
-            min-width: 100px;
+            background: #f8fafc;
         }}
 
         .student-detail {{
             text-align: left;
+            position: relative;
         }}
 
         .detail-summary {{
             cursor: pointer;
             display: inline-block;
-            padding: 6px 12px;
-            background: #667eea;
+            padding: 5px 10px;
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
             color: white;
-            border-radius: 8px;
-            font-size: 0.82em;
-            font-weight: 600;
+            color: #4338ca;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 700;
             white-space: nowrap;
             user-select: none;
             list-style: none;
@@ -810,6 +931,8 @@ def generate_html(data):
         .student-detail > summary::-webkit-details-marker {{ display: none; }}
         .student-detail[open] > .detail-summary {{
             background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
             margin-bottom: 10px;
         }}
 

@@ -203,9 +203,9 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
         if alt_score > total_score:
             total_score = alt_score
             print(f"  📐 使用'已提交周次平均'打分: {submitted_avg:.0f}×0.8 = {alt_score:.1f}")
-        if total_score < 35:
-            total_score = 35.0
-            print("  🛟 保底 35 分（有提交内容）")
+        if total_score < 50:
+            total_score = 50.0
+            print("  🛟 保底 50 分（有提交内容，最低 C-）")
 
     grade = _grade(total_score)
     print(f"  🎯 总分: {total_score:.1f}/100  等级: {grade}")
