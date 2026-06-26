@@ -1,6 +1,6 @@
 {
-  "evaluation_date": "2026-06-26T07:12:56.702754",
-  "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；宽松评分：已提交周次给予额外完成度分；已提交周次平均按 95% 折算）",
+  "evaluation_date": "2026-06-26T16:28:40.187062",
+  "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；宽松评分：已提交周次给予额外完成度分；总分为各周加权得分之和）",
   "scoring_mode": "rule+deepseek",
   "weeks": {
     "week2": {
@@ -683,8 +683,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 93.9,
-      "total_score": 93.9,
+      "base_total_score": 88.9,
+      "total_score": 88.9,
       "weighted_sum": 88.9,
       "completed_weight": 100.0,
       "grade": "A",
@@ -1115,11 +1115,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 81.7,
-      "total_score": 81.7,
+      "base_total_score": 33.8,
+      "total_score": 33.8,
       "weighted_sum": 33.8,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "F",
       "evaluation_date": "2026-06-26T07:06:39.578363",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "各周均有提交，但内容普遍较简单，缺少代码和视频，建议增加实质性内容。"
@@ -2280,11 +2280,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 85.2,
-      "total_score": 85.2,
+      "base_total_score": 77.3,
+      "total_score": 77.3,
       "weighted_sum": 77.3,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "B+",
       "evaluation_date": "2026-06-26T07:07:00.662418",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了大部分作业，但README和代码普遍缺失，week12表现优秀，其余周次内容有待加强。"
@@ -2850,11 +2850,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 85.9,
-      "total_score": 85.9,
+      "base_total_score": 77.8,
+      "total_score": 77.8,
       "weighted_sum": 77.8,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "B+",
       "evaluation_date": "2026-06-26T07:07:09.757770",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了大部分作业，但部分周次内容不完整，缺少README和代码，建议补充完善。"
@@ -3416,11 +3416,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 84.6,
-      "total_score": 84.6,
+      "base_total_score": 76.5,
+      "total_score": 76.5,
       "weighted_sum": 76.5,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "B+",
       "evaluation_date": "2026-06-26T07:07:18.955285",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了大部分作业，但README内容普遍简短，缺乏代码和详细说明，部分周次缺少截图或视频，建议加强文档完整性和深度。"
@@ -3958,8 +3958,8 @@
           "is_past": true
         }
       },
-      "base_total_score": 70.0,
-      "total_score": 70.0,
+      "base_total_score": 67.1,
+      "total_score": 67.1,
       "weighted_sum": 67.1,
       "completed_weight": 100.0,
       "grade": "B-",
@@ -4554,11 +4554,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 71.4,
-      "total_score": 71.4,
+      "base_total_score": 66.4,
+      "total_score": 66.4,
       "weighted_sum": 66.4,
       "completed_weight": 100.0,
-      "grade": "B",
+      "grade": "B-",
       "evaluation_date": "2026-06-26T07:07:34.900117",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "各周提交内容均不完整，缺少README和代码，建议补充必要文档和代码以体现学习成果。"
@@ -5101,11 +5101,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 82.6,
-      "total_score": 82.6,
+      "base_total_score": 70.4,
+      "total_score": 70.4,
       "weighted_sum": 70.4,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "B",
       "evaluation_date": "2026-06-26T07:07:43.268630",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "作业基本按时提交，但内容普遍简单，缺少代码和详细说明，建议加强README撰写和代码提交。"
@@ -5702,11 +5702,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 96.9,
-      "total_score": 96.9,
+      "base_total_score": 88.2,
+      "total_score": 88.2,
       "weighted_sum": 88.2,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:07:53.785406",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业完成度较高，前几周内容充实，但后期部分周次缺少代码文件，week13内容明显不足。"
@@ -6321,11 +6321,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 93.0,
-      "total_score": 93.0,
+      "base_total_score": 88.0,
+      "total_score": 88.0,
       "weighted_sum": 88.0,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T07:08:04.297116",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体完成度中等，前期周次内容较充实，后期部分周次缺乏实质材料，建议加强代码和截图提交。"
@@ -6890,11 +6890,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 97.8,
-      "total_score": 97.8,
+      "base_total_score": 88.9,
+      "total_score": 88.9,
       "weighted_sum": 88.9,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:08:17.106827",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业提交较完整，但部分周次缺少代码文件，建议后续补充代码和更多截图以提升内容分。"
@@ -7475,11 +7475,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 99.7,
-      "total_score": 99.7,
+      "base_total_score": 90.7,
+      "total_score": 90.7,
       "weighted_sum": 90.7,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:08:27.507037",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "该生每周均提交了作业，README内容基本完整，但commit次数普遍偏少，部分周次缺少代码或截图，整体表现良好，建议增加commit频率和代码文件。"
@@ -8109,8 +8109,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 99.9,
+      "total_score": 99.9,
       "weighted_sum": 99.9,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -8734,8 +8734,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 99.1,
+      "total_score": 99.1,
       "weighted_sum": 99.1,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -9329,11 +9329,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 77.0,
-      "total_score": 77.0,
+      "base_total_score": 72.0,
+      "total_score": 72.0,
       "weighted_sum": 72.0,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "B",
       "evaluation_date": "2026-06-26T07:09:02.193679",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "各周提交了基本文件，但普遍缺少README和详细说明，内容深度不足，建议补充文档和代码注释。"
@@ -9951,11 +9951,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 99.4,
-      "total_score": 99.4,
+      "base_total_score": 94.4,
+      "total_score": 94.4,
       "weighted_sum": 94.4,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:09:13.988838",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业完成度较高，大部分周次有实质内容，week12表现突出，但week13和week14内容不足，需加强README和报告撰写。"
@@ -10562,11 +10562,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 98.7,
-      "total_score": 98.7,
+      "base_total_score": 93.7,
+      "total_score": 93.7,
       "weighted_sum": 93.7,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:09:23.631719",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体完成度较好，前期周次内容充实，后期部分周次提交质量下降，项目周完成度较低。"
@@ -11183,11 +11183,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 91.6,
-      "total_score": 91.6,
+      "base_total_score": 86.6,
+      "total_score": 86.6,
       "weighted_sum": 86.6,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T07:09:33.401537",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业提交较完整，但部分周次内容简单，缺少代码和视频，建议加强README质量和项目深度。"
@@ -11816,8 +11816,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 98.7,
+      "total_score": 98.7,
       "weighted_sum": 98.7,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -12445,8 +12445,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 100.0,
+      "total_score": 100.0,
       "weighted_sum": 100.0,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -13006,11 +13006,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 90.5,
-      "total_score": 90.5,
+      "base_total_score": 82.4,
+      "total_score": 82.4,
       "weighted_sum": 82.4,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T07:10:06.684573",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交较为完整，部分周次思考深入，但week11内容严重缺失，建议加强代码和截图提交。"
@@ -13615,11 +13615,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 97.2,
-      "total_score": 97.2,
+      "base_total_score": 92.2,
+      "total_score": 92.2,
       "weighted_sum": 92.2,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:10:17.819864",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业提交较完整，README质量逐步提升，但部分周次缺少截图和代码文件，week14项目完成度低，需加强实践内容。"
@@ -14231,11 +14231,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 96.8,
-      "total_score": 96.8,
+      "base_total_score": 91.8,
+      "total_score": 91.8,
       "weighted_sum": 91.8,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:10:30.120837",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业完成度较好，前期内容扎实，后期部分周次内容较简略，建议加强项目实践和代码提交。"
@@ -14793,11 +14793,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 95.2,
-      "total_score": 95.2,
+      "base_total_score": 86.6,
+      "total_score": 86.6,
       "weighted_sum": 86.6,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T07:10:40.043220",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交积极，README质量较高，但部分周次缺少截图和代码，建议增加实践成果展示。"
@@ -15420,8 +15420,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 96.7,
+      "total_score": 96.7,
       "weighted_sum": 96.7,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -16030,11 +16030,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 98.4,
-      "total_score": 98.4,
+      "base_total_score": 93.4,
+      "total_score": 93.4,
       "weighted_sum": 93.4,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:11:01.041725",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业提交较完整，多数周次有详细README和截图，但week13和week14内容不足，需加强。"
@@ -16646,11 +16646,11 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 97.6,
-      "total_score": 97.6,
+      "base_total_score": 92.6,
+      "total_score": 92.6,
       "weighted_sum": 92.6,
       "completed_weight": 100.0,
-      "grade": "A+",
+      "grade": "A",
       "evaluation_date": "2026-06-26T07:11:12.571000",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业完成度较好，大部分周次有实质内容，但部分周次缺少代码文件，commit次数偏少，建议增加代码提交和README完整性。"
@@ -17874,8 +17874,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 96.8,
+      "total_score": 96.8,
       "weighted_sum": 96.8,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -18498,8 +18498,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 98.9,
+      "total_score": 98.9,
       "weighted_sum": 98.9,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -18941,11 +18941,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 86.5,
-      "total_score": 86.5,
+      "base_total_score": 33.5,
+      "total_score": 33.5,
       "weighted_sum": 33.5,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "F",
       "evaluation_date": "2026-06-26T07:11:53.048610",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了大部分作业，但README质量参差不齐，缺少代码和视频，理解深度有待提高。"
@@ -20150,8 +20150,8 @@
           "lenient_scoring": "宽松评分：已提交周次额外完成度分 +20。"
         }
       },
-      "base_total_score": 100,
-      "total_score": 100,
+      "base_total_score": 99.9,
+      "total_score": 99.9,
       "weighted_sum": 99.9,
       "completed_weight": 100.0,
       "grade": "A+",
@@ -20484,11 +20484,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 82.9,
-      "total_score": 82.9,
+      "base_total_score": 9.8,
+      "total_score": 9.8,
       "weighted_sum": 9.8,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "F",
       "evaluation_date": "2026-06-26T07:12:18.125566",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "仅提交了week10的部分内容，建议完善README和代码以体现完整理解。"
@@ -21011,11 +21011,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 89.8,
-      "total_score": 89.8,
+      "base_total_score": 64.1,
+      "total_score": 64.1,
       "weighted_sum": 64.1,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "C+",
       "evaluation_date": "2026-06-26T07:12:25.884471",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业提交完整，但部分周次内容较简略，缺少代码和视频，建议丰富实验细节。"
@@ -22038,11 +22038,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 78.5,
-      "total_score": 78.5,
+      "base_total_score": 32.7,
+      "total_score": 32.7,
       "weighted_sum": 32.7,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "F",
       "evaluation_date": "2026-06-26T07:12:42.994981",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "作业基本提交，但内容较简单，缺少代码和视频，理解深度不足，建议加强实践和文档质量。"
@@ -22576,11 +22576,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 89.4,
-      "total_score": 89.4,
+      "base_total_score": 65.2,
+      "total_score": 65.2,
       "weighted_sum": 65.2,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "B-",
       "evaluation_date": "2026-06-26T07:12:51.672552",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业提交较完整，但README内容偏简单，缺乏代码和深入思考，建议加强作业深度。"
@@ -23015,11 +23015,11 @@
           "is_past": true
         }
       },
-      "base_total_score": 72.4,
-      "total_score": 72.4,
+      "base_total_score": 32.1,
+      "total_score": 32.1,
       "weighted_sum": 32.1,
       "completed_weight": 100.0,
-      "grade": "B",
+      "grade": "F",
       "evaluation_date": "2026-06-26T07:12:56.702625",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "所有提交周次均只有图片，缺乏必要的README和代码，内容分较低；态度分因提交但接近截止日期而中等偏低。"

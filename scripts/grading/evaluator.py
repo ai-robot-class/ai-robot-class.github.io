@@ -14,10 +14,9 @@ from .week_utils import group_files_by_week
 
 
 LENIENT_SUBMISSION_CREDIT = 20
-SUBMITTED_AVERAGE_FACTOR = 0.95
 SCORING_SYSTEM = (
     "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；"
-    "宽松评分：已提交周次给予额外完成度分；已提交周次平均按 95% 折算）"
+    "宽松评分：已提交周次给予额外完成度分；总分为各周加权得分之和）"
 )
 
 
@@ -247,19 +246,6 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     apply_lenient_week_standard(weeks_result, WEEKS)
     weighted_sum, completed_weight, total_score = weighted_total_from_weeks(weeks_result, now)
 
-    submitted_weeks = [
-        w for w in weeks_result.values()
-        if isinstance(w, dict) and w.get("submitted")
-    ]
-    if submitted_weeks:
-        submitted_avg = sum(w["raw_score"] for w in submitted_weeks) / len(submitted_weeks)
-        alt_score = submitted_avg * SUBMITTED_AVERAGE_FACTOR
-        if alt_score > total_score:
-            total_score = alt_score
-            print(
-                f"  📐 使用'已提交周次平均'打分: "
-                f"{submitted_avg:.0f}×{SUBMITTED_AVERAGE_FACTOR:.2f} = {alt_score:.1f}"
-            )
     grade = _grade(total_score)
     print(f"  🎯 基础总分: {total_score:.1f}/100  等级: {grade}")
 
