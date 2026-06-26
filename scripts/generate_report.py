@@ -382,20 +382,57 @@ def _build_academic_assignment_from_weeks(student, group, week_info):
         for wk in group_weeks
         if isinstance(weeks.get(wk), dict) and weeks[wk].get("submitted")
     )
-    score = (earned / possible * 100) if possible else 0
+    max_score = float(group.get("max_score", 2.5))
+    score = (max_score * earned / possible) if possible else 0
     return {
         "id": group.get("id"),
         "title": group.get("title"),
         "weeks": group_weeks,
+        "max_score": max_score,
         "earned_weighted": round(earned, 2),
         "possible_weighted": possible,
         "submitted_weeks": submitted,
         "total_weeks": len(group_weeks),
-        "score": round(score, 1),
+        "score": round(min(max_score, score), 2),
     }
 
 
-def generate_academic_assignment_table(students, groups, week_info):
+def _build_midterm_github_doc_from_weeks(student, midterm_config):
+    source_week = midterm_config.get("source_week", "week7")
+    max_score = float(midterm_config.get("max_score", 30))
+    week_result = (student.get("weeks") or {}).get(source_week, {})
+    raw = 0.0
+    if isinstance(week_result, dict) and week_result.get("submitted"):
+        raw = float(
+            week_result.get(
+                "raw_score",
+                week_result.get("content_score", 0) + week_result.get("attitude_score", 0),
+            )
+        )
+    return {
+        "id": midterm_config.get("id", "midterm_github_doc"),
+        "title": midterm_config.get("title", "期中考试：GitHub规范文档"),
+        "source_week": source_week,
+        "source_path": week_result.get("actual_path") if isinstance(week_result, dict) else None,
+        "submitted": bool(isinstance(week_result, dict) and week_result.get("submitted")),
+        "raw_score": round(raw, 1),
+        "max_score": max_score,
+        "score": round(min(max_score, raw * max_score / 100), 2),
+    }
+
+
+def _small_score_class(score, max_score):
+    percent = score / max_score if max_score else 0
+    if percent >= 0.85:
+        return "academic-high"
+    if percent >= 0.7:
+        return "academic-mid"
+    if percent >= 0.55:
+        return "academic-low"
+    return "academic-risk"
+
+
+def generate_academic_assignment_table(students, groups, week_info, midterm_config):
     if not groups:
         return ""
     rows = []
@@ -407,48 +444,50 @@ def generate_academic_assignment_table(students, groups, week_info):
             for item in s.get("academic_assignments", [])
             if isinstance(item, dict)
         }
+        midterm = s.get("midterm_github_doc_score") or _build_midterm_github_doc_from_weeks(s, midterm_config)
+        midterm_score = float(midterm.get("score", 0))
+        midterm_max = float(midterm.get("max_score", midterm_config.get("max_score", 30)))
+        total_small_score = midterm_score
         cells = [
             f'<td class="academic-name" title="@{s["github_id"]}">'
             f'<a href="{s["repo_url"]}" target="_blank">@{s["github_id"]}</a></td>'
         ]
+        cells.append(
+            f'<td class="{_small_score_class(midterm_score, midterm_max)}" '
+            f'title="来源：{_escape_html(str(midterm.get("source_path") or midterm.get("source_week", "")))} · '
+            f'原始规范文档评分 {float(midterm.get("raw_score", 0)):.1f}/100">'
+            f'<strong>{midterm_score:.2f}</strong><small>/{midterm_max:g}</small></td>'
+        )
         for group in groups:
             item = assignments_by_id.get(group.get("id")) or _build_academic_assignment_from_weeks(s, group, week_info)
-            score = item.get("score", 0)
+            score = float(item.get("score", 0))
+            max_score = float(item.get("max_score", group.get("max_score", 2.5)))
             submitted = item.get("submitted_weeks", 0)
             total = item.get("total_weeks", len(group.get("weeks", [])))
             earned = item.get("earned_weighted", 0)
             possible = item.get("possible_weighted", 0)
-            if score >= 85:
-                cls = "academic-high"
-            elif score >= 70:
-                cls = "academic-mid"
-            elif score >= 55:
-                cls = "academic-low"
-            else:
-                cls = "academic-risk"
+            cls = _small_score_class(score, max_score)
+            total_small_score += score
             cells.append(
                 f'<td class="{cls}" title="加权 {earned:.1f}/{possible} · 提交 {submitted}/{total} 周">'
-                f'<strong>{score:.1f}</strong><small>{submitted}/{total}</small></td>'
+                f'<strong>{score:.2f}</strong><small>/{max_score:g} · {submitted}/{total}</small></td>'
             )
-        avg = sum(
-            (assignments_by_id.get(g.get("id")) or _build_academic_assignment_from_weeks(s, g, week_info)).get("score", 0)
-            for g in groups
-        ) / len(groups)
-        cells.append(f'<td class="academic-average"><strong>{avg:.1f}</strong></td>')
+        total_max = midterm_max + sum(float(g.get("max_score", 2.5)) for g in groups)
+        cells.append(f'<td class="academic-average"><strong>{total_small_score:.2f}</strong><small>/{total_max:g}</small></td>')
         rows.append(f'<tr>{"".join(cells)}</tr>')
 
-    headers = ['<th>学生</th>']
+    headers = ['<th>学生</th>', '<th>期中<small>GitHub规范 /30</small></th>']
     for index, group in enumerate(groups, start=1):
         weeks = "/".join(f"W{wk[4:]}" for wk in group.get("weeks", []))
         headers.append(
-            f'<th title="{_escape_html(group.get("title", ""))}">{index}<small>{weeks}</small></th>'
+            f'<th title="{_escape_html(group.get("title", ""))}">{index}<small>{weeks} /{float(group.get("max_score", 2.5)):g}</small></th>'
         )
-    headers.append('<th>均分</th>')
+    headers.append('<th>合计<small>/40</small></th>')
 
     return f"""
     <div class="academic-section" id="academic-assignments">
-        <h2>🧾 期中考试：GitHub 作业目录格式评分</h2>
-        <p class="week-table-note">教务系统按四次作业录入；这里按每三周合并为一个小作业，分数为组内周加权得分换算到 100 分，括号小字为该组提交周数。</p>
+        <h2>🧾 期中与教务系统小作业小分</h2>
+        <p class="week-table-note">期中考试单独按 GitHub 规范文档计 30 分；教务系统四次作业按每三周合并计分，每次满分 2.5 分，合计 10 分。这里仅显示小分，不做 A/B/C 等级评定。</p>
         <div class="table-scroll academic-scroll">
             <table class="academic-table">
                 <thead><tr>{''.join(headers)}</tr></thead>
@@ -641,6 +680,7 @@ def generate_html(data):
         students_sorted,
         data.get("academic_assignment_groups", []),
         week_info,
+        data.get("midterm_github_doc", {}),
     )
     table_html = generate_week_table(students_sorted, week_keys, week_info)
     week14_ranking_html = generate_week14_ranking(data)

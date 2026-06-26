@@ -1,5 +1,5 @@
 {
-  "evaluation_date": "2026-06-26T08:33:06.108585",
+  "evaluation_date": "2026-06-26T17:53:01.716612",
   "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；宽松评分：已提交周次给予额外完成度分；总分为各周加权得分之和）",
   "scoring_mode": "rule+deepseek",
   "weeks": {
@@ -67,39 +67,43 @@
   "academic_assignment_groups": [
     {
       "id": "assignment1",
-      "title": "期中作业1：GitHub作业目录格式 I",
+      "title": "小作业1",
       "weeks": [
         "week2",
         "week3",
         "week4"
-      ]
+      ],
+      "max_score": 2.5
     },
     {
       "id": "assignment2",
-      "title": "期中作业2：GitHub作业目录格式 II",
+      "title": "小作业2",
       "weeks": [
         "week5",
         "week6",
         "week7"
-      ]
+      ],
+      "max_score": 2.5
     },
     {
       "id": "assignment3",
-      "title": "期中作业3：GitHub作业目录格式 III",
+      "title": "小作业3",
       "weeks": [
         "week8",
         "week10",
         "week11"
-      ]
+      ],
+      "max_score": 2.5
     },
     {
       "id": "assignment4",
-      "title": "期中作业4：GitHub作业目录格式 IV",
+      "title": "小作业4",
       "weeks": [
         "week12",
         "week13",
         "week14"
-      ]
+      ],
+      "max_score": 2.5
     }
   ],
   "students": [
@@ -770,65 +774,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.67,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.2,
-          "grade": "A+"
+          "score": 2.45
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.72,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 79.6,
-          "grade": "B+"
+          "score": 1.99
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 30.08,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 94.0,
-          "grade": "A"
+          "score": 2.35
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 24.46,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 84.3,
-          "grade": "A-"
+          "score": 2.11
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 72.0,
+        "score": 21.6
+      }
     },
     {
       "github_id": "dx8283",
@@ -1359,65 +1373,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.38,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 85.4,
-          "grade": "A-"
+          "score": 2.14
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.4,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 87.6,
-          "grade": "A-"
+          "score": 2.19
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 24.96,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 78.0,
-          "grade": "B+"
+          "score": 1.95
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 0.0,
           "possible_weighted": 29,
           "submitted_weeks": 0,
           "total_weeks": 3,
-          "score": 0.0,
-          "grade": "F"
+          "score": 0.0
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 80.0,
+        "score": 24.0
+      }
     },
     {
       "github_id": "wx4812",
@@ -2088,65 +2112,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 27.65,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.3,
-          "grade": "A+"
+          "score": 2.38
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "机器人课程作业/week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "c2480098091-jpg",
@@ -2776,65 +2810,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.76,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 93.1,
-          "grade": "A"
+          "score": 2.33
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.5,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 88.1,
-          "grade": "A"
+          "score": 2.2
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.28,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 88.4,
-          "grade": "A"
+          "score": 2.21
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 19.12,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 65.9,
-          "grade": "B-"
+          "score": 1.65
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "作业/week7",
+        "submitted": true,
+        "raw_score": 82.0,
+        "score": 24.6
+      }
     },
     {
       "github_id": "ruilongchen27",
@@ -3462,65 +3506,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.84,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 93.6,
-          "grade": "A"
+          "score": 2.34
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.72,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 84.4,
-          "grade": "A-"
+          "score": 2.11
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 25.28,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 79.0,
-          "grade": "B+"
+          "score": 1.98
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.92,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 61.8,
-          "grade": "C+"
+          "score": 1.54
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 76.0,
+        "score": 22.8
+      }
     },
     {
       "github_id": "123lkr",
@@ -4130,65 +4184,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.17,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 84.3,
-          "grade": "A-"
+          "score": 2.11
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.48,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 83.2,
-          "grade": "A-"
+          "score": 2.08
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 27.24,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 85.1,
-          "grade": "A-"
+          "score": 2.13
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.6,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 60.7,
-          "grade": "C+"
+          "score": 1.52
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 84.0,
+        "score": 25.2
+      }
     },
     {
       "github_id": "zmtqzl-sys",
@@ -4780,65 +4844,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 13.52,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 75.1,
-          "grade": "B"
+          "score": 1.88
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.02,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 76.3,
-          "grade": "B+"
+          "score": 1.91
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 24.04,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 75.1,
-          "grade": "B"
+          "score": 1.88
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 13.84,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 47.7,
-          "grade": "D"
+          "score": 1.19
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "第七周",
+        "submitted": true,
+        "raw_score": 74.0,
+        "score": 22.2
+      }
     },
     {
       "github_id": "xiaozhuaichigua",
@@ -5469,65 +5543,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 9.86,
           "possible_weighted": 18,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 54.8,
-          "grade": "C-"
+          "score": 1.37
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.04,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 71.6,
-          "grade": "B"
+          "score": 1.79
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 23.36,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 73.0,
-          "grade": "B"
+          "score": 1.82
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.58,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 64.1,
-          "grade": "C+"
+          "score": 1.6
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 64.0,
+        "score": 19.2
+      }
     },
     {
       "github_id": "Yves-Caiy",
@@ -6111,65 +6195,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 11.7,
           "possible_weighted": 18,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 65.0,
-          "grade": "C+"
+          "score": 1.62
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.86,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 80.3,
-          "grade": "B+"
+          "score": 2.01
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 26.44,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 82.6,
-          "grade": "A-"
+          "score": 2.07
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.36,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 53.0,
-          "grade": "C-"
+          "score": 1.32
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 78.0,
+        "score": 23.4
+      }
     },
     {
       "github_id": "srttttt",
@@ -6838,65 +6932,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.9,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.4,
-          "grade": "A+"
+          "score": 2.49
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.28,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 59.6,
-          "grade": "C"
+          "score": 1.49
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "zone57",
@@ -7565,72 +7669,82 @@
       "total_score": 88.0,
       "weighted_sum": 88.0,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "A",
       "evaluation_date": "2026-06-26T08:28:17.553383",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交较完整，部分周次内容充实，但week11、week13、week14内容不足，需加强。",
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.7,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.3,
-          "grade": "A+"
+          "score": 2.46
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.98,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 90.4,
-          "grade": "A"
+          "score": 2.26
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 29.92,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 93.5,
-          "grade": "A"
+          "score": 2.34
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.38,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 73.7,
-          "grade": "B"
+          "score": 1.84
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 82.0,
+        "score": 24.6
+      }
     },
     {
       "github_id": "rushijie666",
@@ -8311,65 +8425,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.64,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.3,
-          "grade": "A+"
+          "score": 2.46
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 31.52,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.5,
-          "grade": "A+"
+          "score": 2.46
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 22.59,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 77.9,
-          "grade": "B+"
+          "score": 1.95
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "homework7",
+        "submitted": true,
+        "raw_score": 96.0,
+        "score": 28.8
+      }
     },
     {
       "github_id": "xiaoxinwaishi",
@@ -9010,65 +9134,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 31.76,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.2,
-          "grade": "A+"
+          "score": 2.48
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 19.92,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 68.7,
-          "grade": "B-"
+          "score": 1.72
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "testerwm",
@@ -9762,65 +9896,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.92,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.7,
-          "grade": "A+"
+          "score": 2.49
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "Nanami-MIO",
@@ -10518,65 +10662,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.8,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.0,
-          "grade": "A+"
+          "score": 2.48
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.31,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 97.6,
-          "grade": "A+"
+          "score": 2.44
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 96.0,
+        "score": 28.8
+      }
     },
     {
       "github_id": "chaofanguo70-boop",
@@ -11222,65 +11376,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 14.48,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 80.4,
-          "grade": "B+"
+          "score": 2.01
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 11.92,
           "possible_weighted": 21,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 56.8,
-          "grade": "C"
+          "score": 1.42
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 26.24,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 82.0,
-          "grade": "A-"
+          "score": 2.05
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.25,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 73.3,
-          "grade": "B"
+          "score": 1.83
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": null,
+        "submitted": false,
+        "raw_score": 0.0,
+        "score": 0.0
+      }
     },
     {
       "github_id": "yyf20041207",
@@ -11965,65 +12129,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.85,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.2,
-          "grade": "A+"
+          "score": 2.48
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.48,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 97.5,
-          "grade": "A+"
+          "score": 2.44
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 31.4,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.1,
-          "grade": "A+"
+          "score": 2.45
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 24.64,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 85.0,
-          "grade": "A-"
+          "score": 2.12
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 96.0,
+        "score": 28.8
+      }
     },
     {
       "github_id": "ZhangXiao163",
@@ -12688,65 +12862,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.8,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.9,
-          "grade": "A+"
+          "score": 2.47
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.21,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 96.2,
-          "grade": "A+"
+          "score": 2.41
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 31.92,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.8,
-          "grade": "A+"
+          "score": 2.49
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 23.8,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 82.1,
-          "grade": "A-"
+          "score": 2.05
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week07",
+        "submitted": true,
+        "raw_score": 89.0,
+        "score": 26.7
+      }
     },
     {
       "github_id": "shizhuanjun",
@@ -13421,65 +13605,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.59,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 92.2,
-          "grade": "A"
+          "score": 2.3
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 19.44,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 92.6,
-          "grade": "A"
+          "score": 2.31
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 29.36,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 91.8,
-          "grade": "A"
+          "score": 2.29
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.25,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 73.3,
-          "grade": "B"
+          "score": 1.83
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 88.0,
+        "score": 26.4
+      }
     },
     {
       "github_id": "1783680315",
@@ -14194,65 +14388,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 27.72,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.6,
-          "grade": "A+"
+          "score": 2.39
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "7week",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "2107294955c-collab",
@@ -14977,65 +15181,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 29.0,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "liuyiyuan168-hub",
@@ -15629,65 +15843,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.3,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 90.6,
-          "grade": "A"
+          "score": 2.26
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 19.12,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 91.0,
-          "grade": "A"
+          "score": 2.28
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.44,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 88.9,
-          "grade": "A"
+          "score": 2.22
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.56,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 64.0,
-          "grade": "C+"
+          "score": 1.6
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 88.0,
+        "score": 26.4
+      }
     },
     {
       "github_id": "phantom8888888",
@@ -16358,65 +16582,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.11,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.1,
-          "grade": "A+"
+          "score": 2.38
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 19.48,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 92.8,
-          "grade": "A"
+          "score": 2.32
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 30.56,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.5,
-          "grade": "A+"
+          "score": 2.39
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 25.25,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 87.1,
-          "grade": "A-"
+          "score": 2.18
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "15688506062-coder",
@@ -17090,65 +17324,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.55,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 91.9,
-          "grade": "A"
+          "score": 2.3
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.26,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 96.5,
-          "grade": "A+"
+          "score": 2.41
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 31.44,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.2,
-          "grade": "A+"
+          "score": 2.46
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 23.54,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 81.2,
-          "grade": "B+"
+          "score": 2.03
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 98.0,
+        "score": 29.4
+      }
     },
     {
       "github_id": "zhaoyu20030813-dotcom",
@@ -17743,65 +17987,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.4,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 96.7,
-          "grade": "A+"
+          "score": 2.42
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.26,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 96.5,
-          "grade": "A+"
+          "score": 2.41
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 30.56,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.5,
-          "grade": "A+"
+          "score": 2.39
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.36,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 63.3,
-          "grade": "C+"
+          "score": 1.58
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 90.0,
+        "score": 27.0
+      }
     },
     {
       "github_id": "duzening",
@@ -18476,65 +18730,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.92,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.6,
-          "grade": "A+"
+          "score": 2.49
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 25.81,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 89.0,
-          "grade": "A"
+          "score": 2.23
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "lucaswilliamlightbringer-dev",
@@ -19205,65 +19469,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.95,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.7,
-          "grade": "A+"
+          "score": 2.49
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.7,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 98.6,
-          "grade": "A+"
+          "score": 2.46
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 22.75,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 78.4,
-          "grade": "B+"
+          "score": 1.96
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "wxh4月16日week7",
+        "submitted": true,
+        "raw_score": 94.0,
+        "score": 28.2
+      }
     },
     {
       "github_id": "kkura121138",
@@ -19929,65 +20203,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.17,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.4,
-          "grade": "A+"
+          "score": 2.38
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.21,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 96.2,
-          "grade": "A+"
+          "score": 2.41
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 30.52,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.4,
-          "grade": "A+"
+          "score": 2.38
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 24.66,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 85.0,
-          "grade": "A-"
+          "score": 2.13
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 97.0,
+        "score": 29.1
+      }
     },
     {
       "github_id": "zaofanchishenme111-maker",
@@ -20636,65 +20920,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.18,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 95.4,
-          "grade": "A+"
+          "score": 2.39
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 20.27,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 96.5,
-          "grade": "A+"
+          "score": 2.41
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.12,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 87.9,
-          "grade": "A-"
+          "score": 2.2
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 23.64,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 81.5,
-          "grade": "B+"
+          "score": 2.04
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 95.0,
+        "score": 28.5
+      }
     },
     {
       "github_id": "wangqiuzhuang",
@@ -21404,65 +21698,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.19,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 97.2,
-          "grade": "A+"
+          "score": 2.43
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "shizhuoyuan39-droid",
@@ -22139,65 +22443,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 27.92,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 96.3,
-          "grade": "A+"
+          "score": 2.41
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "liu20040831",
@@ -22661,65 +22975,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.52,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 91.8,
-          "grade": "A"
+          "score": 2.29
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 81.0,
-          "grade": "B+"
+          "score": 2.02
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 0.0,
           "possible_weighted": 32,
           "submitted_weeks": 0,
           "total_weeks": 3,
-          "score": 0.0,
-          "grade": "F"
+          "score": 0.0
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 0.0,
           "possible_weighted": 29,
           "submitted_weeks": 0,
           "total_weeks": 3,
-          "score": 0.0,
-          "grade": "F"
+          "score": 0.0
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "第七周",
+        "submitted": true,
+        "raw_score": 76.0,
+        "score": 22.8
+      }
     },
     {
       "github_id": "yaojia662-lgtm",
@@ -23368,65 +23692,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.94,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 88.6,
-          "grade": "A"
+          "score": 2.21
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 13.92,
           "possible_weighted": 21,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 66.3,
-          "grade": "B-"
+          "score": 1.66
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.96,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 90.5,
-          "grade": "A"
+          "score": 2.26
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 19.71,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 68.0,
-          "grade": "B-"
+          "score": 1.7
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": null,
+        "submitted": false,
+        "raw_score": 0.0,
+        "score": 0.0
+      }
     },
     {
       "github_id": "ctrlCvsix",
@@ -24160,65 +24494,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.0,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.0,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 32.0,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 100.0,
-          "grade": "A+"
+          "score": 2.5
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 28.92,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 99.7,
-          "grade": "A+"
+          "score": 2.49
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "Week07",
+        "submitted": true,
+        "raw_score": 100.0,
+        "score": 30.0
+      }
     },
     {
       "github_id": "yaokai0928-glitch",
@@ -24913,65 +25257,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 12.61,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 70.1,
-          "grade": "B"
+          "score": 1.75
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 14.46,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 68.9,
-          "grade": "B-"
+          "score": 1.72
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 21.95,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 68.6,
-          "grade": "B-"
+          "score": 1.71
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.98,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 55.1,
-          "grade": "C"
+          "score": 1.38
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": ".",
+        "submitted": true,
+        "raw_score": 71.0,
+        "score": 21.3
+      }
     },
     {
       "github_id": "wasser316",
@@ -25526,65 +25880,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.2,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 90.0,
-          "grade": "A"
+          "score": 2.25
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.82,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 84.9,
-          "grade": "A-"
+          "score": 2.12
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 30.04,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 93.9,
-          "grade": "A"
+          "score": 2.35
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 0.0,
           "possible_weighted": 29,
           "submitted_weeks": 0,
           "total_weeks": 3,
-          "score": 0.0,
-          "grade": "F"
+          "score": 0.0
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 78.0,
+        "score": 23.4
+      }
     },
     {
       "github_id": "czh805509-source",
@@ -26192,65 +26556,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.44,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 85.8,
-          "grade": "A-"
+          "score": 2.14
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.16,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 81.7,
-          "grade": "B+"
+          "score": 2.04
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 26.4,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 82.5,
-          "grade": "A-"
+          "score": 2.06
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 18.84,
           "possible_weighted": 29,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 65.0,
-          "grade": "C+"
+          "score": 1.62
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week07",
+        "submitted": true,
+        "raw_score": 68.0,
+        "score": 20.4
+      }
     },
     {
       "github_id": "1174742913-dot",
@@ -26812,65 +27186,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.12,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 84.0,
-          "grade": "A-"
+          "score": 2.1
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 17.54,
           "possible_weighted": 21,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 83.5,
-          "grade": "A-"
+          "score": 2.09
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 25.44,
           "possible_weighted": 32,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 79.5,
-          "grade": "B+"
+          "score": 1.99
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 9.84,
           "possible_weighted": 29,
           "submitted_weeks": 1,
           "total_weeks": 3,
-          "score": 33.9,
-          "grade": "F"
+          "score": 0.85
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": "week7",
+        "submitted": true,
+        "raw_score": 66.0,
+        "score": 19.8
+      }
     },
     {
       "github_id": "sharonwwww",
@@ -27438,65 +27822,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 16.35,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 90.8,
-          "grade": "A"
+          "score": 2.27
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 14.16,
           "possible_weighted": 21,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 67.4,
-          "grade": "B-"
+          "score": 1.69
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 19.0,
           "possible_weighted": 32,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 59.4,
-          "grade": "C"
+          "score": 1.48
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 15.72,
           "possible_weighted": 29,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 54.2,
-          "grade": "C-"
+          "score": 1.36
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": null,
+        "submitted": false,
+        "raw_score": 0.0,
+        "score": 0.0
+      }
     },
     {
       "github_id": "gumyeonghye310-star",
@@ -27957,65 +28351,75 @@
       "academic_assignments": [
         {
           "id": "assignment1",
-          "title": "期中作业1：GitHub作业目录格式 I",
+          "title": "小作业1",
           "weeks": [
             "week2",
             "week3",
             "week4"
           ],
+          "max_score": 2.5,
           "earned_weighted": 13.48,
           "possible_weighted": 18,
           "submitted_weeks": 3,
           "total_weeks": 3,
-          "score": 74.9,
-          "grade": "B"
+          "score": 1.87
         },
         {
           "id": "assignment2",
-          "title": "期中作业2：GitHub作业目录格式 II",
+          "title": "小作业2",
           "weeks": [
             "week5",
             "week6",
             "week7"
           ],
+          "max_score": 2.5,
           "earned_weighted": 12.16,
           "possible_weighted": 21,
           "submitted_weeks": 2,
           "total_weeks": 3,
-          "score": 57.9,
-          "grade": "C"
+          "score": 1.45
         },
         {
           "id": "assignment3",
-          "title": "期中作业3：GitHub作业目录格式 III",
+          "title": "小作业3",
           "weeks": [
             "week8",
             "week10",
             "week11"
           ],
+          "max_score": 2.5,
           "earned_weighted": 6.48,
           "possible_weighted": 32,
           "submitted_weeks": 1,
           "total_weeks": 3,
-          "score": 20.2,
-          "grade": "F"
+          "score": 0.51
         },
         {
           "id": "assignment4",
-          "title": "期中作业4：GitHub作业目录格式 IV",
+          "title": "小作业4",
           "weeks": [
             "week12",
             "week13",
             "week14"
           ],
+          "max_score": 2.5,
           "earned_weighted": 0.0,
           "possible_weighted": 29,
           "submitted_weeks": 0,
           "total_weeks": 3,
-          "score": 0.0,
-          "grade": "F"
+          "score": 0.0
         }
-      ]
+      ],
+      "midterm_github_doc_score": {
+        "id": "midterm_github_doc",
+        "title": "期中考试：GitHub规范文档",
+        "source_week": "week7",
+        "max_score": 30,
+        "source_path": null,
+        "submitted": false,
+        "raw_score": 0.0,
+        "score": 0.0
+      }
     }
   ],
   "week14_rankings": [
@@ -28597,5 +29001,11 @@
       ],
       "rank": 25
     }
-  ]
+  ],
+  "midterm_github_doc": {
+    "id": "midterm_github_doc",
+    "title": "期中考试：GitHub规范文档",
+    "source_week": "week7",
+    "max_score": 30
+  }
 }

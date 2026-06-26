@@ -21,25 +21,35 @@ SCORING_SYSTEM = (
 ACADEMIC_ASSIGNMENT_GROUPS = [
     {
         "id": "assignment1",
-        "title": "期中作业1：GitHub作业目录格式 I",
+        "title": "小作业1",
         "weeks": ["week2", "week3", "week4"],
+        "max_score": 2.5,
     },
     {
         "id": "assignment2",
-        "title": "期中作业2：GitHub作业目录格式 II",
+        "title": "小作业2",
         "weeks": ["week5", "week6", "week7"],
+        "max_score": 2.5,
     },
     {
         "id": "assignment3",
-        "title": "期中作业3：GitHub作业目录格式 III",
+        "title": "小作业3",
         "weeks": ["week8", "week10", "week11"],
+        "max_score": 2.5,
     },
     {
         "id": "assignment4",
-        "title": "期中作业4：GitHub作业目录格式 IV",
+        "title": "小作业4",
         "weeks": ["week12", "week13", "week14"],
+        "max_score": 2.5,
     },
 ]
+MIDTERM_GITHUB_DOC = {
+    "id": "midterm_github_doc",
+    "title": "期中考试：GitHub规范文档",
+    "source_week": "week7",
+    "max_score": 30,
+}
 MANUAL_SCORE_REVIEWS = {
     "yaokai0928-glitch": {
         "score": 65.0,
@@ -175,21 +185,43 @@ def build_academic_assignments(result: dict) -> list[dict]:
             for wk in group_weeks
             if isinstance(weeks.get(wk), dict) and weeks[wk].get("submitted")
         )
-        score = (earned / possible * 100) if possible else 0.0
+        max_score = float(group.get("max_score", 2.5))
+        score = max_score * earned / possible if possible else 0.0
         assignments.append(
             {
                 "id": group["id"],
                 "title": group["title"],
                 "weeks": group_weeks,
+                "max_score": max_score,
                 "earned_weighted": round(earned, 2),
                 "possible_weighted": possible,
                 "submitted_weeks": submitted,
                 "total_weeks": len(group_weeks),
-                "score": round(score, 1),
-                "grade": _grade(score) if score > 0 else "F",
+                "score": round(min(max_score, score), 2),
             }
         )
     return assignments
+
+
+def build_midterm_github_doc_score(result: dict) -> dict:
+    source_week = MIDTERM_GITHUB_DOC["source_week"]
+    week_result = (result.get("weeks") or {}).get(source_week, {})
+    raw = 0.0
+    if isinstance(week_result, dict) and week_result.get("submitted"):
+        raw = float(
+            week_result.get(
+                "raw_score",
+                week_result.get("content_score", 0) + week_result.get("attitude_score", 0),
+            )
+        )
+    max_score = float(MIDTERM_GITHUB_DOC["max_score"])
+    return {
+        **MIDTERM_GITHUB_DOC,
+        "source_path": week_result.get("actual_path") if isinstance(week_result, dict) else None,
+        "submitted": bool(isinstance(week_result, dict) and week_result.get("submitted")),
+        "raw_score": round(raw, 1),
+        "score": round(min(max_score, raw * max_score / 100), 2),
+    }
 
 
 def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) -> dict:
@@ -380,6 +412,7 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     if ai_comment:
         result["ai_overall_comment"] = ai_comment
     apply_manual_score_review(result)
+    result["midterm_github_doc_score"] = build_midterm_github_doc_score(result)
     result["academic_assignments"] = build_academic_assignments(result)
     return result
 
@@ -433,6 +466,7 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
             wk: {"title": info["title"], "weight": info["weight"], "due_date": info["due_date"]}
             for wk, info in WEEKS.items()
         },
+        "midterm_github_doc": MIDTERM_GITHUB_DOC,
         "academic_assignment_groups": ACADEMIC_ASSIGNMENT_GROUPS,
         "students": results,
     }
