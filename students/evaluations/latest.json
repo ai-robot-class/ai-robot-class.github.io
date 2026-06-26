@@ -1,6 +1,6 @@
 {
-  "evaluation_date": "2026-06-26T06:26:37.127657",
-  "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合）",
+  "evaluation_date": "2026-06-26T15:39:44.567898",
+  "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；课程曲线 +3，A+ 最多 5 名）",
   "scoring_mode": "rule+deepseek",
   "weeks": {
     "week2": {
@@ -1175,13 +1175,14 @@
           "is_past": true
         }
       },
-      "total_score": 76.3,
+      "total_score": 79.3,
       "weighted_sum": 71.3,
       "completed_weight": 100.0,
       "grade": "B+",
       "evaluation_date": "2026-06-26T06:20:13.011000",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较为完整，但部分周次README内容缺失或过于简略，代码文件普遍缺失，建议加强README的完整性和代码提交。"
+      "ai_overall_comment": "整体作业提交较为完整，但部分周次README内容缺失或过于简略，代码文件普遍缺失，建议加强README的完整性和代码提交。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "dx8283",
@@ -1588,13 +1589,14 @@
           "is_past": true
         }
       },
-      "total_score": 52.8,
+      "total_score": 55.8,
       "weighted_sum": 26.0,
       "completed_weight": 100.0,
-      "grade": "C-",
+      "grade": "C",
       "evaluation_date": "2026-06-26T06:20:19.379477",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "学生每周均有提交，但内容以图片为主，缺少代码和视频，整体深度不足，建议加强实践和文档质量。"
+      "ai_overall_comment": "学生每周均有提交，但内容以图片为主，缺少代码和视频，整体深度不足，建议加强实践和文档质量。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "wx4812",
@@ -2162,13 +2164,14 @@
           "is_past": true
         }
       },
-      "total_score": 86.4,
+      "total_score": 89.4,
       "weighted_sum": 86.4,
       "completed_weight": 100.0,
-      "grade": "A-",
+      "grade": "A",
       "evaluation_date": "2026-06-26T06:20:30.833125",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，前期内容扎实，后期部分周次缺少README和截图，但态度积极，commit较多。"
+      "ai_overall_comment": "整体作业完成度较高，前期内容扎实，后期部分周次缺少README和截图，但态度积极，commit较多。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "c2480098091-jpg",
@@ -2682,13 +2685,14 @@
           "is_past": true
         }
       },
-      "total_score": 65.9,
+      "total_score": 68.9,
       "weighted_sum": 60.9,
       "completed_weight": 100.0,
       "grade": "B-",
       "evaluation_date": "2026-06-26T06:20:39.631696",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但README和代码缺失较多，week12表现优秀，其他周次内容有待加强。"
+      "ai_overall_comment": "整体提交了大部分作业，但README和代码缺失较多，week12表现优秀，其他周次内容有待加强。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "ruilongchen27",
@@ -3218,13 +3222,14 @@
           "is_past": true
         }
       },
-      "total_score": 64.1,
+      "total_score": 67.1,
       "weighted_sum": 60.1,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-26T06:20:48.566514",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "前期作业完成较好，但后期内容不完整，缺少README和必要文件，需加强。"
+      "ai_overall_comment": "前期作业完成较好，但后期内容不完整，缺少README和必要文件，需加强。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "123lkr",
@@ -3750,13 +3755,14 @@
           "is_past": true
         }
       },
-      "total_score": 63.3,
+      "total_score": 66.3,
       "weighted_sum": 58.3,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-26T06:20:57.479216",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但README质量参差不齐，部分周次缺乏代码和详细说明，建议加强内容深度和完整性。"
+      "ai_overall_comment": "整体提交了大部分作业，但README质量参差不齐，部分周次缺乏代码和详细说明，建议加强内容深度和完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "zmtqzl-sys",
@@ -4258,13 +4264,14 @@
           "is_past": true
         }
       },
-      "total_score": 50.0,
+      "total_score": 53.0,
       "weighted_sum": 48.9,
       "completed_weight": 100.0,
       "grade": "C-",
       "evaluation_date": "2026-06-26T06:21:05.625107",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了图片但缺乏README和代码，内容分偏低，态度分一般，建议补充文档和代码以体现理解。"
+      "ai_overall_comment": "整体提交了图片但缺乏README和代码，内容分偏低，态度分一般，建议补充文档和代码以体现理解。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "xiaozhuaichigua",
@@ -4820,13 +4827,14 @@
           "is_past": true
         }
       },
-      "total_score": 55.0,
+      "total_score": 58.0,
       "weighted_sum": 47.4,
       "completed_weight": 100.0,
       "grade": "C",
       "evaluation_date": "2026-06-26T06:21:13.572997",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "作业提交不完整，多数周次缺少README和代码，内容分偏低，态度分尚可但需改进。"
+      "ai_overall_comment": "作业提交不完整，多数周次缺少README和代码，内容分偏低，态度分尚可但需改进。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "Yves-Caiy",
@@ -5336,13 +5344,14 @@
           "is_past": true
         }
       },
-      "total_score": 58.2,
+      "total_score": 61.2,
       "weighted_sum": 53.2,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "C+",
       "evaluation_date": "2026-06-26T06:21:21.955150",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但README内容普遍简单，缺乏代码和详细说明，建议加强文档质量和深度。"
+      "ai_overall_comment": "整体提交了大部分作业，但README内容普遍简单，缺乏代码和详细说明，建议加强文档质量和深度。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "srttttt",
@@ -5903,13 +5912,14 @@
           "is_past": true
         }
       },
-      "total_score": 77.3,
+      "total_score": 80.3,
       "weighted_sum": 72.3,
       "completed_weight": 100.0,
       "grade": "B+",
       "evaluation_date": "2026-06-26T06:21:33.823714",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，README内容详实，但部分周次缺少代码文件，week13内容明显不足，建议补充实际代码和实验结果。"
+      "ai_overall_comment": "整体作业完成度较高，README内容详实，但部分周次缺少代码文件，week13内容明显不足，建议补充实际代码和实验结果。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "zone57",
@@ -6485,13 +6495,14 @@
           "is_past": true
         }
       },
-      "total_score": 76.6,
+      "total_score": 79.6,
       "weighted_sum": 71.6,
       "completed_weight": 100.0,
       "grade": "B+",
       "evaluation_date": "2026-06-26T06:21:43.885190",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体完成度较好，前期作业质量较高，但后期部分周次缺乏实质内容，需加强提交完整性。"
+      "ai_overall_comment": "整体完成度较好，前期作业质量较高，但后期部分周次缺乏实质内容，需加强提交完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "rushijie666",
@@ -7020,13 +7031,14 @@
           "is_past": true
         }
       },
-      "total_score": 77.8,
+      "total_score": 80.8,
       "weighted_sum": 72.8,
       "completed_weight": 100.0,
       "grade": "B+",
       "evaluation_date": "2026-06-26T06:21:56.455121",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，README质量逐步提升，但部分周次缺少代码文件，建议补充。"
+      "ai_overall_comment": "整体作业提交较完整，README质量逐步提升，但部分周次缺少代码文件，建议补充。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "xiaoxinwaishi",
@@ -7571,13 +7583,14 @@
           "is_past": true
         }
       },
-      "total_score": 80.4,
+      "total_score": 83.4,
       "weighted_sum": 75.4,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T06:22:06.650170",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交完整，README质量较高，截图和代码基本齐全，但部分周次commit次数少，内容深度有待加强。"
+      "ai_overall_comment": "整体作业提交完整，README质量较高，截图和代码基本齐全，但部分周次commit次数少，内容深度有待加强。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "testerwm",
@@ -8168,13 +8181,14 @@
           "is_past": true
         }
       },
-      "total_score": 90.5,
+      "total_score": 95.0,
       "weighted_sum": 85.5,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A+",
       "evaluation_date": "2026-06-26T06:22:22.434313",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，前期周次内容扎实，后期部分周次缺少代码或视频，建议补充完整。"
+      "ai_overall_comment": "整体作业完成度较高，前期周次内容扎实，后期部分周次缺少代码或视频，建议补充完整。",
+      "score_curve_adjustment": "课程曲线加分 +3；总分前 5 名保底 A+。"
     },
     {
       "github_id": "Nanami-MIO",
@@ -8756,13 +8770,14 @@
           "is_past": true
         }
       },
-      "total_score": 89.6,
+      "total_score": 92.6,
       "weighted_sum": 84.6,
       "completed_weight": 100.0,
       "grade": "A",
       "evaluation_date": "2026-06-26T06:22:34.770115",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，各周内容扎实，README和截图基本齐全，体现了对机器人课程知识的理解和实践能力。建议后续注意README的完整性，并增加截图和视频以更直观展示成果。"
+      "ai_overall_comment": "整体作业完成度较高，各周内容扎实，README和截图基本齐全，体现了对机器人课程知识的理解和实践能力。建议后续注意README的完整性，并增加截图和视频以更直观展示成果。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "chaofanguo70-boop",
@@ -9317,13 +9332,14 @@
           "is_past": true
         }
       },
-      "total_score": 58.0,
+      "total_score": 61.0,
       "weighted_sum": 53.0,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "C+",
       "evaluation_date": "2026-06-26T06:22:43.396018",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交内容不完整，多数周次缺少README和代码，建议补充文档和代码以体现理解。"
+      "ai_overall_comment": "整体提交内容不完整，多数周次缺少README和代码，建议补充文档和代码以体现理解。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "yyf20041207",
@@ -9902,13 +9918,14 @@
           "is_past": true
         }
       },
-      "total_score": 81.3,
+      "total_score": 84.3,
       "weighted_sum": 76.3,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T06:22:55.497780",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，week12表现突出，但week13和week14内容不足，建议加强README和截图补充。"
+      "ai_overall_comment": "整体作业完成度较高，week12表现突出，但week13和week14内容不足，建议加强README和截图补充。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "ZhangXiao163",
@@ -10476,13 +10493,14 @@
           "is_past": true
         }
       },
-      "total_score": 81.5,
+      "total_score": 84.5,
       "weighted_sum": 76.5,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T06:23:05.601373",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体完成度较高，前几周内容扎实，但后期部分周次提交内容较少，建议加强项目完整性。"
+      "ai_overall_comment": "整体完成度较高，前几周内容扎实，但后期部分周次提交内容较少，建议加强项目完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "shizhuanjun",
@@ -11060,13 +11078,14 @@
           "is_past": true
         }
       },
-      "total_score": 72.2,
+      "total_score": 75.2,
       "weighted_sum": 67.2,
       "completed_weight": 100.0,
       "grade": "B",
       "evaluation_date": "2026-06-26T06:23:15.916372",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，但部分周次内容较简略，缺少代码和视频，建议加强README质量和项目深度。"
+      "ai_overall_comment": "整体作业提交较完整，但部分周次内容较简略，缺少代码和视频，建议加强README质量和项目深度。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "1783680315",
@@ -11656,13 +11675,14 @@
           "is_past": true
         }
       },
-      "total_score": 90.7,
+      "total_score": 95.0,
       "weighted_sum": 85.7,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A+",
       "evaluation_date": "2026-06-26T06:23:27.480054",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体表现良好，各周内容充实，但部分周次缺少代码或截图，commit次数有待提高。"
+      "ai_overall_comment": "整体表现良好，各周内容充实，但部分周次缺少代码或截图，commit次数有待提高。",
+      "score_curve_adjustment": "课程曲线加分 +3；总分前 5 名保底 A+。"
     },
     {
       "github_id": "2107294955c-collab",
@@ -12248,13 +12268,14 @@
           "is_past": true
         }
       },
-      "total_score": 93.0,
+      "total_score": 96.0,
       "weighted_sum": 88.0,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A+",
       "evaluation_date": "2026-06-26T06:23:38.799488",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，各周内容扎实，但部分周缺少视频证据，建议后续补充。"
+      "ai_overall_comment": "整体作业完成度较高，各周内容扎实，但部分周缺少视频证据，建议后续补充。",
+      "score_curve_adjustment": "课程曲线加分 +3；总分前 5 名保底 A+。"
     },
     {
       "github_id": "liuyiyuan168-hub",
@@ -12775,13 +12796,14 @@
           "is_past": true
         }
       },
-      "total_score": 70.3,
+      "total_score": 73.3,
       "weighted_sum": 65.3,
       "completed_weight": 100.0,
       "grade": "B",
       "evaluation_date": "2026-06-26T06:23:48.979103",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交较完整，但部分周次缺少代码或视频，README质量参差不齐，建议加强实践记录和深度思考。"
+      "ai_overall_comment": "整体提交较完整，但部分周次缺少代码或视频，README质量参差不齐，建议加强实践记录和深度思考。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "phantom8888888",
@@ -13347,13 +13369,14 @@
           "is_past": true
         }
       },
-      "total_score": 79.4,
+      "total_score": 82.4,
       "weighted_sum": 74.4,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T06:24:00.044419",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，前期周次内容充实，但week14项目完成度低，需加强。"
+      "ai_overall_comment": "整体作业提交较完整，前期周次内容充实，但week14项目完成度低，需加强。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "15688506062-coder",
@@ -13926,13 +13949,14 @@
           "is_past": true
         }
       },
-      "total_score": 80.7,
+      "total_score": 83.7,
       "weighted_sum": 75.7,
       "completed_weight": 100.0,
-      "grade": "B+",
+      "grade": "A-",
       "evaluation_date": "2026-06-26T06:24:11.571928",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，多数周次有实质内容，但week14项目缺失严重，建议加强项目实践和提交完整性。"
+      "ai_overall_comment": "整体作业完成度较高，多数周次有实质内容，但week14项目缺失严重，建议加强项目实践和提交完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "zhaoyu20030813-dotcom",
@@ -14454,13 +14478,14 @@
           "is_past": true
         }
       },
-      "total_score": 74.8,
+      "total_score": 77.8,
       "weighted_sum": 69.8,
       "completed_weight": 100.0,
-      "grade": "B",
+      "grade": "B+",
       "evaluation_date": "2026-06-26T06:24:21.802831",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交情况良好，README质量较高，但部分周次缺少图片、代码或视频等辅助材料，建议增加实践成果展示。"
+      "ai_overall_comment": "整体提交情况良好，README质量较高，但部分周次缺少图片、代码或视频等辅助材料，建议增加实践成果展示。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "duzening",
@@ -15044,13 +15069,14 @@
           "is_past": true
         }
       },
-      "total_score": 83.8,
+      "total_score": 86.8,
       "weighted_sum": 78.8,
       "completed_weight": 100.0,
       "grade": "A-",
       "evaluation_date": "2026-06-26T06:24:32.061702",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，但代码提交不足，部分周次README内容与周次不匹配，建议加强代码和文档的完整性。"
+      "ai_overall_comment": "整体作业完成度较高，但代码提交不足，部分周次README内容与周次不匹配，建议加强代码和文档的完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "lucaswilliamlightbringer-dev",
@@ -15617,13 +15643,14 @@
           "is_past": true
         }
       },
-      "total_score": 84.8,
+      "total_score": 87.8,
       "weighted_sum": 79.8,
       "completed_weight": 100.0,
       "grade": "A-",
       "evaluation_date": "2026-06-26T06:24:42.901146",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，前期内容充实，但week13和week14质量下降，需加强项目报告和规范。"
+      "ai_overall_comment": "整体作业提交较完整，前期内容充实，但week13和week14质量下降，需加强项目报告和规范。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "kkura121138",
@@ -16196,13 +16223,14 @@
           "is_past": true
         }
       },
-      "total_score": 78.9,
+      "total_score": 81.9,
       "weighted_sum": 73.9,
       "completed_weight": 100.0,
       "grade": "B+",
       "evaluation_date": "2026-06-26T06:24:54.244641",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，week12表现突出，但部分周次缺少代码文件，README内容可进一步丰富。"
+      "ai_overall_comment": "整体作业提交较完整，week12表现突出，但部分周次缺少代码文件，README内容可进一步丰富。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "zaofanchishenme111-maker",
@@ -16759,13 +16787,14 @@
           "is_past": true
         }
       },
-      "total_score": 69.2,
+      "total_score": 72.2,
       "weighted_sum": 69.2,
       "completed_weight": 100.0,
-      "grade": "B-",
+      "grade": "B",
       "evaluation_date": "2026-06-26T06:25:04.246851",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，但部分周次README内容不足或缺失，建议加强文档和代码的完整性。"
+      "ai_overall_comment": "整体作业提交较完整，但部分周次README内容不足或缺失，建议加强文档和代码的完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "wangqiuzhuang",
@@ -17350,13 +17379,14 @@
           "is_past": true
         }
       },
-      "total_score": 90.9,
+      "total_score": 95.0,
       "weighted_sum": 85.9,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A+",
       "evaluation_date": "2026-06-26T06:25:17.812447",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体表现优秀，前12周内容扎实、态度积极；第13周未提交实质内容，第14周项目完成度一般，建议加强项目文档和报告。"
+      "ai_overall_comment": "整体表现优秀，前12周内容扎实、态度积极；第13周未提交实质内容，第14周项目完成度一般，建议加强项目文档和报告。",
+      "score_curve_adjustment": "课程曲线加分 +3；总分前 5 名保底 A+。"
     },
     {
       "github_id": "shizhuoyuan39-droid",
@@ -17937,13 +17967,14 @@
           "is_past": true
         }
       },
-      "total_score": 88.2,
+      "total_score": 91.2,
       "weighted_sum": 83.2,
       "completed_weight": 100.0,
       "grade": "A",
       "evaluation_date": "2026-06-26T06:25:29.406069",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交完整，README质量较高，体现了对实验的理解与思考，但部分周次缺少代码文件，建议后续补充。"
+      "ai_overall_comment": "整体作业提交完整，README质量较高，体现了对实验的理解与思考，但部分周次缺少代码文件，建议后续补充。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "liu20040831",
@@ -18361,13 +18392,14 @@
           "is_past": true
         }
       },
-      "total_score": 57.7,
+      "total_score": 60.7,
       "weighted_sum": 25.7,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "C+",
       "evaluation_date": "2026-06-26T06:25:35.603986",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但内容质量参差不齐，缺少代码和详细文档，建议加强README撰写和代码实现。"
+      "ai_overall_comment": "整体提交了大部分作业，但内容质量参差不齐，缺少代码和详细文档，建议加强README撰写和代码实现。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "yaojia662-lgtm",
@@ -18897,13 +18929,14 @@
           "is_past": true
         }
       },
-      "total_score": 59.5,
+      "total_score": 62.5,
       "weighted_sum": 59.5,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "C+",
       "evaluation_date": "2026-06-26T06:25:44.347697",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但内容偏简略，缺少代码实现，建议加强实践和文档完整性。"
+      "ai_overall_comment": "整体提交了大部分作业，但内容偏简略，缺少代码实现，建议加强实践和文档完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "ctrlCvsix",
@@ -19499,13 +19532,14 @@
           "is_past": true
         }
       },
-      "total_score": 92.5,
+      "total_score": 95.5,
       "weighted_sum": 87.5,
       "completed_weight": 100.0,
-      "grade": "A",
+      "grade": "A+",
       "evaluation_date": "2026-06-26T06:25:56.515466",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度很高，各周README详细，截图和代码齐全，体现了扎实的实践能力和思考深度。"
+      "ai_overall_comment": "整体作业完成度很高，各周README详细，截图和代码齐全，体现了扎实的实践能力和思考深度。",
+      "score_curve_adjustment": "课程曲线加分 +3；总分前 5 名保底 A+。"
     },
     {
       "github_id": "yaokai0928-glitch",
@@ -19829,13 +19863,14 @@
           "is_past": true
         }
       },
-      "total_score": 55.0,
+      "total_score": 58.0,
       "weighted_sum": 7.4,
       "completed_weight": 100.0,
       "grade": "C",
       "evaluation_date": "2026-06-26T06:25:59.766807",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "仅提交了week10，内容不完整，建议补充README和代码以体现理解。"
+      "ai_overall_comment": "仅提交了week10，内容不完整，建议补充README和代码以体现理解。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "wasser316",
@@ -20328,13 +20363,14 @@
           "is_past": true
         }
       },
-      "total_score": 60.4,
+      "total_score": 63.4,
       "weighted_sum": 49.9,
       "completed_weight": 100.0,
       "grade": "C+",
       "evaluation_date": "2026-06-26T06:26:07.144306",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "学生按时提交了大部分作业，内容基本完整但缺乏代码和视频，态度良好，建议增加代码和视频展示。"
+      "ai_overall_comment": "学生按时提交了大部分作业，内容基本完整但缺乏代码和视频，态度良好，建议增加代码和视频展示。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "czh805509-source",
@@ -20882,13 +20918,14 @@
           "is_past": true
         }
       },
-      "total_score": 57.8,
+      "total_score": 60.8,
       "weighted_sum": 57.8,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "C+",
       "evaluation_date": "2026-06-26T06:26:17.508421",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但内容质量参差不齐，缺少截图和代码文件，建议补充完整。"
+      "ai_overall_comment": "整体提交了大部分作业，但内容质量参差不齐，缺少截图和代码文件，建议补充完整。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "1174742913-dot",
@@ -21299,13 +21336,14 @@
           "is_past": true
         }
       },
-      "total_score": 50.1,
+      "total_score": 53.1,
       "weighted_sum": 24.9,
       "completed_weight": 100.0,
       "grade": "C-",
       "evaluation_date": "2026-06-26T06:26:23.576295",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "作业基本提交，但内容较为简单，缺少代码和详细说明，建议加强README质量和提交更多实质性内容。"
+      "ai_overall_comment": "作业基本提交，但内容较为简单，缺少代码和详细说明，建议加强README质量和提交更多实质性内容。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "sharonwwww",
@@ -21809,13 +21847,14 @@
           "is_past": true
         }
       },
-      "total_score": 60.1,
+      "total_score": 63.1,
       "weighted_sum": 50.4,
       "completed_weight": 100.0,
       "grade": "C+",
       "evaluation_date": "2026-06-26T06:26:32.368583",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，但README内容普遍简略，缺乏深入思考，部分周次缺少代码或截图，建议加强内容深度和完整性。"
+      "ai_overall_comment": "整体作业提交较完整，但README内容普遍简略，缺乏深入思考，部分周次缺少代码或截图，建议加强内容深度和完整性。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
       "github_id": "gumyeonghye310-star",
@@ -22229,13 +22268,14 @@
           "is_past": true
         }
       },
-      "total_score": 50.0,
+      "total_score": 53.0,
       "weighted_sum": 23.7,
       "completed_weight": 100.0,
       "grade": "C-",
       "evaluation_date": "2026-06-26T06:26:37.127506",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "各周均提交了图片，但缺少README和代码，内容分偏低；态度分因提交但接近截止日期而中等。"
+      "ai_overall_comment": "各周均提交了图片，但缺少README和代码，内容分偏低；态度分因提交但接近截止日期而中等。",
+      "score_curve_adjustment": "课程曲线加分 +3。"
     }
   ]
 }

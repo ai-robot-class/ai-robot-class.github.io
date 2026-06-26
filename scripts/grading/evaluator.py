@@ -37,6 +37,41 @@ def _grade(total_score: float) -> str:
     return "F"
 
 
+def _has_submission(result: dict) -> bool:
+    weeks = result.get("weeks", {})
+    return any(isinstance(w, dict) and w.get("submitted") for w in weeks.values())
+
+
+def apply_score_curve(results: list[dict], *, bonus: float = 3.0, max_a_plus: int = 5) -> None:
+    """Apply the course display curve after individual scoring."""
+    eligible = [
+        r for r in results
+        if r.get("repo_exists") and _has_submission(r) and r.get("total_score", 0) > 0
+    ]
+    for result in eligible:
+        before = float(result.get("total_score", 0))
+        curved = min(before + bonus, 100.0)
+        result["total_score"] = round(curved, 1)
+        result["grade"] = _grade(curved)
+        result["score_curve_adjustment"] = f"课程曲线加分 +{bonus:g}。"
+
+    ranked = sorted(eligible, key=lambda x: x.get("total_score", 0), reverse=True)
+    for rank, result in enumerate(ranked, start=1):
+        if rank <= max_a_plus:
+            if result.get("total_score", 0) < 95:
+                result["total_score"] = 95.0
+            result["grade"] = "A+"
+            result["score_curve_adjustment"] = (
+                f"课程曲线加分 +{bonus:g}；总分前 {max_a_plus} 名保底 A+。"
+            )
+        elif result.get("grade") == "A+":
+            result["total_score"] = min(result.get("total_score", 0), 94.9)
+            result["grade"] = "A"
+            result["score_curve_adjustment"] = (
+                f"课程曲线加分 +{bonus:g}；A+ 名额上限为 {max_a_plus} 名。"
+            )
+
+
 def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) -> dict:
     github_id = student["github_id"]
     repo_url = student["repo_url"]
@@ -289,15 +324,16 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
 
     payload = {
         "evaluation_date": datetime.now().isoformat(),
-        "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合）",
+        "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；课程曲线 +3，A+ 最多 5 名）",
         "scoring_mode": "rule+deepseek" if use_ai and ai_scoring_enabled() else "rule",
         "weeks": {
             wk: {"title": info["title"], "weight": info["weight"], "due_date": info["due_date"]}
             for wk, info in WEEKS.items()
         },
-        "week14_rankings": build_week14_rankings(results),
         "students": results,
     }
+    apply_score_curve(results)
+    payload["week14_rankings"] = build_week14_rankings(results)
 
     latest = output_dir / "latest.json"
     with open(latest, "w", encoding="utf-8") as f:
