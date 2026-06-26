@@ -1,6 +1,6 @@
 {
-  "evaluation_date": "2026-06-26T15:38:53.305095",
-  "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；课程曲线 +3，A+ 最多 5 名）",
+  "evaluation_date": "2026-06-26T15:59:55.944904",
+  "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；最低 B-，课程曲线 +3，A+ 最多 5 名）",
   "scoring_mode": "rule+deepseek",
   "weeks": {
     "week2": {
@@ -1563,14 +1563,15 @@
           "is_past": true
         }
       },
-      "total_score": 56.8,
+      "total_score": 65.0,
       "weighted_sum": 23.0,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:44:10.105737",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "每周都有提交，但内容以截图为主，缺少代码和视频，建议增加代码实现和详细说明。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "wx4812",
@@ -4238,14 +4239,14 @@
           "is_past": true
         }
       },
-      "total_score": 53.0,
+      "total_score": 65.0,
       "weighted_sum": 48.9,
       "completed_weight": 100.0,
-      "grade": "C-",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:45:04.901115",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了图片但缺乏README和代码，内容分偏低，态度分一般，建议补充文档和代码以体现理解。",
-      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 C- / 50 分。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。",
       "score_curve_adjustment": "课程曲线加分 +3。"
     },
     {
@@ -4802,14 +4803,15 @@
           "is_past": true
         }
       },
-      "total_score": 55.4,
+      "total_score": 65.0,
       "weighted_sum": 47.4,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:45:15.787982",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交内容严重不足，缺乏README和代码，仅靠少量图片和视频支撑，需大幅改进。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "Yves-Caiy",
@@ -5319,14 +5321,15 @@
           "is_past": true
         }
       },
-      "total_score": 61.2,
+      "total_score": 65.0,
       "weighted_sum": 53.2,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:45:25.545951",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "作业基本提交，但内容普遍简单，缺乏代码和深入理解，建议加强README撰写和代码实践。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "srttttt",
@@ -9306,14 +9309,15 @@
           "is_past": true
         }
       },
-      "total_score": 61.0,
+      "total_score": 65.0,
       "weighted_sum": 53.0,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:47:06.781780",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交内容较为单薄，多数周次缺少README和代码，建议补充文档和详细说明。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "yyf20041207",
@@ -18284,14 +18288,15 @@
           "is_past": true
         }
       },
-      "total_score": 60.7,
+      "total_score": 65.0,
       "weighted_sum": 25.7,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:50:32.482603",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了大部分作业，但内容深度和完整性有待提高，建议加强代码和文档的补充。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "yaojia662-lgtm",
@@ -18821,14 +18826,15 @@
           "is_past": true
         }
       },
-      "total_score": 62.5,
+      "total_score": 65.0,
       "weighted_sum": 59.5,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:50:44.464470",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了大部分作业，但内容偏简略，缺乏代码和深入思考，态度一般，建议加强实践和文档质量。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "ctrlCvsix",
@@ -19749,14 +19755,15 @@
           "is_past": true
         }
       },
-      "total_score": 57.6,
+      "total_score": 65.0,
       "weighted_sum": 7.4,
       "completed_weight": 100.0,
-      "grade": "C",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:51:05.967608",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "仅提交了week10，内容不完整，建议补充README和代码以体现理解。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "wasser316",
@@ -20249,14 +20256,15 @@
           "is_past": true
         }
       },
-      "total_score": 63.4,
+      "total_score": 65.0,
       "weighted_sum": 49.9,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:51:15.481178",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "作业基本按时提交，内容完整度一般，缺少代码和视频，建议增加代码实现和视频演示以提升质量。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "czh805509-source",
@@ -20804,14 +20812,15 @@
           "is_past": true
         }
       },
-      "total_score": 60.8,
+      "total_score": 65.0,
       "weighted_sum": 57.8,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:51:27.850070",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了大部分周次的作业，但内容质量参差不齐，缺少截图和代码文件，建议补充完整。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "1174742913-dot",
@@ -21222,14 +21231,15 @@
           "is_past": true
         }
       },
-      "total_score": 53.1,
+      "total_score": 65.0,
       "weighted_sum": 24.9,
       "completed_weight": 100.0,
-      "grade": "C-",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:51:34.788063",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "作业基本提交，但内容较简单，缺少代码和视频，建议补充更多实质性内容。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "sharonwwww",
@@ -21733,14 +21743,15 @@
           "is_past": true
         }
       },
-      "total_score": 63.1,
+      "total_score": 65.0,
       "weighted_sum": 50.4,
       "completed_weight": 100.0,
-      "grade": "C+",
+      "grade": "B-",
       "evaluation_date": "2026-06-23T12:51:45.940307",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体作业提交较为完整，但README内容普遍简略，缺乏深入思考和详细说明，部分周次缺少代码或截图，建议加强作业的完整性和深度。",
-      "score_curve_adjustment": "课程曲线加分 +3。"
+      "score_curve_adjustment": "课程曲线加分 +3。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。"
     },
     {
       "github_id": "gumyeonghye310-star",
@@ -22154,14 +22165,14 @@
           "is_past": true
         }
       },
-      "total_score": 53.0,
+      "total_score": 65.0,
       "weighted_sum": 23.7,
       "completed_weight": 100.0,
-      "grade": "C-",
+      "grade": "B-",
       "evaluation_date": "2026-06-26T15:13:26.251964",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "所有提交周次均缺少README和代码，仅提供图片，内容严重不足，建议补充完整。",
-      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 C- / 50 分。",
+      "minimum_grade_adjustment": "有提交内容，按课程展示规则保底 B- / 65 分。",
       "score_curve_adjustment": "课程曲线加分 +3。"
     }
   ]

@@ -238,9 +238,9 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
         if alt_score > total_score:
             total_score = alt_score
             print(f"  📐 使用'已提交周次平均'打分: {submitted_avg:.0f}×0.8 = {alt_score:.1f}")
-        if total_score < 50:
-            total_score = 50.0
-            print("  🛟 保底 50 分（有提交内容，最低 C-）")
+        if total_score < 65:
+            total_score = 65.0
+            print("  🛟 保底 65 分（有提交内容，最低 B-）")
 
     grade = _grade(total_score)
     print(f"  🎯 总分: {total_score:.1f}/100  等级: {grade}")
@@ -324,7 +324,7 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
 
     payload = {
         "evaluation_date": datetime.now().isoformat(),
-        "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；课程曲线 +3，A+ 最多 5 名）",
+        "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；最低 B-，课程曲线 +3，A+ 最多 5 名）",
         "scoring_mode": "rule+deepseek" if use_ai and ai_scoring_enabled() else "rule",
         "weeks": {
             wk: {"title": info["title"], "weight": info["weight"], "due_date": info["due_date"]}
