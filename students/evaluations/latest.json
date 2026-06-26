@@ -1,5 +1,5 @@
 {
-  "evaluation_date": "2026-06-26T17:17:39.457144",
+  "evaluation_date": "2026-06-26T17:25:54.092003",
   "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；宽松评分：已提交周次给予额外完成度分；总分为各周加权得分之和）",
   "scoring_mode": "rule+deepseek",
   "weeks": {
@@ -690,7 +690,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:29:24.598440",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但部分周次内容与主题不符或缺失代码文件，建议加强README与代码的完整性。"
+      "ai_overall_comment": "整体提交了大部分作业，但部分周次内容与主题不符或缺失代码文件，建议加强README与代码的完整性。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.67,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.2,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 16.72,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 79.6,
+          "grade": "B+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 30.08,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 94.0,
+          "grade": "A"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 24.46,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 84.3,
+          "grade": "A-"
+        }
+      ]
     },
     {
       "github_id": "dx8283",
@@ -1122,7 +1184,69 @@
       "grade": "F",
       "evaluation_date": "2026-06-26T07:29:31.162159",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "各周均有提交，但内容普遍偏简单，缺少代码和视频，建议加强实践和文档详细度。"
+      "ai_overall_comment": "各周均有提交，但内容普遍偏简单，缺少代码和视频，建议加强实践和文档详细度。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 15.38,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 85.4,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 18.4,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 87.6,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 29,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        }
+      ]
     },
     {
       "github_id": "wx4812",
@@ -1733,7 +1857,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:29:40.794548",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，前期周次内容充实，后期部分周次缺少README和截图，但commit活跃，态度良好。"
+      "ai_overall_comment": "整体作业完成度较高，前期周次内容充实，后期部分周次缺少README和截图，但commit活跃，态度良好。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 27.65,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.3,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "c2480098091-jpg",
@@ -2287,7 +2473,69 @@
       "grade": "B+",
       "evaluation_date": "2026-06-26T07:29:49.626435",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但README和代码缺失较多，week12表现优秀，其他周次内容有待加强。"
+      "ai_overall_comment": "整体提交了大部分作业，但README和代码缺失较多，week12表现优秀，其他周次内容有待加强。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 15.74,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 87.4,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 17.22,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 82.0,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 27.32,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 85.4,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 17.04,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 58.8,
+          "grade": "C"
+        }
+      ]
     },
     {
       "github_id": "ruilongchen27",
@@ -2857,7 +3105,69 @@
       "grade": "B+",
       "evaluation_date": "2026-06-26T07:29:57.975511",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但后期作业README缺失，内容不够充实，建议加强文档和代码提交。"
+      "ai_overall_comment": "整体提交了大部分作业，但后期作业README缺失，内容不够充实，建议加强文档和代码提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 16.84,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 93.6,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 17.72,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 84.4,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 25.28,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 79.0,
+          "grade": "B+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 17.92,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 61.8,
+          "grade": "C+"
+        }
+      ]
     },
     {
       "github_id": "123lkr",
@@ -3423,7 +3733,69 @@
       "grade": "B+",
       "evaluation_date": "2026-06-26T07:30:07.213008",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "学生提交了所有周次的作业，但README普遍简略，缺乏代码和深入分析，内容分中等偏低；态度分尚可，但部分周次commit次数少。建议加强README的详细性和代码提交。"
+      "ai_overall_comment": "学生提交了所有周次的作业，但README普遍简略，缺乏代码和深入分析，内容分中等偏低；态度分尚可，但部分周次commit次数少。建议加强README的详细性和代码提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 15.17,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 84.3,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 17.48,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 83.2,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 27.24,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 85.1,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 16.64,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 57.4,
+          "grade": "C"
+        }
+      ]
     },
     {
       "github_id": "zmtqzl-sys",
@@ -3965,7 +4337,69 @@
       "grade": "B-",
       "evaluation_date": "2026-06-26T07:30:14.949381",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了图片但缺乏README和代码，内容分偏低，态度分一般，建议补充文档和代码以提升质量。"
+      "ai_overall_comment": "整体提交了图片但缺乏README和代码，内容分偏低，态度分一般，建议补充文档和代码以提升质量。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 13.52,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 75.1,
+          "grade": "B"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 15.7,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 74.8,
+          "grade": "B"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 24.04,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 75.1,
+          "grade": "B"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 13.84,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 47.7,
+          "grade": "D"
+        }
+      ]
     },
     {
       "github_id": "xiaozhuaichigua",
@@ -4561,7 +4995,69 @@
       "grade": "B-",
       "evaluation_date": "2026-06-26T07:30:22.501587",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "各周提交内容严重不足，缺少README和代码，仅靠图片或视频支撑，需大幅改进。"
+      "ai_overall_comment": "各周提交内容严重不足，缺少README和代码，仅靠图片或视频支撑，需大幅改进。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 9.62,
+          "possible_weighted": 18,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 53.4,
+          "grade": "C-"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 15.04,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 71.6,
+          "grade": "B"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 23.36,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 73.0,
+          "grade": "B"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 18.42,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 63.5,
+          "grade": "C+"
+        }
+      ]
     },
     {
       "github_id": "Yves-Caiy",
@@ -5108,7 +5604,69 @@
       "grade": "B",
       "evaluation_date": "2026-06-26T07:30:30.071944",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，但README内容普遍简单，缺乏代码和深入思考，建议加强文档和代码提交。"
+      "ai_overall_comment": "整体提交了大部分作业，但README内容普遍简单，缺乏代码和深入思考，建议加强文档和代码提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 11.7,
+          "possible_weighted": 18,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 65.0,
+          "grade": "C+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 16.86,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 80.3,
+          "grade": "B+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 26.44,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 82.6,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 15.36,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 53.0,
+          "grade": "C-"
+        }
+      ]
     },
     {
       "github_id": "srttttt",
@@ -5709,7 +6267,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:30:40.646061",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分周次的作业，内容较为充实，但部分周次缺少代码文件，且week13内容明显不足。建议补充代码和截图，提高完成度。"
+      "ai_overall_comment": "整体提交了大部分周次的作业，内容较为充实，但部分周次缺少代码文件，且week13内容明显不足。建议补充代码和截图，提高完成度。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.9,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.4,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 17.28,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 59.6,
+          "grade": "C"
+        }
+      ]
     },
     {
       "github_id": "zone57",
@@ -6328,7 +6948,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:30:51.180381",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交较完整，前期作业质量较高，但后期部分周次内容不足，需加强README和代码提交。"
+      "ai_overall_comment": "整体提交较完整，前期作业质量较高，但后期部分周次内容不足，需加强README和代码提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.7,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.3,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 18.98,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 90.4,
+          "grade": "A"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 29.92,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 93.5,
+          "grade": "A"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 21.38,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 73.7,
+          "grade": "B"
+        }
+      ]
     },
     {
       "github_id": "rushijie666",
@@ -6897,7 +7579,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:31:04.345040",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，week12表现突出，但部分周次缺少代码文件，week13内容缺失严重，建议补充代码和截图。"
+      "ai_overall_comment": "整体作业提交较完整，week12表现突出，但部分周次缺少代码文件，week13内容缺失严重，建议补充代码和截图。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.64,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.3,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 31.52,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.5,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 18.72,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 64.6,
+          "grade": "C+"
+        }
+      ]
     },
     {
       "github_id": "xiaoxinwaishi",
@@ -7482,7 +8226,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:31:13.785177",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交完整，README质量较高，但commit次数普遍偏少，部分周次缺少代码或截图，建议增加提交频率和补充缺失文件。"
+      "ai_overall_comment": "整体作业提交完整，README质量较高，但commit次数普遍偏少，部分周次缺少代码或截图，建议增加提交频率和补充缺失文件。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 31.76,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.2,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 19.92,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 68.7,
+          "grade": "B-"
+        }
+      ]
     },
     {
       "github_id": "testerwm",
@@ -8116,7 +8922,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:31:29.354567",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，各周均有实质内容，README质量良好，但部分周缺少代码或视频，建议后续补充完整证据链。"
+      "ai_overall_comment": "整体作业完成度较高，各周均有实质内容，README质量良好，但部分周缺少代码或视频，建议后续补充完整证据链。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 28.92,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.7,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "Nanami-MIO",
@@ -8741,7 +9609,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:31:40.476102",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，大部分周次内容详实，体现了对机器人相关技术的理解。建议在后续作业中注意README的完整性和截图、视频的补充。"
+      "ai_overall_comment": "整体作业完成度较高，大部分周次内容详实，体现了对机器人相关技术的理解。建议在后续作业中注意README的完整性和截图、视频的补充。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.8,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 28.31,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 97.6,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "chaofanguo70-boop",
@@ -9336,7 +10266,69 @@
       "grade": "B",
       "evaluation_date": "2026-06-26T07:31:48.422029",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交内容较为单薄，多数周次缺少README和代码，建议加强文档和代码的完整性。"
+      "ai_overall_comment": "整体提交内容较为单薄，多数周次缺少README和代码，建议加强文档和代码的完整性。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 13.18,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 73.2,
+          "grade": "B"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 11.36,
+          "possible_weighted": 21,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 54.1,
+          "grade": "C-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 26.24,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 82.0,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 21.25,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 73.3,
+          "grade": "B"
+        }
+      ]
     },
     {
       "github_id": "yyf20041207",
@@ -9958,7 +10950,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:31:59.327687",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体表现良好，大部分周次有实质内容，week12尤为突出，但week13和week14内容不足，需加强README和截图。"
+      "ai_overall_comment": "整体表现良好，大部分周次有实质内容，week12尤为突出，但week13和week14内容不足，需加强README和截图。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.85,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.2,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.48,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 97.5,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 31.4,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.1,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 24.64,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 85.0,
+          "grade": "A-"
+        }
+      ]
     },
     {
       "github_id": "ZhangXiao163",
@@ -10569,7 +11623,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:32:10.705765",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体完成度较好，前几周内容充实，但后期部分周次提交质量下降，尤其是week13和week14内容不足，建议加强项目完整性和及时提交。"
+      "ai_overall_comment": "整体完成度较好，前几周内容充实，但后期部分周次提交质量下降，尤其是week13和week14内容不足，建议加强项目完整性和及时提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.8,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.9,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.21,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 96.2,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 31.92,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.8,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 23.8,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 82.1,
+          "grade": "A-"
+        }
+      ]
     },
     {
       "github_id": "shizhuanjun",
@@ -11190,7 +12306,69 @@
       "grade": "A-",
       "evaluation_date": "2026-06-26T07:32:20.434590",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，但部分周次缺少代码和视频，README内容有待丰富，建议加强项目实践和文档规范。"
+      "ai_overall_comment": "整体作业提交较完整，但部分周次缺少代码和视频，README内容有待丰富，建议加强项目实践和文档规范。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 16.59,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 92.2,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 19.44,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 92.6,
+          "grade": "A"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 29.36,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 91.8,
+          "grade": "A"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 21.25,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 73.3,
+          "grade": "B"
+        }
+      ]
     },
     {
       "github_id": "1783680315",
@@ -11823,7 +13001,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:32:31.791129",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体表现良好，各周内容充实，体现了对ROS2和机器人技术的深入理解，但部分周次缺少代码文件或截图重复，建议完善。"
+      "ai_overall_comment": "整体表现良好，各周内容充实，体现了对ROS2和机器人技术的深入理解，但部分周次缺少代码文件或截图重复，建议完善。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 27.72,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.6,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "2107294955c-collab",
@@ -12452,7 +13692,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:32:43.168551",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，各周README结构清晰，截图和代码齐全，但部分周缺少视频，week11内容较单薄。"
+      "ai_overall_comment": "整体作业完成度较高，各周README结构清晰，截图和代码齐全，但部分周缺少视频，week11内容较单薄。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 31.88,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.6,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 29.0,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "liuyiyuan168-hub",
@@ -13013,7 +14315,69 @@
       "grade": "A-",
       "evaluation_date": "2026-06-26T07:32:52.925023",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分作业，README质量逐步提升，但部分周次缺少代码或视频，commit次数偏少，建议增加实践内容和提交频率。"
+      "ai_overall_comment": "整体提交了大部分作业，README质量逐步提升，但部分周次缺少代码或视频，commit次数偏少，建议增加实践内容和提交频率。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 16.3,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 90.6,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 19.12,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 91.0,
+          "grade": "A"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 28.44,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 88.9,
+          "grade": "A"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 18.56,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 64.0,
+          "grade": "C+"
+        }
+      ]
     },
     {
       "github_id": "phantom8888888",
@@ -13622,7 +14986,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:33:03.320853",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，README质量逐步提升，但部分周次缺少截图和代码文件，建议补充完整。"
+      "ai_overall_comment": "整体作业完成度较高，README质量逐步提升，但部分周次缺少截图和代码文件，建议补充完整。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.11,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.1,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 19.48,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 92.8,
+          "grade": "A"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 30.56,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.5,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 25.09,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 86.5,
+          "grade": "A-"
+        }
+      ]
     },
     {
       "github_id": "15688506062-coder",
@@ -14238,7 +15664,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:33:14.447929",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业质量较好，前期内容充实，后期部分周次内容不足，建议加强项目实践和文档完整性。"
+      "ai_overall_comment": "整体作业质量较好，前期内容充实，后期部分周次内容不足，建议加强项目实践和文档完整性。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 16.55,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 91.9,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.26,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 96.5,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 31.44,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.2,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 23.54,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 81.2,
+          "grade": "B+"
+        }
+      ]
     },
     {
       "github_id": "zhaoyu20030813-dotcom",
@@ -14800,7 +16288,69 @@
       "grade": "A-",
       "evaluation_date": "2026-06-26T07:33:24.291858",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交完整，README质量较高，体现了对课程内容的深入理解，但部分周次缺少图片和代码文件，建议补充以提升内容分。"
+      "ai_overall_comment": "整体作业提交完整，README质量较高，体现了对课程内容的深入理解，但部分周次缺少图片和代码文件，建议补充以提升内容分。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.4,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 96.7,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.26,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 96.5,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 30.56,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.5,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 18.36,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 63.3,
+          "grade": "C+"
+        }
+      ]
     },
     {
       "github_id": "duzening",
@@ -15427,7 +16977,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:33:33.930989",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较高，README详细，但代码提交不足，部分周次内容与要求不符，建议加强代码实践和及时提交。"
+      "ai_overall_comment": "整体作业完成度较高，README详细，但代码提交不足，部分周次内容与要求不符，建议加强代码实践和及时提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.92,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.6,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 25.81,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 89.0,
+          "grade": "A"
+        }
+      ]
     },
     {
       "github_id": "lucaswilliamlightbringer-dev",
@@ -16037,7 +17649,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:33:43.807621",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交较为完整，大部分周次有详细README和截图，但部分周次缺少代码文件，week13和week14内容不足。"
+      "ai_overall_comment": "整体提交较为完整，大部分周次有详细README和截图，但部分周次缺少代码文件，week13和week14内容不足。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.95,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.7,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.7,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 98.6,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 22.75,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 78.4,
+          "grade": "B+"
+        }
+      ]
     },
     {
       "github_id": "kkura121138",
@@ -16653,7 +18327,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:33:54.579514",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度较好，week12表现突出，但部分周次缺少代码文件，week13内容不完整，建议加强README和代码提交。"
+      "ai_overall_comment": "整体作业完成度较好，week12表现突出，但部分周次缺少代码文件，week13内容不完整，建议加强README和代码提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.17,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.4,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.21,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 96.2,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 30.52,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.4,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 24.66,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 85.0,
+          "grade": "A-"
+        }
+      ]
     },
     {
       "github_id": "zaofanchishenme111-maker",
@@ -17253,7 +18989,69 @@
       "grade": "A",
       "evaluation_date": "2026-06-26T07:34:04.771685",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分周次，但部分周次README为空或内容不符，代码和视频文件较少，建议加强文档完整性和提交规范性。"
+      "ai_overall_comment": "整体提交了大部分周次，但部分周次README为空或内容不符，代码和视频文件较少，建议加强文档完整性和提交规范性。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 17.18,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 95.4,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 20.27,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 96.5,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 28.12,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 87.9,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 23.64,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 81.5,
+          "grade": "B+"
+        }
+      ]
     },
     {
       "github_id": "wangqiuzhuang",
@@ -17881,7 +19679,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:34:17.214674",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业完成度高，前12周内容详实、态度积极，第13周缺少文件，第14周项目报告和进阶部分需加强。"
+      "ai_overall_comment": "整体作业完成度高，前12周内容详实、态度积极，第13周缺少文件，第14周项目报告和进阶部分需加强。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 28.19,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 97.2,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "shizhuoyuan39-droid",
@@ -18505,7 +20365,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:34:29.352530",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交较完整，README质量较高，但部分周次缺少代码和图片，week14报告缺失严重，需加强。"
+      "ai_overall_comment": "整体作业提交较完整，README质量较高，但部分周次缺少代码和图片，week14报告缺失严重，需加强。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 27.92,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 96.3,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "liu20040831",
@@ -18948,7 +20870,69 @@
       "grade": "F",
       "evaluation_date": "2026-06-26T07:34:36.245286",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "提交了所有周次，但内容质量参差不齐，部分周次缺少代码或README，建议加强文档和代码提交。"
+      "ai_overall_comment": "提交了所有周次，但内容质量参差不齐，部分周次缺少代码或README，建议加强文档和代码提交。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 16.52,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 91.8,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 17.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 81.0,
+          "grade": "B+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 29,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        }
+      ]
     },
     {
       "github_id": "yaojia662-lgtm",
@@ -19518,7 +21502,69 @@
       "grade": "B+",
       "evaluation_date": "2026-06-26T07:34:47.338096",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业提交基本完整，但README普遍过于简略，缺乏代码和视频，理解深度不足；week13和week14内容严重缺失，需加强。"
+      "ai_overall_comment": "整体作业提交基本完整，但README普遍过于简略，缺乏代码和视频，理解深度不足；week13和week14内容严重缺失，需加强。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 15.94,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 88.6,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 13.92,
+          "possible_weighted": 21,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 66.3,
+          "grade": "B-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 28.96,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 90.5,
+          "grade": "A"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 19.71,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 68.0,
+          "grade": "B-"
+        }
+      ]
     },
     {
       "github_id": "ctrlCvsix",
@@ -20157,7 +22203,69 @@
       "grade": "A+",
       "evaluation_date": "2026-06-26T07:35:01.081900",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "该生作业提交完整，内容详实，各周README质量高，代码和截图齐全，体现了扎实的动手能力和深入思考。态度积极，commit次数多，但部分周次接近截止日期完成。总体表现优秀。"
+      "ai_overall_comment": "该生作业提交完整，内容详实，各周README质量高，代码和截图齐全，体现了扎实的动手能力和深入思考。态度积极，commit次数多，但部分周次接近截止日期完成。总体表现优秀。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 18.0,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 21.0,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 32.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 100.0,
+          "grade": "A+"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 28.92,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 99.7,
+          "grade": "A+"
+        }
+      ]
     },
     {
       "github_id": "wasser316",
@@ -20684,7 +22792,69 @@
       "grade": "C+",
       "evaluation_date": "2026-06-26T07:35:11.370658",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "学生按时提交了大部分作业，但内容深度不足，缺少代码和视频，建议加强实践和思考。"
+      "ai_overall_comment": "学生按时提交了大部分作业，但内容深度不足，缺少代码和视频，建议加强实践和思考。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 16.2,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 90.0,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 17.82,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 84.9,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 30.04,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 93.9,
+          "grade": "A"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 29,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        }
+      ]
     },
     {
       "github_id": "czh805509-source",
@@ -21275,7 +23445,69 @@
       "grade": "B+",
       "evaluation_date": "2026-06-26T07:35:21.465143",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体提交了大部分周次的作业，但内容质量参差不齐，缺少截图和代码文件，commit次数较少，建议加强实践部分和提交规范性。"
+      "ai_overall_comment": "整体提交了大部分周次的作业，但内容质量参差不齐，缺少截图和代码文件，commit次数较少，建议加强实践部分和提交规范性。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 15.44,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 85.8,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 17.16,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 81.7,
+          "grade": "B+"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 26.4,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 82.5,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 18.84,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 65.0,
+          "grade": "C+"
+        }
+      ]
     },
     {
       "github_id": "1174742913-dot",
@@ -21711,7 +23943,69 @@
       "grade": "F",
       "evaluation_date": "2026-06-26T07:35:27.399048",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "作业基本完成，但内容较为简单，缺乏代码和视频等实质性材料，建议加强README的详细性和完整性。"
+      "ai_overall_comment": "作业基本完成，但内容较为简单，缺乏代码和视频等实质性材料，建议加强README的详细性和完整性。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 15.12,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 84.0,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 17.54,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 83.5,
+          "grade": "A-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 29,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        }
+      ]
     },
     {
       "github_id": "sharonwwww",
@@ -22249,7 +24543,69 @@
       "grade": "B-",
       "evaluation_date": "2026-06-26T07:35:35.178493",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "整体作业基本完成，但README内容较简略，缺乏深入思考和代码展示，部分周次内容不完整，建议加强理解和细节描述。"
+      "ai_overall_comment": "整体作业基本完成，但README内容较简略，缺乏深入思考和代码展示，部分周次内容不完整，建议加强理解和细节描述。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 16.35,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 90.8,
+          "grade": "A"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 14.16,
+          "possible_weighted": 21,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 67.4,
+          "grade": "B-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 19.0,
+          "possible_weighted": 32,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 59.4,
+          "grade": "C"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 15.72,
+          "possible_weighted": 29,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 54.2,
+          "grade": "C-"
+        }
+      ]
     },
     {
       "github_id": "gumyeonghye310-star",
@@ -22688,7 +25044,69 @@
       "grade": "F",
       "evaluation_date": "2026-06-26T07:35:39.734905",
       "scoring_mode": "rule+deepseek",
-      "ai_overall_comment": "所有提交周次均只有图片，缺乏README和代码，内容严重不足，建议补充完整。"
+      "ai_overall_comment": "所有提交周次均只有图片，缺乏README和代码，内容严重不足，建议补充完整。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 13.48,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 74.9,
+          "grade": "B"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 12.16,
+          "possible_weighted": 21,
+          "submitted_weeks": 2,
+          "total_weeks": 3,
+          "score": 57.9,
+          "grade": "C"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 6.48,
+          "possible_weighted": 32,
+          "submitted_weeks": 1,
+          "total_weeks": 3,
+          "score": 20.2,
+          "grade": "F"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 0.0,
+          "possible_weighted": 29,
+          "submitted_weeks": 0,
+          "total_weeks": 3,
+          "score": 0.0,
+          "grade": "F"
+        }
+      ]
     },
     {
       "github_id": "yaokai0928-glitch",
@@ -23379,7 +25797,69 @@
       "evaluation_date": "2026-06-26T17:16:12.840914",
       "scoring_mode": "rule+deepseek",
       "ai_overall_comment": "整体提交了截图和部分视频，但缺乏README和代码，内容分偏低，态度分中等。",
-      "manual_review": "人工复核：能确认参与课堂实验，但主要证据为日期截图和非标准目录，按最低 B- 记录。"
+      "manual_review": "人工复核：能确认参与课堂实验，但主要证据为日期截图和非标准目录，按最低 B- 记录。",
+      "academic_assignments": [
+        {
+          "id": "assignment1",
+          "title": "期中作业1：GitHub作业目录格式 I",
+          "weeks": [
+            "week2",
+            "week3",
+            "week4"
+          ],
+          "earned_weighted": 12.61,
+          "possible_weighted": 18,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 70.1,
+          "grade": "B"
+        },
+        {
+          "id": "assignment2",
+          "title": "期中作业2：GitHub作业目录格式 II",
+          "weeks": [
+            "week5",
+            "week6",
+            "week7"
+          ],
+          "earned_weighted": 14.46,
+          "possible_weighted": 21,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 68.9,
+          "grade": "B-"
+        },
+        {
+          "id": "assignment3",
+          "title": "期中作业3：GitHub作业目录格式 III",
+          "weeks": [
+            "week8",
+            "week10",
+            "week11"
+          ],
+          "earned_weighted": 21.95,
+          "possible_weighted": 32,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 68.6,
+          "grade": "B-"
+        },
+        {
+          "id": "assignment4",
+          "title": "期中作业4：GitHub作业目录格式 IV",
+          "weeks": [
+            "week12",
+            "week13",
+            "week14"
+          ],
+          "earned_weighted": 15.98,
+          "possible_weighted": 29,
+          "submitted_weeks": 3,
+          "total_weeks": 3,
+          "score": 55.1,
+          "grade": "C"
+        }
+      ]
     }
   ],
   "week14_rankings": [
@@ -23934,6 +26414,44 @@
         "缺少 PDF 报告书：按讲义 14.9 节撰写，命名为 week14_组名.pdf。"
       ],
       "rank": 24
+    }
+  ],
+  "academic_assignment_groups": [
+    {
+      "id": "assignment1",
+      "title": "期中作业1：GitHub作业目录格式 I",
+      "weeks": [
+        "week2",
+        "week3",
+        "week4"
+      ]
+    },
+    {
+      "id": "assignment2",
+      "title": "期中作业2：GitHub作业目录格式 II",
+      "weeks": [
+        "week5",
+        "week6",
+        "week7"
+      ]
+    },
+    {
+      "id": "assignment3",
+      "title": "期中作业3：GitHub作业目录格式 III",
+      "weeks": [
+        "week8",
+        "week10",
+        "week11"
+      ]
+    },
+    {
+      "id": "assignment4",
+      "title": "期中作业4：GitHub作业目录格式 IV",
+      "weeks": [
+        "week12",
+        "week13",
+        "week14"
+      ]
     }
   ]
 }

@@ -18,6 +18,28 @@ SCORING_SYSTEM = (
     "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合；"
     "宽松评分：已提交周次给予额外完成度分；总分为各周加权得分之和）"
 )
+ACADEMIC_ASSIGNMENT_GROUPS = [
+    {
+        "id": "assignment1",
+        "title": "期中作业1：GitHub作业目录格式 I",
+        "weeks": ["week2", "week3", "week4"],
+    },
+    {
+        "id": "assignment2",
+        "title": "期中作业2：GitHub作业目录格式 II",
+        "weeks": ["week5", "week6", "week7"],
+    },
+    {
+        "id": "assignment3",
+        "title": "期中作业3：GitHub作业目录格式 III",
+        "weeks": ["week8", "week10", "week11"],
+    },
+    {
+        "id": "assignment4",
+        "title": "期中作业4：GitHub作业目录格式 IV",
+        "weeks": ["week12", "week13", "week14"],
+    },
+]
 MANUAL_SCORE_REVIEWS = {
     "yaokai0928-glitch": {
         "score": 65.0,
@@ -135,6 +157,39 @@ def apply_manual_score_review(result: dict) -> None:
     result["total_score"] = target
     result["grade"] = review["grade"]
     result["manual_review"] = review["reason"]
+
+
+def build_academic_assignments(result: dict) -> list[dict]:
+    weeks = result.get("weeks") or {}
+    assignments = []
+    for group in ACADEMIC_ASSIGNMENT_GROUPS:
+        group_weeks = group["weeks"]
+        possible = sum(WEEKS[wk]["weight"] for wk in group_weeks if wk in WEEKS)
+        earned = sum(
+            weeks.get(wk, {}).get("final_score", 0)
+            for wk in group_weeks
+            if isinstance(weeks.get(wk), dict)
+        )
+        submitted = sum(
+            1
+            for wk in group_weeks
+            if isinstance(weeks.get(wk), dict) and weeks[wk].get("submitted")
+        )
+        score = (earned / possible * 100) if possible else 0.0
+        assignments.append(
+            {
+                "id": group["id"],
+                "title": group["title"],
+                "weeks": group_weeks,
+                "earned_weighted": round(earned, 2),
+                "possible_weighted": possible,
+                "submitted_weeks": submitted,
+                "total_weeks": len(group_weeks),
+                "score": round(score, 1),
+                "grade": _grade(score) if score > 0 else "F",
+            }
+        )
+    return assignments
 
 
 def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) -> dict:
@@ -325,6 +380,7 @@ def evaluate_student(student: dict, gh: GitHubClient, *, use_ai: bool = True) ->
     if ai_comment:
         result["ai_overall_comment"] = ai_comment
     apply_manual_score_review(result)
+    result["academic_assignments"] = build_academic_assignments(result)
     return result
 
 
@@ -377,6 +433,7 @@ def run_evaluation(*, use_ai: bool = True, limit: int | None = None) -> dict:
             wk: {"title": info["title"], "weight": info["weight"], "due_date": info["due_date"]}
             for wk, info in WEEKS.items()
         },
+        "academic_assignment_groups": ACADEMIC_ASSIGNMENT_GROUPS,
         "students": results,
     }
     payload["week14_rankings"] = build_week14_rankings(results)

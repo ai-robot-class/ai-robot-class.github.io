@@ -368,6 +368,97 @@ def generate_week_table(students, week_keys, week_info):
     """
 
 
+def _build_academic_assignment_from_weeks(student, group, week_info):
+    weeks = student.get("weeks") or {}
+    group_weeks = group.get("weeks", [])
+    possible = sum(week_info.get(wk, {}).get("weight", 0) for wk in group_weeks)
+    earned = sum(
+        weeks.get(wk, {}).get("final_score", 0)
+        for wk in group_weeks
+        if isinstance(weeks.get(wk), dict)
+    )
+    submitted = sum(
+        1
+        for wk in group_weeks
+        if isinstance(weeks.get(wk), dict) and weeks[wk].get("submitted")
+    )
+    score = (earned / possible * 100) if possible else 0
+    return {
+        "id": group.get("id"),
+        "title": group.get("title"),
+        "weeks": group_weeks,
+        "earned_weighted": round(earned, 2),
+        "possible_weighted": possible,
+        "submitted_weeks": submitted,
+        "total_weeks": len(group_weeks),
+        "score": round(score, 1),
+    }
+
+
+def generate_academic_assignment_table(students, groups, week_info):
+    if not groups:
+        return ""
+    rows = []
+    for s in students:
+        if not s.get("repo_exists"):
+            continue
+        assignments_by_id = {
+            item.get("id"): item
+            for item in s.get("academic_assignments", [])
+            if isinstance(item, dict)
+        }
+        cells = [
+            f'<td class="academic-name" title="@{s["github_id"]}">'
+            f'<a href="{s["repo_url"]}" target="_blank">@{s["github_id"]}</a></td>'
+        ]
+        for group in groups:
+            item = assignments_by_id.get(group.get("id")) or _build_academic_assignment_from_weeks(s, group, week_info)
+            score = item.get("score", 0)
+            submitted = item.get("submitted_weeks", 0)
+            total = item.get("total_weeks", len(group.get("weeks", [])))
+            earned = item.get("earned_weighted", 0)
+            possible = item.get("possible_weighted", 0)
+            if score >= 85:
+                cls = "academic-high"
+            elif score >= 70:
+                cls = "academic-mid"
+            elif score >= 55:
+                cls = "academic-low"
+            else:
+                cls = "academic-risk"
+            cells.append(
+                f'<td class="{cls}" title="加权 {earned:.1f}/{possible} · 提交 {submitted}/{total} 周">'
+                f'<strong>{score:.1f}</strong><small>{submitted}/{total}</small></td>'
+            )
+        avg = sum(
+            (assignments_by_id.get(g.get("id")) or _build_academic_assignment_from_weeks(s, g, week_info)).get("score", 0)
+            for g in groups
+        ) / len(groups)
+        cells.append(f'<td class="academic-average"><strong>{avg:.1f}</strong></td>')
+        rows.append(f'<tr>{"".join(cells)}</tr>')
+
+    headers = ['<th>学生</th>']
+    for index, group in enumerate(groups, start=1):
+        weeks = "/".join(f"W{wk[4:]}" for wk in group.get("weeks", []))
+        headers.append(
+            f'<th title="{_escape_html(group.get("title", ""))}">{index}<small>{weeks}</small></th>'
+        )
+    headers.append('<th>均分</th>')
+
+    return f"""
+    <div class="academic-section" id="academic-assignments">
+        <h2>🧾 期中考试：GitHub 作业目录格式评分</h2>
+        <p class="week-table-note">教务系统按四次作业录入；这里按每三周合并为一个小作业，分数为组内周加权得分换算到 100 分，括号小字为该组提交周数。</p>
+        <div class="table-scroll academic-scroll">
+            <table class="academic-table">
+                <thead><tr>{''.join(headers)}</tr></thead>
+                <tbody>{''.join(rows)}</tbody>
+            </table>
+        </div>
+    </div>
+    """
+
+
 def generate_pages_carousel(students):
     """生成学生 GitHub Pages 的滑窗预览，包含健康度反馈"""
     pages_students = [s for s in students if s.get('pages_enabled') and s.get('pages_url')]
@@ -546,6 +637,11 @@ def generate_html(data):
     stats_html = generate_stats(students_sorted)
     carousel_html = generate_pages_carousel(students_sorted)
     cards_html = "\n".join(generate_student_card(s, week_keys) for s in students_sorted)
+    academic_html = generate_academic_assignment_table(
+        students_sorted,
+        data.get("academic_assignment_groups", []),
+        week_info,
+    )
     table_html = generate_week_table(students_sorted, week_keys, week_info)
     week14_ranking_html = generate_week14_ranking(data)
 
@@ -768,6 +864,70 @@ def generate_html(data):
             border-top: 2px solid #e5e7eb;
             border-bottom: 2px solid #e5e7eb;
         }}
+        .academic-section {{
+            margin: 28px 0 38px;
+            padding: 22px 0 4px;
+            border-top: 2px solid #e5e7eb;
+        }}
+        .academic-scroll {{
+            max-width: 900px;
+            margin: 0 auto;
+        }}
+        .academic-table {{
+            width: 100%;
+            min-width: 720px;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+            font-size: 0.9em;
+        }}
+        .academic-table th {{
+            background: #334155;
+            color: white;
+            padding: 10px 8px;
+            text-align: center;
+        }}
+        .academic-table th:first-child {{
+            text-align: left;
+            width: 230px;
+        }}
+        .academic-table th small {{
+            display: block;
+            margin-top: 3px;
+            color: #cbd5e1;
+            font-size: 0.75em;
+            font-weight: 500;
+        }}
+        .academic-table td {{
+            border-bottom: 1px solid #e5e7eb;
+            padding: 10px 8px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }}
+        .academic-name {{
+            text-align: left !important;
+            font-weight: 600;
+        }}
+        .academic-name a {{
+            color: #334155;
+            display: block;
+            overflow: hidden;
+            text-decoration: none;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }}
+        .academic-table td small {{
+            display: block;
+            margin-top: 2px;
+            color: #64748b;
+            font-size: 0.72em;
+            font-weight: 600;
+        }}
+        .academic-high {{ background: #d9f5ed; color: #047857; }}
+        .academic-mid {{ background: #e5efff; color: #1d4ed8; }}
+        .academic-low {{ background: #fff2d8; color: #b45309; }}
+        .academic-risk {{ background: #fee2e2; color: #b91c1c; }}
+        .academic-average {{ background: #f1f5f9; color: #0f172a; }}
         .week-table-note {{
             max-width: 760px;
             margin: 0 auto 18px;
@@ -1406,6 +1566,8 @@ def generate_html(data):
             <p><strong>ℹ️ 说明</strong>：每周得分按权重加权后计入总分。表格最右侧<strong>「详细分析」</strong>可展开各周评语与改进建议。
             <a href="#week14-ranking" style="color:#667eea;font-weight:600;">第14周排名 ↓</a></p>
         </div>
+
+        {academic_html}
 
         {table_html}
 
