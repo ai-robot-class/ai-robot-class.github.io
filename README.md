@@ -1,421 +1,94 @@
-# AI机器人课程
+# Frank Zhao · Course Homepage
 
-![ROS2](https://img.shields.io/badge/ROS2-Humble-green)
-![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![PyBullet](https://img.shields.io/badge/PyBullet-Ready-green)
+<div align="center">
 
----
+# Frank Zhao (Ruinan Zhao)
 
+**Ph.D. Candidate · Electrical Engineering · Hanyang University**
 
-> 🤖 "未来，每个人都应该拥有一台机器人。" 
+Robotics · Control Systems · Machine Learning & Reinforcement Learning · Computer Vision
 
-欢迎来到**AI机器人课程**！这将是一场激动人心的旅程，带你从零基础到能够编写程序控制自己的机器人。
+📧 [zhaoruinan@hanyang.ac.kr](mailto:zhaoruinan@hanyang.ac.kr)
 
-### 什么是AI机器人？
-
-想象一下：
-- 🧹 能够自己打扫卫生的扫地机器人
-- 🏭 工厂里精确操作的机械臂
-- 🚗 自己驾驶汽车穿越城市的无人车
-- 🤖 能够陪你聊天做家务的智能助手
-
-这些**AI机器人**的共同点是什么？它们都有一个"大脑"（人工智能）和一个"身体"（机械硬件）。
-
-### 本课程学什么？
-
-这不是单一技术的课程，而是一门将**机器人、人工智能、ROS2、Python编程、传感器、视觉识别**等知识**都涉猎一遍**的入门课程：
-
-| 知识领域 | 本课程内容 |
-|---------|-----------|
-| 🤖 **机器人基础** | 机器人结构、运动原理、坐标系 |
-| 🧠 **人工智能** | 计算机视觉、物体识别、QR码检测 |
-| 🛠️ **ROS2** | 节点通信、话题服务、导航框架 |
-| 💻 **Python编程** | Python基础、ROS2 API、节点开发 |
-| 👁️ **传感器** | 激光雷达、相机、里程计 |
-| 🔄 **闭环控制** | 反馈控制、避障逻辑 |
-| 🖥️ **仿真** | PyBullet（学生编程实践） |
-
-> 💡 **课程目标**：让你对机器人领域有**全面认识**，找到自己感兴趣的方向，为后续深入学习打下基础！
-
-### 课程特色
-
-| 特色 | 说明 |
-|------|------|
-| 🎮 **动手实践** | 每节课都有实际操作，不是纸上谈兵 |
-| 🐢 **仿真先行** | 先在虚拟世界测试，不用担心弄坏机器人 |
-| 📚 **循序渐进** | 从hello world到自主导航，步步为营 |
+</div>
 
 ---
 
-## 课程信息
+## 👋 About Me
 
-- **课程名称**: AI机器人 (신한대학교)
-- **授课安排**: 每周一次课，3小时/次
-- **前置要求**: 零基础！只要会用电脑
-- **授课方式**: 理论 + 演示 + 实验
+I am **Frank Zhao (Ruinan Zhao)**, a **Ph.D. Candidate in Electrical Engineering at Hanyang
+University, South Korea**. My work spans **Robotics & Control Systems, Machine Learning &
+Reinforcement Learning, and Computer Vision & Image Processing**.
 
----
+For my master's degree, my research topic was **"Reinforcement Learning for the Door-Opening
+Task of a Robotic Manipulator"** — which is exactly why I love bringing **Reinforcement
+Learning** into the classroom: to guide you, in the most intuitive way, from the math
+fundamentals all the way to agents that learn to make decisions on their own.
 
-## 讲师介绍
-
-### 赵瑞楠 (조서남)
-
-#### 教育背景
-
-| 学位 | 学校 | 时间 |
-|------|------|------|
-| 博士（课程修完）| 韩国汉阳大学 | 2021-2026 |
-| 硕士 | 韩国汉阳大学 | 2019-2021 |
-| 本科 | 天津大学 | 2010-2014 |
-
-#### 工作经历
-
-- **系统工程师** (2014-2016)
-  - 天津电气科学研究院有限公司
-  - 负责电气控制系统设计与开发
-
-#### 研究领域
-
-- 🤖 机器人与控制系统
-- 👁️ 计算机视觉与图像处理
-- 🧠 机器学习与强化学习
-
-#### 联系信息
-
-- 📧 邮箱: z_ruinan@hotmail.com
+> 💡 I believe the best way to learn is **hands-on and step-by-step**: simulate first, then
+> build the theory, then implement the algorithms — with every step runnable.
 
 ---
 
-## 课程要求
+## 🎓 Education
 
-### 📝 作业与报告
+| Degree | University | Major | Date |
+|--------|-----------|-------|------|
+| **Ph.D. (in progress)** | Hanyang University (Ansan, Korea) | Electrical Engineering | Expected 2026-08 |
+| **M.Sc.** | Hanyang University (Ansan, Korea) | Electrical Engineering | 2021-08 |
+| **B.Sc.** | Tianjin University (Tianjin, China) | Automation | 2014-07 |
 
-1. **GitHub账户**: 每位同学需在[GitHub](https://github.com/)注册账户
-2. **代码提交**: 每次课上练习和课后作业代码、报告（如果有）都需上传至个人GitHub仓库
-   - 本学期：**公开仓库**（以后可改为私有）
-   - 仓库命名建议: `ai-robotics-hw{N}`
-3. **报告格式**: 使用**Markdown**格式编写实验报告
-4. **仓库命名**: 建议格式 `ai-robotics-hw{N}`
+## 💼 Experience
 
-### 📊 课前问卷
+- **System Engineer**, Tianjin Electric Science Research Institute Co., Ltd. (2014-08 – 2016-05)
+  - Designed, developed, and commissioned integrated drive-test electric control systems for
+    industrial applications.
 
-> **第2周上课前**，请大家填写问卷，调查内容：
-> - 编程基础（Python/C++/其他）
-> - 机器人/ROS经验
-> - 感兴趣的方向（视觉/导航/机械臂/AI等）
+## 🏆 Highlights
 
-### 🤖 AI助手 + ROS2机器人 互联设计
+- 📜 **Korean Invention Patent**: Visual–Tactile Sensor-Based Robot Gripper Development
+  (Korean Patent No. **10-2739485**, registered 2024-12-03)
+- 📄 **UR 2022** Late-Breaking Result: RGB-D Camera Data Enhancement using Image Resolution
+  Techniques
+- 📝 **Master's Thesis**: Reinforcement Learning for the Door-Opening Task of a Robotic Manipulator
+- 📄 **Ph.D. Research**: Image Quality Enhancement Technology
 
-> 本课程特色：**让AI助手控制ROS2机器人！**
+## 🛠️ Skills
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    课程中的AI+机器人互联架构                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   用户                          机器人                           │
-│     │                            │                              │
-│     │  语音/文字指令            │                              │
-│     ▼                            │                              │
-│  ┌─────────┐                    │                              │
-│  │ AI助手  │                    │                              │
-│  │(意图理解)│                    │                              │
-│  └────┬────┘                    │                              │
-│       │                         │                              │
-│       │  意图识别+指令转换       │                              │
-│       ▼                         │                              │
-│  ┌─────────┐                    │                              │
-│  │OpenCLAW │◄───────────────────┤                              │
-│  │(多平台  │                    │                              │
-│  │ 中枢)  │                    │                              │
-│  └────┬────┘                    │                              │
-│       │                         │                              │
-│       │ WebSocket/ROS2          │                              │
-│       ▼                         ▼                              │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │                    仿真/真机机器人                      │    │
-│  │  /cmd_vel ← 速度命令    /tts ← 语音播报               │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
+`Robotics & Control Systems` · `Machine Learning & Reinforcement Learning` ·
+`Computer Vision & Image Processing` · `Python` · `ROS2` · `PyTorch`
 
-#### 🔌 互联方式
-
-| 连接方式 | 说明 | 课程应用 |
-|----------|------|---------|
-| **WebSocket** | 实时双向通信 | 仿真演示Demo |
-| **ROS2话题/服务** | ROS2原生通信 | 机器人控制 |
-| **OpenCLAW** | 多平台AI助手框架 | 飞书/Telegram控制 |
-
-> 📺 **课程演示Demo**：
-> - [机器狗遥控仿真](/demo1/) - WebSocket控制Cannon.js物理引擎
-> - [双臂机器人叠布料](/demo2/) - 强化学习运动规划
-
-#### 📡 ROS2消息类型
-
-```
-速度控制：
-/robot/cmd_vel   → geometry_msgs/Twist
-
-状态查询：
-/robot/odom      → nav_msgs/Odometry
-/robot/battery   → sensor_msgs/BatteryState
-
-语音交互：
-/tts/speak       → std_msgs/String    (机器人说话)
-/stt/listen      → std_msgs/String    (听取指令)
-
-传感器：
-/camera/image    → sensor_msgs/Image
-/lidar/scan     → sensor_msgs/LaserScan
-```
+**Languages**: Chinese (native) · Korean (Full Professional) · English
 
 ---
 
-## 完整课程大纲
+## 📚 Courses
 
-### 第一阶段：基础与环境搭建（9小时）
+I currently offer two courses. Please pick the one that interests you:
 
-| 周次 | 主题 | 第一次课 | 第二次课 |
-|------|------|---------|---------|
-| **第1周** | 课程介绍与仿真环境搭建 | 机器人与AI的前世今生（1.5h） | PyBullet网页仿真（1.5h） |
-| **第2周** | ROS2通信机制基础 | 节点与话题初体验（1.5h） | 让机器人画个圆（1.5h） |
-| **第3周** | Python编程与机器人控制 | 第一个Python机器人程序（1.5h） | 机器人走正方形（1.5h） |
+### 🤖 [Course 1: AI Robotics](courses/ai-robot/README.md)
 
-### 第二阶段：运动学与空间感知（12小时）
+A beginner-friendly **ROS2 + Python + Simulation** robotics course. From *hello world* to
+autonomous navigation, every lesson is hands-on and runnable — covering robot fundamentals,
+sensors, computer vision, closed-loop control, and a team capstone project.
 
-| 周次 | 主题 | 第一次课 | 第二次课 |
-|------|------|---------|---------|
-| **第4周** | 机器人运动学基础（二维） | 坐标系与里程计（1.5h） | 运动学演示实验（1.5h） |
-| **第5周** | 传感器与感知基础 | 常用传感器介绍（1.5h） | 小组项目选题截止（作业提交） |
-| **第6周** | 闭环控制初探 | 传感器闭环控制（1.5h） | 简单避障逻辑（1.5h） |
-| **第7周** | 复习与实操演练 | 半期知识总复习（1.5h） | 模拟考试与练习（1.5h） |
-| **第8周** | **期中考试** | 笔试：公式/概念/计算（1.5h） | - |
+> Keywords: `ROS2` `PyBullet` `Python` `Sensors` `Vision` `Team Project`
+> 👉 [Enter course »](courses/ai-robot/README.md)
 
-### 第三阶段：AI交互与感知（12小时）
+### 🧠 [Course 2: Reinforcement Learning](courses/rl/README.md)
 
-| 周次 | 主题 | 第一次课 | 第二次课 |
-|------|------|---------|---------|
-| **第9周** | 语音交互 | 语音识别原理（1.5h） | ROS2语音控制节点（1.5h） |
-| **第10周** | 手势体感控制 | 手势识别基础（1.5h） | 体感控制机器人（1.5h） |
-| **第11周** | 运动路径规划 | A*算法原理（1.5h） | 机器人导航实现（1.5h） |
-| **第12周** | 机器人视觉实操 | 手机摄像头接入 WSL + ArUco 识别（1.5h） | 相机标定 + 基于标定的距离计算（1.5h） |
+Starting from the **mathematical foundations**, this course builds up **Reinforcement
+Learning** systematically: Python linear algebra → Markov Decision Processes → RL core
+concepts → application environments → a family of RL algorithms. Five progressive parts,
+balancing theory and code.
 
-### 第四阶段：综合项目（9小时）
-
-| 周次 | 主题 | 第一次课 | 第二次课 |
-|------|------|---------|---------|
-| **第13周** | 小组项目调试辅导 | 项目调试指导（1.5h） | 解决技术问题（1.5h） |
-| **第14周** | 小组项目展示 | Demo Day（1.5h） | - |
-| **第15周** | **期末考试** | 笔试：公式/概念/计算（1.5h） | - |
+> Keywords: `Linear Algebra` `MDP` `Q-Learning` `Policy Gradient` `DQN` `PPO` `Gymnasium`
+> 👉 [Enter course »](courses/rl/README.md)
 
 ---
 
-## 知识点图谱
+<div align="center">
 
-```
-                            ┌─────────────────┐
-                            │   AI 机器人      │
-                            │   (15周课程)    │
-                            └────────┬────────┘
-                                     │
-         ┌───────────────────────────┼───────────────────────────┐
-         │                           │                           │
-         ▼                           ▼                           ▼
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│   感知世界       │       │   决策思考       │       │   执行动作       │
-│ (传感器输入)     │       │ (AI/算法)        │       │ (执行器输出)     │
-└────────┬────────┘       └────────┬────────┘       └────────┬────────┘
-         │                        │                        │
-    ┌────┴────┐              ┌─────┴─────┐            ┌─────┴─────┐
-    │相机/图像  │              │路径规划   │            │电机驱动   │
-    │激光雷达  │              │目标识别   │            │机械臂控制 │
-    │IMU     │              │决策树     │            │语音/显示  │
-    │超声波    │              │深度学习   │            │           │
-    └─────────┘              └───────────┘            └───────────┘
-         │                        │                        │
-         └────────────────────────┼────────────────────────┘
-                                  │
-                         ┌────────┴────────┐
-                         │  ROS2 中间件     │
-                         │  (通信框架)       │
-                         └────────┬────────┘
-                                  │
-    ┌─────────────────────────────┼─────────────────────────────┐
-    │                             │                             │
-    ▼                             ▼                             ▼
-┌─────────────┐          ┌─────────────┐          ┌─────────────┐
-│  Topic      │          │  Service   │          │  Action     │
-│  异步发布/订阅│          │  同步请求/响应│          │  长时间任务 │
-└─────────────┘          └─────────────┘          └─────────────┘
-    第2-3周                    第4周                   第6周
-```
+*Learning by doing. Let's go from zero to intelligent, together.* 🚀
 
----
-
-## 技能图谱
-
-```
-Level 1 🌱 入门（1-3周）
-├── 环境搭建：Docker + ROS2 + VNC
-├── 第一个节点：运行turtlesim
-├── 通信机制：Topic/Pub/Sub
-├── Python基础：编写控制脚本
-└── 运动控制：走直线、走正方形
-
-Level 2 🌿 进阶（4-7周）
-├── 运动学：坐标系、里程计
-├── 传感器：LiDAR、相机、IMU
-├── 闭环控制：反馈与调节
-├── 可视化：RViz使用
-└── 避障逻辑：基础算法
-
-Level 3 🌳 AI应用（9-12周）
-├── OpenCV：图像处理
-├── 视觉识别：QR码、颜色
-├── 视觉伺服：目标追踪
-├── Sim2Real：仿真到真机
-└── 硬件连接：DiGua机器人
-
-Level 4 🌲 综合项目（13-15周）
-├── 系统设计：功能规划
-├── 算法实现：感知+决策+控制
-├── 团队协作：版本控制
-├── 问题排查：调试技能
-└── 展示汇报：技术表达
-```
-
----
-
-## 推荐阅读书目
-
-> 💡 **提示**: 本课程内容比推荐书目**更简单易懂**，零基础也能轻松上手！不用担心学习困难！
-
-### 📖 入门必读
-
-| 书名 | 作者 | 简介 |
-|------|------|------|
-| **ROS2机器人编程实战** | 陈的明 | 中文ROS2入门经典，图文丰富 |
-| **Python编程：从入门到实践** | Eric Matthes | Python基础，实践导向 |
-| **机器人操作系统入门** | ROS官方 | 官方教材，权威可靠 |
-
-### 📖 进阶提升
-
-| 书名 | 作者 | 简介 |
-|------|------|------|
-| **Programming Robots with ROS** | Morgan Quigley | 英文ROS经典 |
-| **ROS Robot Programming** | YoonSeok Pyo | 韩国ROS教程 |
-| **OpenCV计算机视觉** | Gary Bradski | OpenCV权威指南 |
-| **深度学习入门：基于Python** | 斋藤康毅 | AI基础理论 |
-
-### 📖 拓展深入
-
-| 书名 | 作者 | 简介 |
-|------|------|------|
-| **机器人学导论** | John J. Craig | 机器人学圣经 |
-| **概率机器人** | Sebastian Thrun | SLAM理论基础 |
-| **自动驾驶汽车设计** | Steven M.. | 综合知识 |
-
-### 📱 课程讲义
-
-![课程讲义](images/course-qr.png)
-
-> 📱 **提示**: 请使用**相机扫码**访问课程讲义（微信扫码可能无法打开）
-
----
-
-## 在线学习资源
-
-### 🌐 官方文档
-- [ROS2官方文档 (Humble)](https://docs.ros.org/en/humble/)
-
-
-
-### 🛠️ 开发工具
-- VS Code - 代码编辑器
-- terminator - 终端复用
-- Git - 版本控制
-
----
-
-## 实验环境
-
-> ⚠️ **建议使用自己的电脑或服务器**，因为学习机器人过程中可能会把操作系统弄坏（需要频繁重装系统）
-
-### 硬件要求
-| 项目 | 最低配置 | 推荐配置 |
-|------|---------|---------|
-| 内存 | 4GB | 8GB+ |
-| CPU | 双核 | 四核+ |
-| 磁盘 | 20GB | 50GB+ SSD |
-| 网络 | 稳定连接 | 稳定连接 |
-
-### 软件环境
-- PyBullet (学生编程实践)
-- VS Code
-- 浏览器（Chrome推荐）
-
----
-
-## 常见问题
-
-### Q: 没有机器人能学吗？
-**A**: 当然可以！我们使用PyBullet网页仿真，在浏览器中直接运行，无需安装！
-
-### Q: 编程基础差怎么办？
-**A**: 课程从零开始，第三周会专门讲解Python基础，边学边练！
-
-### Q: 学完能做什么？
-**A**: 你可以：
-- 参加机器人竞赛（RoboCup、RM等）
-- 做自己的智能小车/机械臂
-- 申请机器人相关实习
-- 继续学习SLAM和自动驾驶
-
----
-
-## 课程考核
-
-| 考核方式 | 比例 | 说明 |
-|---------|------|------|
-| 平时成绩 | 20% | 出勤 + 作业 |
-| 期中考试 | 30% | 第8周 笔试（公式/概念/计算，可带2页双面A4纸） |
-| 期末考试 | 30% | 第15周 笔试（可带2页双面A4纸） |
-| 小组项目 | 20% | 第13-14周 |
-
----
-
-## 📦 小组项目说明
-
-### 项目形式
-
-期末项目可以是以下形式之一：
-
-| 类型 | 说明 | 示例 |
-|------|------|------|
-| **纯仿真** | 完全在仿真环境中完成 | PyBullet网页仿真项目 |
-| **纯软件** | 纯算法/代码，无实体 | 视觉识别算法、运动规划 |
-| **硬件结合** | 结合ROS小车等硬件 | 实体机器人控制 |
-| **3D打印** | 3D打印零件组装机器人 | 自定义机械臂、夹爪 |
-
-### 项目要求
-
-1. **选题**：第5周截止，需提交选题和分工计划
-2. **形式**：2-4人小组合作
-3. **展示**：第14周 Demo展示
-
-> 💡 **提示**：鼓励使用各类AI编程工具（如GitHub Copilot、ChatGPT等）提升开发效率！
-
-### 参考方向
-
-- 🤖 语音控制机器人导航
-- 👋 手势识别控制机器人
-- 🗺️ 自主路径规划与避障
-- 📷 视觉引导抓取/放置
-- 🐕 机器狗运动控制
-- 🎨 双臂机器人任务执行
-
----
-
-*准备好开启你的机器人之旅了吗？让我们出发吧！ 🚀*
+</div>
