@@ -1,94 +1,77 @@
-# Frank Zhao · Course Homepage
+# Frank Zhao — Teaching & Course Materials
 
 <div align="center">
 
-# Frank Zhao (Ruinan Zhao)
+## Frank Zhao (Ruinan Zhao)
 
-**Ph.D. Candidate · Electrical Engineering · Hanyang University**
+**Ph.D. Candidate, Electrical Engineering — Hanyang University**
 
-Robotics · Control Systems · Machine Learning & Reinforcement Learning · Computer Vision
+Robotics · Control Systems · Reinforcement Learning · Computer Vision
 
-📧 [zhaoruinan@hanyang.ac.kr](mailto:zhaoruinan@hanyang.ac.kr)
+[zhaoruinan@hanyang.ac.kr](mailto:zhaoruinan@hanyang.ac.kr)
 
 </div>
 
 ---
 
-## 👋 About Me
+## Overview
 
-I am **Frank Zhao (Ruinan Zhao)**, a **Ph.D. Candidate in Electrical Engineering at Hanyang
-University, South Korea**. My work spans **Robotics & Control Systems, Machine Learning &
-Reinforcement Learning, and Computer Vision & Image Processing**.
+This site hosts the lecture materials, notes, and reference resources for the courses I teach.
+It is intended as a **study reference for students** — a place to review concepts, follow the
+worked examples, and access the code accompanying each lesson.
 
-For my master's degree, my research topic was **"Reinforcement Learning for the Door-Opening
-Task of a Robotic Manipulator"** — which is exactly why I love bringing **Reinforcement
-Learning** into the classroom: to guide you, in the most intuitive way, from the math
-fundamentals all the way to agents that learn to make decisions on their own.
+My teaching emphasizes a **progressive, hands-on approach**: build intuition through
+runnable examples first, then develop the underlying theory, and finally implement the methods
+independently.
 
-> 💡 I believe the best way to learn is **hands-on and step-by-step**: simulate first, then
-> build the theory, then implement the algorithms — with every step runnable.
+## Biography
 
----
+I am a Ph.D. candidate in Electrical Engineering at Hanyang University, South Korea. My research
+and teaching interests lie in **robotics and control systems, reinforcement learning, and
+computer vision**. My master's research addressed *Reinforcement Learning for the Door-Opening
+Task of a Robotic Manipulator*, which continues to inform how I introduce reinforcement learning
+to students — grounded in real robotic control problems.
 
-## 🎓 Education
+**Education**
 
-| Degree | University | Major | Date |
-|--------|-----------|-------|------|
-| **Ph.D. (in progress)** | Hanyang University (Ansan, Korea) | Electrical Engineering | Expected 2026-08 |
-| **M.Sc.** | Hanyang University (Ansan, Korea) | Electrical Engineering | 2021-08 |
-| **B.Sc.** | Tianjin University (Tianjin, China) | Automation | 2014-07 |
+| Degree | Institution | Field | Date |
+|--------|-------------|-------|------|
+| Ph.D. (in progress) | Hanyang University, Korea | Electrical Engineering | Expected 2026-08 |
+| M.Sc. | Hanyang University, Korea | Electrical Engineering | 2021-08 |
+| B.Sc. | Tianjin University, China | Automation | 2014-07 |
 
-## 💼 Experience
+**Selected Work**
 
-- **System Engineer**, Tianjin Electric Science Research Institute Co., Ltd. (2014-08 – 2016-05)
-  - Designed, developed, and commissioned integrated drive-test electric control systems for
-    industrial applications.
+- Korean Invention Patent — Visual–Tactile Sensor-Based Robot Gripper (No. 10-2739485, 2024)
+- UR 2022, Late-Breaking Result — RGB-D Camera Data Enhancement via Image Resolution Techniques
+- M.Sc. Thesis — Reinforcement Learning for the Door-Opening Task of a Robotic Manipulator
 
-## 🏆 Highlights
-
-- 📜 **Korean Invention Patent**: Visual–Tactile Sensor-Based Robot Gripper Development
-  (Korean Patent No. **10-2739485**, registered 2024-12-03)
-- 📄 **UR 2022** Late-Breaking Result: RGB-D Camera Data Enhancement using Image Resolution
-  Techniques
-- 📝 **Master's Thesis**: Reinforcement Learning for the Door-Opening Task of a Robotic Manipulator
-- 📄 **Ph.D. Research**: Image Quality Enhancement Technology
-
-## 🛠️ Skills
-
-`Robotics & Control Systems` · `Machine Learning & Reinforcement Learning` ·
-`Computer Vision & Image Processing` · `Python` · `ROS2` · `PyTorch`
-
-**Languages**: Chinese (native) · Korean (Full Professional) · English
+**Areas** — Robotics & Control · Reinforcement Learning · Computer Vision · Python · ROS2 · PyTorch
 
 ---
 
-## 📚 Courses
+## Courses
 
-I currently offer two courses. Please pick the one that interests you:
+The following courses are documented on this site. Each course page contains the full syllabus,
+lecture notes, and accompanying code.
 
-### 🤖 [Course 1: AI Robotics](courses/ai-robot/README.md)
+### [Course I — AI Robotics](courses/ai-robot/README.md)
 
-A beginner-friendly **ROS2 + Python + Simulation** robotics course. From *hello world* to
-autonomous navigation, every lesson is hands-on and runnable — covering robot fundamentals,
-sensors, computer vision, closed-loop control, and a team capstone project.
+An introductory robotics course based on ROS2, Python, and simulation. It progresses from
+environment setup to autonomous navigation, covering robot fundamentals, sensing, computer
+vision, closed-loop control, and a team capstone project.
 
-> Keywords: `ROS2` `PyBullet` `Python` `Sensors` `Vision` `Team Project`
-> 👉 [Enter course »](courses/ai-robot/README.md)
+### [Course II — Reinforcement Learning](courses/rl/README.md)
 
-### 🧠 [Course 2: Reinforcement Learning](courses/rl/README.md)
-
-Starting from the **mathematical foundations**, this course builds up **Reinforcement
-Learning** systematically: Python linear algebra → Markov Decision Processes → RL core
-concepts → application environments → a family of RL algorithms. Five progressive parts,
-balancing theory and code.
-
-> Keywords: `Linear Algebra` `MDP` `Q-Learning` `Policy Gradient` `DQN` `PPO` `Gymnasium`
-> 👉 [Enter course »](courses/rl/README.md)
+A structured introduction to reinforcement learning, developed in five progressive parts:
+mathematical foundations (linear algebra), Markov decision processes, core reinforcement
+learning concepts, application environments, and reinforcement learning algorithms. Each part
+pairs theoretical development with runnable code.
 
 ---
 
 <div align="center">
 
-*Learning by doing. Let's go from zero to intelligent, together.* 🚀
+*Course materials are updated throughout the semester.*
 
 </div>
