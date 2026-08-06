@@ -1,0 +1,520 @@
+{
+  "evaluation_date": "2026-06-23T02:03:56.966589",
+  "scoring_system": "总分 100 分（内容 70 + 态度 30；规则分 + DeepSeek AI 融合）",
+  "scoring_mode": "rule",
+  "weeks": {
+    "week2": {
+      "title": "ROS2环境配置",
+      "weight": 5,
+      "due_date": "2026-03-15"
+    },
+    "week3": {
+      "title": "GitHub与命令行",
+      "weight": 5,
+      "due_date": "2026-03-22"
+    },
+    "week4": {
+      "title": "Python仿真",
+      "weight": 8,
+      "due_date": "2026-03-29"
+    },
+    "week5": {
+      "title": "机器人运动学",
+      "weight": 8,
+      "due_date": "2026-04-05"
+    },
+    "week6": {
+      "title": "KITTI实验",
+      "weight": 8,
+      "due_date": "2026-04-12"
+    },
+    "week7": {
+      "title": "Markdown整理",
+      "weight": 5,
+      "due_date": "2026-04-19"
+    },
+    "week8": {
+      "title": "Docker容器",
+      "weight": 8,
+      "due_date": "2026-04-26"
+    },
+    "week9": {
+      "title": "数学基础",
+      "weight": 8,
+      "due_date": "2026-05-03"
+    },
+    "week10": {
+      "title": "Docker与OpenCV",
+      "weight": 10,
+      "due_date": "2026-05-10"
+    },
+    "week11": {
+      "title": "Docker进阶与Pages",
+      "weight": 10,
+      "due_date": "2026-05-17"
+    },
+    "week12": {
+      "title": "视觉与语音",
+      "weight": 10,
+      "due_date": "2026-05-24"
+    },
+    "week13": {
+      "title": "期末项目",
+      "weight": 15,
+      "due_date": "2026-06-22"
+    }
+  },
+  "students": [
+    {
+      "github_id": "miaohaonan10-boop",
+      "repo_url": "https://github.com/miaohaonan10-boop/mhnAI",
+      "repo_exists": true,
+      "repo_name": "mhnAI",
+      "repo_description": "",
+      "stars": 0,
+      "forks": 0,
+      "default_branch": "main",
+      "pages_url": "https://miaohaonan10-boop.github.io/mhnAI/",
+      "pages_enabled": true,
+      "pages_audit": {
+        "total_images": 0,
+        "broken_images": [],
+        "broken_links": [],
+        "has_title": true,
+        "has_style": true,
+        "has_content": true,
+        "word_count": 562,
+        "issues": [],
+        "suggestions": [],
+        "score": 90
+      },
+      "total_files": 31,
+      "total_commits": 60,
+      "weeks": {
+        "week2": {
+          "submitted": true,
+          "actual_path": "week2",
+          "content_score": 59,
+          "attitude_score": 17,
+          "rule_content_score": 59,
+          "rule_attitude_score": 17,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week 2：WSL、Ubuntu 与 ROS2 环境配置\n\n## 实验内容\n\n本周完成了以下任务：\n\n1. 安装 WSL Ubuntu 22.04\n2. 配置 ROS2 Humble 环境\n3. 运行 turtlesim 小乌龟节点\n\n## 实验截图\n\n### Ubuntu 安装成功\n\n<img src=\"img/ubuntu-install.png\" alt=\"Ubuntu 安装\" width=\"600\">\n\n### 小乌龟仿真运行\n\n<img src=\"img/turtlesim.png\" alt=\"小乌龟\" width=\"600\">\n\n## 运行命令\n\n\\`\\`\\`bash\n# 启动小乌龟节点\nros2 run turtlesim turtlesim_node\n\n# 启动键盘控制\nros2 run turtlesim turtle_teleop_key\n\\`\\`\\`\n\n## 遇到的问题\n\n1. **问题**：运行 `ros2` 命令提示 command not found\n   **解决**：运行 `source /opt/ros/humble/setup.bash`\n\n## 学习心得\n\n通过本周学习，我掌握了 WSL 的基本使用和 ROS2 的安装配置...\n\n## 返回\n\n[← 返回首页](../)\n",
+          "details": {
+            "readme_size": 813,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week2）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README较详细 (+14)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）"
+          ],
+          "raw_score": 76,
+          "final_score": 3.8,
+          "is_past": true
+        },
+        "week3": {
+          "submitted": true,
+          "actual_path": "week3",
+          "content_score": 62,
+          "attitude_score": 17,
+          "rule_content_score": 62,
+          "rule_attitude_score": 17,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week X：双足机器人仿真环境配置与基础测试\n## 实验内容\n本周完成了以下任务：\n1.  搭建双足机器人仿真环境\n2.  配置机器人关节参数与重力设置\n3.  运行双足机器人基础姿态仿真并采集相机数据\n\n---\n\n### 双足机器人仿真主界面\n![双足机器人仿真主界面](img/biped-main.png)\n\n### 合成相机数据（RGB/深度/分割）\n![相机数据面板](img/biped-camera.png)\n\n---\n\n## 运行参数与说明\n```bash\n# 核心物理参数\ngravity: -10.000\n\n# 左侧关节参数（单位：弧度）\nhip_abduction_left: 0.000\nhip_rotation_left: 0.000\nhip_flexion_left: 1.020\nknee_joint_left: -1.970\nknee_to_shin_left: -0.084\nankle_joint_left: 2.060\ntoe_joint_left: -1.900\n\n# 右侧关节参数（单位：弧度）\nhip_abduction_right: 0.000\nhip_rotation_right: 0.000\nhip_flexion_right: 1.020\nknee_joint_right: -1.970\nknee_to_shin_right: -0.084\n```\n\n---\n\n## 遇到的问题\n1.  **问题**：机器人姿态不稳，启动后出现倾倒\n    **解决**：调整`hip_flexion`与`knee_joint`的初始角度，降低重心高度，同时确认重力参数`gravity`设置为`-10.0`，匹配物理引擎默认配置。\n\n2.  **问题**：合成相机深度数据显示异常\n    **解决**：检查相机投影矩阵与机器人模型的坐标匹配关系，重置相机位置并重新生成深度图与分割掩码。\n\n---\n\n## 学习心得\n通过本周的学习，我掌握了双足机器人仿真环境的搭建流程，理解了各关节参数对机器人初始姿态的影响，学会了使用合成相机采集RGB、深度与语义分割数据，为后续的步态控制与感知算法开发打下了基础。\n\n---\n\n## 返回\n[← 返回首页](../)\n",
+          "details": {
+            "readme_size": 1711,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week3）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）"
+          ],
+          "raw_score": 79,
+          "final_score": 3.95,
+          "is_past": true
+        },
+        "week4": {
+          "submitted": true,
+          "actual_path": "week4",
+          "content_score": 62,
+          "attitude_score": 17,
+          "rule_content_score": 62,
+          "rule_attitude_score": 17,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week X：ROS2 KITTI 数据集可视化实验\n## 实验内容\n本周完成了以下任务：\n1.  配置 ROS2 环境下的 KITTI 数据集发布节点\n2.  启动 RViz 并添加激光雷达点云、相机图像可视化插件\n3.  验证 KITTI 数据集中点云与图像数据的同步发布效果\n\n---\n\n### KITTI 数据集 RViz 可视化主界面\n![KITTI RViz 可视化](img/kitti-rviz.png)\n\n### 多模态数据同步显示（点云+相机图像）\n![多模态数据面板](img/kitti-multimodal.png)\n\n---\n\n## 运行命令\n```bash\n# 启动 ROS2 环境\nsource /opt/ros/humble/setup.bash\nsource ~/ros2_ws/install/setup.bash\n\n# 启动 KITTI 数据集发布节点\nros2 run kitti_publishers kitti_publisher_node\n\n# 启动 RViz 可视化并加载配置文件\nrviz2 -d ~/ros2_ws/src/ros2_kitti_publishers/default.rviz\n```\n\n---\n\n## 遇到的问题\n1.  **问题**：运行 RViz 时无法显示相机图像话题\n    **解决**：检查图像话题的发布名称与 RViz 配置中的 Topic 名称是否一致，确认节点已成功发布 `image_color_left`/`image_gray_left` 等话题，并重新添加 Image 显示插件。\n\n2.  **问题**：激光点云显示为空白或颜色异常\n    **解决**：确认点云话题 `PointCloud2` 的 Frame ID 与 RViz 中的 Fixed Frame 一致（如设置为 `base_link`），并调整点云的 Color Transformer 为 `Intensity` 或 `Range`，启用点云着色显示。\n\n---\n\n## 学习心得\n通过本周学习，我掌握了 ROS2 下多模态数据集（激光雷达+相机）的发布与可视化流程，理解了 RViz 中不同传感器数据的配置方法，熟悉了 KITTI 数据集的数据格式与话题同步逻辑，为后续自动驾驶感知算法的开发打下了基础。\n\n---\n\n## 返回\n[← 返回首页](../)\n",
+          "details": {
+            "readme_size": 1761,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week4）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）"
+          ],
+          "raw_score": 79,
+          "final_score": 6.32,
+          "is_past": true
+        },
+        "week5": {
+          "submitted": true,
+          "actual_path": "Week5",
+          "content_score": 27,
+          "attitude_score": 17,
+          "rule_content_score": 27,
+          "rule_attitude_score": 17,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "",
+          "details": {
+            "readme_size": 0,
+            "total_images": 0,
+            "meaningful_images": 0,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 1,
+            "commit_count": 1,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: Week5）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "📄 包含额外文档 (+2)",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（1次，+6）"
+          ],
+          "raw_score": 44,
+          "final_score": 3.52,
+          "is_past": true
+        },
+        "week6": {
+          "submitted": true,
+          "actual_path": "week6",
+          "content_score": 62,
+          "attitude_score": 19,
+          "rule_content_score": 62,
+          "rule_attitude_score": 19,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week 6：ROS2 小乌龟仿真实验\n## 实验内容\n本周完成了以下任务：\n1.  启动 ROS2 小乌龟仿真节点\n2.  验证仿真环境的正常运行\n3.  确认小乌龟初始状态与终端日志输出\n\n---\n\n## 实验截图\n### 小乌龟仿真启动界面\n![小乌龟仿真运行](img/turtlesim-week6.png)\n\n---\n\n## 运行命令\n```bash\n# 启动小乌龟仿真节点\nros2 run turtlesim turtlesim_node\n```\n\n---\n\n## 关键日志说明\n终端输出关键信息解读：\n- `[INFO] [turtlesim]: Starting turtlesim with node name /turtlesim`：表示仿真节点成功启动\n- `[INFO] [turtlesim]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]`：表示小乌龟在画布中心（默认坐标）成功生成，初始朝向为0度\n\n---\n\n## 遇到的问题\n1.  **问题**：运行 `ros2 run turtlesim turtlesim_node` 提示命令未找到\n    **解决**：执行 `source /opt/ros/humble/setup.bash` 加载 ROS2 环境变量，确保终端能识别 ROS2 命令。\n\n2.  **问题**：仿真窗口无法弹出\n    **解决**：确认 WSL/本地系统的图形界面配置正常（如 WSL2 需安装 VcXsrv 并设置 DISPLAY 环境变量），重启终端后再次运行命令。\n\n---\n\n## 学习心得\n通过本周实验，我成功启动了 ROS2 基础仿真环境，熟悉了 ROS2 节点的启动方式与终端日志解读，理解了 turtlesim 作为 ROS2 入门工具的基本使用方法，为后续的话题通信、控制指令等进阶学习打下了基础。\n\n---\n\n## 返回\n[← 返回首页](../)\n",
+          "details": {
+            "readme_size": 1535,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 4,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week6）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）"
+          ],
+          "raw_score": 81,
+          "final_score": 6.48,
+          "is_past": true
+        },
+        "week7": {
+          "submitted": true,
+          "actual_path": "week7",
+          "content_score": 33,
+          "attitude_score": 19,
+          "rule_content_score": 33,
+          "rule_attitude_score": 19,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "1.复习 2.markdown 3.期中考试(作业替代): 整理github 作业目录,提升可读性\n",
+          "details": {
+            "readme_size": 92,
+            "total_images": 0,
+            "meaningful_images": 0,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 1,
+            "commit_count": 4,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week7）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📄 包含额外文档 (+2)",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）"
+          ],
+          "raw_score": 52,
+          "final_score": 2.6,
+          "is_past": true
+        },
+        "week8": {
+          "submitted": true,
+          "actual_path": "week8",
+          "content_score": 37,
+          "attitude_score": 19,
+          "rule_content_score": 37,
+          "rule_attitude_score": 19,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "",
+          "details": {
+            "readme_size": 0,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 1,
+            "total_files": 1
+          },
+          "comments": [
+            "✅ 已提交（路径: week8）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（1次，+6）",
+            "⏰ 延迟19天 (+3)"
+          ],
+          "raw_score": 56,
+          "final_score": 4.48,
+          "is_past": true
+        },
+        "week9": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "rule_content_score": 0,
+          "rule_attitude_score": 0,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "",
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week10": {
+          "submitted": true,
+          "actual_path": "week10",
+          "content_score": 62,
+          "attitude_score": 21,
+          "rule_content_score": 62,
+          "rule_attitude_score": 21,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week X：OpenCV 图像处理实验\n## 实验内容\n本周完成了以下任务：\n1.  安装图像处理依赖库（ImageMagick、OpenCV 相关组件）\n2.  运行 Python 脚本 `cat_test.py` 读取并显示图像\n3.  解决 OpenCV 运行时字体缺失问题\n\n---\n\n## 实验截图\n### 图像读取与显示结果\n![OpenCV 读取并显示猫咪图像](img/opencv-cat.png)\n\n---\n\n## 运行命令\n```bash\n# 安装图像处理依赖\nsudo apt install graphicsmagick-imagemagick-compat\nsudo apt install imagemagick-6.q16\nsudo apt install imagemagick-6.q16hdri\n\n# 运行 Python 图像处理脚本\npython3 cat_test.py\n```\n\n---\n\n## 关键日志与问题解决\n### 1. 命令执行报错\n- **问题**：终端输入了代码片段（如括号、字符串），导致 `bash` 报语法错误。\n- **解决**：直接在终端中运行代码片段会被视为命令，需将代码写入 `.py` 文件再执行，避免直接在终端中粘贴 Python 代码。\n\n### 2. 图片读取错误\n- **问题**：提示“找不到图片 cat.png”\n- **解决**：将图片文件与脚本放在同一目录下，或在代码中使用图片的绝对路径，确保文件路径正确。\n\n### 3. OpenCV 字体缺失警告\n- **问题**：`FontDatabase: Cannot find font directory` 警告，提示 Qt 字体缺失。\n- **解决**：\n  1.  安装字体依赖：\n      ```bash\n      sudo apt install fonts-dejavu\n      ```\n  2.  临时解决（代码中添加环境变量）：\n      ```python\n      import os\n      os.environ['QT_QPA_FONTDIR'] = '/usr/share/fonts/truetype/dejavu'\n      ```\n\n---\n\n## 学习心得\n通过本周实验，我掌握了 Ubuntu 环境下 OpenCV 图像处理的基础流程，学会了处理依赖安装、路径错误和运行时警告等常见问题，理解了 OpenCV 读取并显示图像的核心逻辑，为后续的图像预处理、特征提取等进阶任务打下了基础。\n\n---\n\n## 返回\n[← 返回首页](../)\n",
+          "details": {
+            "readme_size": 1921,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week10）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）",
+            "⏰ 稍延迟5天 (+5)"
+          ],
+          "raw_score": 83,
+          "final_score": 8.3,
+          "is_past": true
+        },
+        "week11": {
+          "submitted": true,
+          "actual_path": "week11",
+          "content_score": 65,
+          "attitude_score": 26,
+          "rule_content_score": 65,
+          "rule_attitude_score": 26,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week X：Docker 部署 ROS2 环境实验\n## 实验内容\n本周完成了以下任务：\n1.  安装并配置 Docker 环境\n2.  构建 ROS2 基础镜像 `my-ros2-full:v1.0`\n3.  启动 ROS2 容器并验证端口映射\n4.  查看运行中的容器状态\n\n---\n\n## 实验截图\n### Docker 容器运行状态\n![Docker ROS2 容器运行](img/docker-ros2.png)\n\n---\n\n## 运行命令\n```bash\n# 查看正在运行的 Docker 容器\ndocker ps\n\n# （补充：启动 ROS2 容器的典型命令，含端口映射）\ndocker run -d -p 6080:80/tcp --name ros2-container my-ros2-full:v1.0\n```\n\n---\n\n## 关键信息解读\n终端 `docker ps` 输出的关键信息：\n- **容器ID**：`b5cf969c73bd`\n- **镜像名称**：`my-ros2-full:v1.0`，为自定义构建的 ROS2 完整环境镜像\n- **端口映射**：`0.0.0.0:6080->80/tcp`，表示宿主机的6080端口映射到容器的80端口，可通过浏览器访问容器内的服务\n- **运行状态**：`Up About a minute`，容器已正常启动并运行约1分钟\n\n---\n\n## 遇到的问题\n1.  **问题**：运行 `docker ps` 看不到预期的 ROS2 容器\n    **解决**：确认容器是否以 `docker run -d` 方式后台启动，若未启动需重新执行容器启动命令；若容器已退出，使用 `docker logs <容器ID>` 查看退出日志排查错误。\n\n2.  **问题**：无法通过 `localhost:6080` 访问容器内的服务\n    **解决**：检查宿主机防火墙是否放行6080端口，确认容器内服务是否在80端口正常监听，核对启动命令的端口映射配置是否正确。\n\n---\n\n## 学习心得\n通过本周实验，我掌握了使用 Docker 部署 ROS2 开发环境的方法，理解了容器化环境的优势（环境隔离、一键部署），熟悉了 `docker ps` 等常用命令的使用，学会了端口映射的配置与验证，为后续在隔离环境中开发 ROS2 项目打下了基础。\n\n---\n\n## 返回\n[← 返回首页](../)\n",
+          "details": {
+            "readme_size": 1916,
+            "total_images": 3,
+            "meaningful_images": 3,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 4,
+            "total_files": 4
+          },
+          "comments": [
+            "✅ 已提交（路径: week11）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 较多截图（3张，+15）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）",
+            "✅ 按时完成 (+8)"
+          ],
+          "raw_score": 91,
+          "final_score": 9.1,
+          "is_past": true
+        },
+        "week12": {
+          "submitted": true,
+          "actual_path": "week12",
+          "content_score": 62,
+          "attitude_score": 23,
+          "rule_content_score": 62,
+          "rule_attitude_score": 23,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week 12：ArUco 标记检测与相机通信实验\n## 实验内容\n本周完成了以下任务：\n1.  确认并统一ArUco标记参数：使用`DICT_4X4_50`字典，Marker ID为6\n2.  生成并打印/显示指定的ArUco标记\n3.  配置并启动浏览器端相机服务，开启视频流发送\n4.  运行终端检测程序，建立手机摄像头与检测程序的通信链路\n5.  验证相机画面传输与ArUco标记检测的流程连通性\n\n---\n\n## 实验截图\n1.  手机端相机服务界面（ArUco检测页面）\n\n\n2.  ArUco标记生成器界面 + 终端日志输出\n\n\n---\n\n## 运行命令/关键配置\n```bash\n# （终端服务端启动命令示例，以课程提供的脚本为例）\npython3 ar_camera_server.py --dict DICT_4X4_50 --id 6\n```\n\n关键配置解读：\n-   **ArUco字典**：`DICT_4X4_50`，表示使用4x4编码、共50个标记的ArUco字典，确保检测端与标记端参数完全一致\n-   **Marker ID**：`6`，本次实验指定的标记编号，需与生成的标记ID完全匹配\n-   **相机服务状态**：“摄像头已打开，等待视频发送”表示服务已就绪，等待客户端（手机）的视频流接入\n-   **终端日志**：持续的`GET /preview.jpg`请求表示手机已成功向服务端传输摄像头画面，通信链路正常\n\n---\n\n## 遇到的问题与解决\n1.  **问题**：页面显示“摄像头已打开，等待视频发送”，但终端无日志输出，画面无法传输\n    解决：检查手机与电脑是否连接同一局域网，确认浏览器已获取相机权限；核对服务端IP与端口配置，关闭电脑防火墙或放行对应端口。\n\n2.  **问题**：画面能正常传输，但始终无法检测到ArUco标记\n    解决：核对标记字典与ID是否与生成的标记一致；调整手机与标记的距离、角度，确保标记完整、清晰地出现在画面中，避免反光或遮挡。\n\n---\n\n## 学习心得\n通过本周实验，我掌握了ArUco标记的生成、参数配置方法，理解了相机视频流传输与标记检测的基本流程，熟悉了浏览器端相机服务与终端程序的通信方式，为后续基于视觉标记的定位、导航类ROS项目打下了基础。\n\n---\n\n需要我帮你把这份报告再精简成更短的课堂提交版吗？\n",
+          "details": {
+            "readme_size": 2278,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 3,
+            "total_files": 3
+          },
+          "comments": [
+            "✅ 已提交（路径: week12）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（2张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（3次，+8）",
+            "⏰ 稍延迟4天 (+5)"
+          ],
+          "raw_score": 85,
+          "final_score": 8.5,
+          "is_past": true
+        },
+        "week13": {
+          "submitted": true,
+          "actual_path": "week13",
+          "content_score": 63,
+          "attitude_score": 26,
+          "rule_content_score": 63,
+          "rule_attitude_score": 26,
+          "ai_content_score": null,
+          "ai_attitude_score": null,
+          "readme_excerpt": "# Week 13：PyBullet 四足机器人站立仿真实验\n\n## 一、实验目的\n1.  掌握Ubuntu Linux环境下PyBullet物理仿真引擎的安装与配置方法\n2.  学会使用Python调用PyBullet加载URDF机器人模型并实现关节控制\n3.  理解四足机器人站立姿态的实现原理，掌握关节角度与力矩的调试方法\n4.  能够独立排查并解决机器人仿真中的常见问题（关节ID不匹配、姿态倒置、力矩不足等）\n5.  为后续四足机器人步态控制、运动规划等进阶实验奠定基础\n\n## 二、实验环境\n- 操作系统：Ubuntu 22.04 LTS\n- Python版本：Python 3.10\n- 核心库：PyBullet 3.2.6\n- 机器人模型：Unitree Laikago 四足机器人URDF模型（16关节带脚趾版本）\n- 图形渲染：OpenGL 3.3\n\n## 三、实验内容与步骤\n\n### 3.1 安装PyBullet仿真环境\n执行以下命令安装PyBullet库：\n```bash\npip3 install pybullet\n```\n\n### 3.2 编写机器人站立仿真脚本\n创建`quad_trot.py`文件，实现机器人加载、空中姿态校准与稳定站立功能：\n```python\nimport pybullet as p\nimport pybullet_data\nimport time\n\ndef main():\n    # 初始化GUI仿真环境\n    p.connect(p.GUI)\n    p.setAdditionalSearchPath(pybullet_data.getDataPath())\n    p.setGravity(0, 0, -9.8)\n    p.loadURDF(\"plane.urdf\")\n\n    # 加载机器人到空中，避免初始砸地\n    start_pos = [0, 0, 0.5]\n    robot = p.loadURDF(\"laikago/laikago_toes.urdf\", start_pos)\n\n    # 创建固定约束，将机器人身体钉在空中，不受重力影响\n    fixed_constraint = p.createConstraint(\n        robot, -1, -1, -1, p.JOINT_FIXED,\n        [0,0,0], [0,0,0], start_pos\n    )\n\n    dt = 1/240\n\n    # 匹配Laikago 16关节模型的站立角度\n    stand_angles = {\n        # 右前腿 FR (ID 0-3)\n        0: -0.15,  # 髋外展\n        1:  0.7,   # 髋前屈\n        2: -1.3,   # 膝屈曲\n        3:  0.0,   # 脚趾固定\n        # 左前腿 FL (ID 4-7)\n        4:  0.15,  # 髋外展\n        5:  0.7,   # 髋前屈\n        6: -1.3,   # 膝屈曲\n        7:  0.0,   # 脚趾固定\n        # 右后腿 RR (ID 8-11)\n        8: -0.15,  # 髋外展\n        9: -0.7,   # 髋后伸\n        10: 1.3,   # 膝屈曲\n        11: 0.0,   # 脚趾固定\n        # 左后腿 RL (ID 12-15)\n        12: 0.15,  # 髋外展\n        13:-0.7,   # 髋后伸\n        14: 1.3,   # 膝屈曲\n        15: 0.0    # 脚趾固定\n    }\n\n    print(\"正在空中校准站立姿态...\")\n    # 给3秒时间让所有关节完全到位\n    for _ in range(720):\n        for jid, ang in stand_angles.items():\n            p.setJointMotorControl2(\n                robot, jid, p.POSITION_CONTROL,\n                targetPosition=ang, force=500\n            )\n        p.stepSimulation()\n        time.sleep(dt)\n\n    print(\"姿态校准完成，机器人落地...\")\n    # 移除固定约束，机器人以站立姿态平稳落地\n    p.removeConstraint(fixed_constraint)\n\n    print(\"✅ 机器人成功四脚着地稳定站立\")\n    # 永久保持站立状态\n    while True:\n        for jid, ang in stand_angles.items():\n            p.setJointMotorControl2(\n                robot, jid, p.POSITION_CONTROL,\n                targetPosition=ang, force=300\n            )\n        p.stepSimulation()\n        time.sleep(dt)\n\nif __name__ == \"__main__\":\n    main()\n```\n\n在终端中运行仿真脚本：\n```bash\npython3 quad_trot.py\n```\n\n## 四、实验结果\n成功运行脚本后，弹出Bullet Physics仿真窗口，机器人执行以下流程：\n1.  初始悬浮在空中，四条腿同时弯曲",
+          "details": {
+            "readme_size": 6347,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week13）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README非常详细 (+20)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）",
+            "🎉 提前一周完成 (+10)"
+          ],
+          "raw_score": 89,
+          "final_score": 13.35,
+          "is_past": true
+        }
+      },
+      "total_score": 75.4,
+      "weighted_sum": 70.4,
+      "completed_weight": 100.0,
+      "grade": "B",
+      "evaluation_date": "2026-06-23T02:03:56.966402",
+      "scoring_mode": "rule"
+    }
+  ]
+}

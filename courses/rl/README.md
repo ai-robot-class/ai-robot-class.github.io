@@ -59,6 +59,33 @@ pip install numpy matplotlib gymnasium torch
 
 ---
 
+## 📗 参考教材与参考代码
+
+本课程的推荐**参考教材**与**参考代码**为肖智清《强化学习：原理与 Python 实战》系列，
+其配套开源仓库每章都提供 **TensorFlow 2 与 PyTorch 一一对照**的高质量实现，
+覆盖从经典到深度强化学习的主流算法，且**无需 GPU、笔记本即可运行**——与本课程理念高度契合。
+
+- 📦 **代码仓库**：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book)
+  （在线代码与运行结果：<https://zhiqingxiao.github.io/rl-book/>）
+- 📘 **英文版 (2024)**：[en2024](https://github.com/ZhiqingXiao/rl-book/tree/master/en2024) ·
+  📕 **中文版 (2023)**：[zh2023](https://github.com/ZhiqingXiao/rl-book/tree/master/zh2023) ·
+  中文旧版 (2019)：[zh2019](https://github.com/ZhiqingXiao/rl-book/tree/master/zh2019)
+
+**本课程各部分 ↔ 参考章节/代码对照**（便于延伸阅读与查代码）：
+
+| 本课程 | 参考书章节与配套代码（环境 / 算法） |
+|--------|-------------------------------------|
+| 第一部分 · 线性代数基础 | 第 1 章：Gym 入门与环境使用 |
+| 第二部分 · MDP | 第 2 章 `CliffWalking`（Bellman）、第 3 章 `FrozenLake`（动态规划 DP） |
+| 第三部分 · RL 基础概念 | 第 4 章 `Blackjack`（蒙特卡洛 MC）、第 5 章 `Taxi`（Sarsa / 期望 Sarsa / Q-Learning / Double QL） |
+| 第四部分 · 应用环境 | 全书 Gym 环境实例；第 1 章环境安装与自定义扩展 |
+| 第五部分 · RL 算法 | 第 6 章 `MountainCar`（DQN / Double / Dueling）、第 7 章 `CartPole`（VPG 策略梯度）、第 8 章 `Acrobot`（Actor-Critic / PPO / TRPO / NPG）、第 9 章 `Pendulum`（DDPG / TD3）、第 10 章 `LunarLander`（SAC）、第 12 章 `Pong`（分布式 DQN）、第 14 章 `TicTacToe`（AlphaZero） |
+
+> 💡 建议：先读本课程各部分建立直觉，再到参考仓库对照运行同主题的 `.ipynb` 代码
+> （TensorFlow 与 PyTorch 任选其一）加深理解。
+
+---
+
 ## 📖 如何学习本课程
 
 1. **按顺序**阅读五个部分，前面是后面的基础；

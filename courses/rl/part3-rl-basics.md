@@ -160,5 +160,7 @@ V(s_t) ← V(s_t) + α [ r_{t+1} + γ V(s_{t+1}) - V(s_t) ]
 
 ---
 
+📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book) 第 4 章 `Blackjack`（蒙特卡洛）、第 5 章 `Taxi`（Sarsa / Q-Learning）
+
 ⬅️ 上一部分：[第二部分 · 马尔可夫决策过程](part2-mdp.md)
 ➡️ 下一部分：[第四部分 · 应用环境示例](part4-environments.md)

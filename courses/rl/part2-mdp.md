@@ -178,5 +178,7 @@ print("各状态价值:", v)
 
 ---
 
+📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book) 第 2 章 `CliffWalking`（贝尔曼）、第 3 章 `FrozenLake`（动态规划）
+
 ⬅️ 上一部分：[第一部分 · 线性代数基础](part1-linear-algebra.md)
 ➡️ 下一部分：[第三部分 · 强化学习基础概念](part3-rl-basics.md)

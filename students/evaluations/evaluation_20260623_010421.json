@@ -1,0 +1,1789 @@
+{
+  "evaluation_date": "2026-06-23T01:04:21.905461",
+  "scoring_system": "总分 100 分（内容 70% + 态度 30%，按已上课周次归一化）",
+  "weeks": {
+    "week2": {
+      "title": "ROS2环境配置",
+      "weight": 5,
+      "due_date": "2026-03-15"
+    },
+    "week3": {
+      "title": "GitHub与命令行",
+      "weight": 5,
+      "due_date": "2026-03-22"
+    },
+    "week4": {
+      "title": "Python仿真",
+      "weight": 8,
+      "due_date": "2026-03-29"
+    },
+    "week5": {
+      "title": "机器人运动学",
+      "weight": 8,
+      "due_date": "2026-04-05"
+    },
+    "week6": {
+      "title": "KITTI实验",
+      "weight": 8,
+      "due_date": "2026-04-12"
+    },
+    "week7": {
+      "title": "Markdown整理",
+      "weight": 5,
+      "due_date": "2026-04-19"
+    },
+    "week8": {
+      "title": "Docker容器",
+      "weight": 8,
+      "due_date": "2026-04-26"
+    },
+    "week9": {
+      "title": "数学基础",
+      "weight": 8,
+      "due_date": "2026-05-03"
+    },
+    "week10": {
+      "title": "Docker与OpenCV",
+      "weight": 10,
+      "due_date": "2026-05-10"
+    },
+    "week11": {
+      "title": "Docker进阶与Pages",
+      "weight": 10,
+      "due_date": "2026-05-17"
+    },
+    "week12": {
+      "title": "视觉与语音",
+      "weight": 10,
+      "due_date": "2026-05-24"
+    },
+    "week13": {
+      "title": "期末项目",
+      "weight": 15,
+      "due_date": "2026-06-22"
+    }
+  },
+  "students": [
+    {
+      "github_id": "miaohaonan10-boop",
+      "repo_url": "https://github.com/miaohaonan10-boop/mhnAI",
+      "repo_exists": true,
+      "repo_name": "mhnAI",
+      "repo_description": "",
+      "stars": 0,
+      "forks": 0,
+      "default_branch": "main",
+      "pages_url": "https://miaohaonan10-boop.github.io/mhnAI/",
+      "pages_enabled": true,
+      "pages_audit": {
+        "total_images": 5,
+        "broken_images": [
+          {
+            "src": "img/turtlesim-week6.png",
+            "resolved": "https://miaohaonan10-boop.github.io/mhnAI/week6/img/turtlesim-week6.png",
+            "page": "/week6/",
+            "status": 404
+          },
+          {
+            "src": "img/biped-main.png",
+            "resolved": "https://miaohaonan10-boop.github.io/mhnAI/week3/img/biped-main.png",
+            "page": "/week3/",
+            "status": 404
+          },
+          {
+            "src": "img/biped-camera.png",
+            "resolved": "https://miaohaonan10-boop.github.io/mhnAI/week3/img/biped-camera.png",
+            "page": "/week3/",
+            "status": 404
+          },
+          {
+            "src": "img/ubuntu-install.png",
+            "resolved": "https://miaohaonan10-boop.github.io/mhnAI/week2/img/ubuntu-install.png",
+            "page": "/week2/",
+            "status": 404
+          },
+          {
+            "src": "img/turtlesim.png",
+            "resolved": "https://miaohaonan10-boop.github.io/mhnAI/week2/img/turtlesim.png",
+            "page": "/week2/",
+            "status": 404
+          }
+        ],
+        "broken_links": [],
+        "has_title": true,
+        "has_style": true,
+        "has_content": true,
+        "word_count": 562,
+        "issues": [
+          "有 5 张图片无法加载（共检查 5 张，总图数 5）"
+        ],
+        "suggestions": [
+          "图片路径错误：检查 README 中的图片相对路径，或将图片放入仓库后用相对路径引用"
+        ],
+        "score": 80
+      },
+      "total_files": 31,
+      "total_commits": 60,
+      "weeks": {
+        "week2": {
+          "submitted": true,
+          "actual_path": "week2",
+          "content_score": 59,
+          "attitude_score": 17,
+          "details": {
+            "readme_size": 813,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week2）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README较详细 (+14)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）"
+          ],
+          "raw_score": 76,
+          "final_score": 3.8,
+          "is_past": true
+        },
+        "week3": {
+          "submitted": true,
+          "actual_path": "week3",
+          "content_score": 62,
+          "attitude_score": 17,
+          "details": {
+            "readme_size": 1711,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week3）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）"
+          ],
+          "raw_score": 79,
+          "final_score": 3.95,
+          "is_past": true
+        },
+        "week4": {
+          "submitted": true,
+          "actual_path": "week4",
+          "content_score": 62,
+          "attitude_score": 17,
+          "details": {
+            "readme_size": 1761,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week4）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）"
+          ],
+          "raw_score": 79,
+          "final_score": 6.32,
+          "is_past": true
+        },
+        "week5": {
+          "submitted": true,
+          "actual_path": "Week5",
+          "content_score": 27,
+          "attitude_score": 17,
+          "details": {
+            "readme_size": 0,
+            "total_images": 0,
+            "meaningful_images": 0,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 1,
+            "commit_count": 1,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: Week5）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "📄 包含额外文档 (+2)",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（1次，+6）"
+          ],
+          "raw_score": 44,
+          "final_score": 3.52,
+          "is_past": true
+        },
+        "week6": {
+          "submitted": true,
+          "actual_path": "week6",
+          "content_score": 62,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 1535,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 4,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week6）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）"
+          ],
+          "raw_score": 81,
+          "final_score": 6.48,
+          "is_past": true
+        },
+        "week7": {
+          "submitted": true,
+          "actual_path": "week7",
+          "content_score": 33,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 92,
+            "total_images": 0,
+            "meaningful_images": 0,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 1,
+            "commit_count": 4,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week7）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📄 包含额外文档 (+2)",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）"
+          ],
+          "raw_score": 52,
+          "final_score": 2.6,
+          "is_past": true
+        },
+        "week8": {
+          "submitted": true,
+          "actual_path": "week8",
+          "content_score": 37,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 0,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 1,
+            "total_files": 1
+          },
+          "comments": [
+            "✅ 已提交（路径: week8）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（1次，+6）",
+            "⏰ 延迟19天 (+3)"
+          ],
+          "raw_score": 56,
+          "final_score": 4.48,
+          "is_past": true
+        },
+        "week9": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week10": {
+          "submitted": true,
+          "actual_path": "week10",
+          "content_score": 62,
+          "attitude_score": 21,
+          "details": {
+            "readme_size": 1921,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week10）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）",
+            "⏰ 稍延迟5天 (+5)"
+          ],
+          "raw_score": 83,
+          "final_score": 8.3,
+          "is_past": true
+        },
+        "week11": {
+          "submitted": true,
+          "actual_path": "week11",
+          "content_score": 65,
+          "attitude_score": 26,
+          "details": {
+            "readme_size": 1916,
+            "total_images": 3,
+            "meaningful_images": 3,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 4,
+            "total_files": 4
+          },
+          "comments": [
+            "✅ 已提交（路径: week11）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 较多截图（3张，+15）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）",
+            "✅ 按时完成 (+8)"
+          ],
+          "raw_score": 91,
+          "final_score": 9.1,
+          "is_past": true
+        },
+        "week12": {
+          "submitted": true,
+          "actual_path": "week12",
+          "content_score": 62,
+          "attitude_score": 23,
+          "details": {
+            "readme_size": 2278,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 3,
+            "total_files": 3
+          },
+          "comments": [
+            "✅ 已提交（路径: week12）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（2张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（3次，+8）",
+            "⏰ 稍延迟4天 (+5)"
+          ],
+          "raw_score": 85,
+          "final_score": 8.5,
+          "is_past": true
+        },
+        "week13": {
+          "submitted": true,
+          "actual_path": "week13",
+          "content_score": 63,
+          "attitude_score": 26,
+          "details": {
+            "readme_size": 6347,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 2,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: week13）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README非常详细 (+20)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 有提交（2次，+6）",
+            "🎉 提前一周完成 (+10)"
+          ],
+          "raw_score": 89,
+          "final_score": 13.35,
+          "is_past": true
+        }
+      },
+      "total_score": 74.4,
+      "weighted_sum": 70.4,
+      "completed_weight": 100.0,
+      "grade": "B",
+      "evaluation_date": "2026-06-23T01:04:01.931203"
+    },
+    {
+      "github_id": "dx8283",
+      "repo_url": "https://github.com/dx8283/DIAOXIN",
+      "repo_exists": true,
+      "repo_name": "DIAOXIN",
+      "repo_description": "diaoxin",
+      "stars": 0,
+      "forks": 0,
+      "default_branch": "main",
+      "pages_url": null,
+      "pages_enabled": false,
+      "pages_audit": null,
+      "total_files": 3,
+      "total_commits": 3,
+      "weeks": {
+        "week2": {
+          "submitted": true,
+          "actual_path": ".",
+          "content_score": 37,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 0,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 3,
+            "total_files": 1
+          },
+          "comments": [
+            "✅ 已提交（路径: .）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（3次，+8）"
+          ],
+          "raw_score": 56,
+          "final_score": 2.8,
+          "is_past": true
+        },
+        "week3": {
+          "submitted": true,
+          "actual_path": ".",
+          "content_score": 37,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 0,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 3,
+            "total_files": 1
+          },
+          "comments": [
+            "✅ 已提交（路径: .）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（3次，+8）"
+          ],
+          "raw_score": 56,
+          "final_score": 2.8,
+          "is_past": true
+        },
+        "week4": {
+          "submitted": true,
+          "actual_path": ".",
+          "content_score": 37,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 0,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 3,
+            "total_files": 1
+          },
+          "comments": [
+            "✅ 已提交（路径: .）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（3次，+8）"
+          ],
+          "raw_score": 56,
+          "final_score": 4.48,
+          "is_past": true
+        },
+        "week5": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week6": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week7": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week8": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week9": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week10": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week11": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week12": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week13": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        }
+      },
+      "total_score": 44.8,
+      "weighted_sum": 10.1,
+      "completed_weight": 100.0,
+      "grade": "D",
+      "evaluation_date": "2026-06-23T01:04:04.480271"
+    },
+    {
+      "github_id": "wx4812",
+      "repo_url": "https://github.com/wx4812/lixi",
+      "repo_exists": true,
+      "repo_name": "lixi",
+      "repo_description": "",
+      "stars": 0,
+      "forks": 0,
+      "default_branch": "main",
+      "pages_url": null,
+      "pages_enabled": false,
+      "pages_audit": null,
+      "total_files": 84,
+      "total_commits": 100,
+      "weeks": {
+        "week2": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week2",
+          "content_score": 70,
+          "attitude_score": 21,
+          "details": {
+            "readme_size": 2003,
+            "total_images": 3,
+            "meaningful_images": 3,
+            "images_in_subdir": 3,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 10,
+            "total_files": 6
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week2）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 较多截图（3张，+15）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（10次，+10）"
+          ],
+          "raw_score": 91,
+          "final_score": 4.55,
+          "is_past": true
+        },
+        "week3": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week3",
+          "content_score": 68,
+          "attitude_score": 21,
+          "details": {
+            "readme_size": 1635,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 2,
+            "code_count": 3,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 9,
+            "total_files": 7
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week3）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 结构化记录 (+2)",
+            "📷 有截图（2张，+12）",
+            "📁 图片组织规范",
+            "💻 多个代码文件（3个，+10）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（9次，+10）"
+          ],
+          "raw_score": 89,
+          "final_score": 4.45,
+          "is_past": true
+        },
+        "week4": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week4",
+          "content_score": 67,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 1586,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 2,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 4,
+            "total_files": 5
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week4）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（2张，+12）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）"
+          ],
+          "raw_score": 86,
+          "final_score": 6.88,
+          "is_past": true
+        },
+        "week5": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week5",
+          "content_score": 59,
+          "attitude_score": 21,
+          "details": {
+            "readme_size": 1641,
+            "total_images": 0,
+            "meaningful_images": 0,
+            "images_in_subdir": 0,
+            "code_count": 1,
+            "video_count": 3,
+            "doc_count": 0,
+            "commit_count": 5,
+            "total_files": 6
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week5）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "💻 有代码（1个，+7）",
+            "🎬 包含视频演示 (+4)",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（5次，+10）"
+          ],
+          "raw_score": 80,
+          "final_score": 6.4,
+          "is_past": true
+        },
+        "week6": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week6",
+          "content_score": 69,
+          "attitude_score": 21,
+          "details": {
+            "readme_size": 2749,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 2,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 5,
+            "total_files": 5
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week6）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "📷 有截图（2张，+12）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（5次，+10）"
+          ],
+          "raw_score": 90,
+          "final_score": 7.2,
+          "is_past": true
+        },
+        "week7": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week7",
+          "content_score": 66,
+          "attitude_score": 19,
+          "details": {
+            "readme_size": 1374,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 1,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 4,
+            "total_files": 4
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week7）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README较详细 (+14)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（1张，+12）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）"
+          ],
+          "raw_score": 85,
+          "final_score": 4.25,
+          "is_past": true
+        },
+        "week8": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week8",
+          "content_score": 69,
+          "attitude_score": 23,
+          "details": {
+            "readme_size": 2003,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 2,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 5,
+            "total_files": 5
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week8）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 包含问题/思考 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 有截图（2张，+12）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（5次，+10）",
+            "⏰ 延迟30天 (+3)"
+          ],
+          "raw_score": 92,
+          "final_score": 7.36,
+          "is_past": true
+        },
+        "week9": {
+          "submitted": false,
+          "actual_path": null,
+          "content_score": 0,
+          "attitude_score": 0,
+          "details": {},
+          "comments": [
+            "❌ 未提交作业"
+          ],
+          "raw_score": 0,
+          "final_score": 0.0,
+          "is_past": true
+        },
+        "week10": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week10",
+          "content_score": 70,
+          "attitude_score": 21,
+          "details": {
+            "readme_size": 3047,
+            "total_images": 6,
+            "meaningful_images": 6,
+            "images_in_subdir": 6,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 4,
+            "total_files": 9
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week10）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README非常详细 (+20)",
+            "💡 包含问题/思考 (+2)",
+            "💡 包含学习总结 (+2)",
+            "💡 结构化记录 (+2)",
+            "💡 README中引用了图片 (+2)",
+            "📷 丰富截图（6张, 6张有效，+18）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交（4次，+8）",
+            "⏰ 延迟16天 (+3)"
+          ],
+          "raw_score": 91,
+          "final_score": 9.1,
+          "is_past": true
+        },
+        "week11": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week11",
+          "content_score": 68,
+          "attitude_score": 23,
+          "details": {
+            "readme_size": 1292,
+            "total_images": 4,
+            "meaningful_images": 4,
+            "images_in_subdir": 4,
+            "code_count": 3,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 6,
+            "total_files": 9
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week11）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README较详细 (+14)",
+            "💡 结构化记录 (+2)",
+            "📷 较多截图（4张，+15）",
+            "📁 图片组织规范",
+            "💻 多个代码文件（3个，+10）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（6次，+10）",
+            "⏰ 延迟9天 (+3)"
+          ],
+          "raw_score": 91,
+          "final_score": 9.1,
+          "is_past": true
+        },
+        "week12": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week12",
+          "content_score": 68,
+          "attitude_score": 25,
+          "details": {
+            "readme_size": 1878,
+            "total_images": 4,
+            "meaningful_images": 4,
+            "images_in_subdir": 4,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 5,
+            "total_files": 6
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week12）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README很详细 (+17)",
+            "💡 结构化记录 (+2)",
+            "📷 较多截图（4张，+15）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（5次，+10）",
+            "⏰ 稍延迟4天 (+5)"
+          ],
+          "raw_score": 93,
+          "final_score": 9.3,
+          "is_past": true
+        },
+        "week13": {
+          "submitted": true,
+          "actual_path": "机器人课程作业/week13",
+          "content_score": 52,
+          "attitude_score": 30,
+          "details": {
+            "readme_size": 1,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 2,
+            "code_count": 1,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 11,
+            "total_files": 5
+          },
+          "comments": [
+            "✅ 已提交（路径: 机器人课程作业/week13）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 有截图（2张，+12）",
+            "📁 图片组织规范",
+            "💻 有代码（1个，+7）",
+            "✅ 完成作业的态度分 (+10)",
+            "⭐ 多次提交迭代（11次，+10）",
+            "🎉 提前一周完成 (+10)"
+          ],
+          "raw_score": 82,
+          "final_score": 12.3,
+          "is_past": true
+        }
+      },
+      "total_score": 80.9,
+      "weighted_sum": 80.9,
+      "completed_weight": 100.0,
+      "grade": "B+",
+      "evaluation_date": "2026-06-23T01:04:14.531098"
+    },
+    {
+      "github_id": "c2480098091-jpg",
+      "repo_url": "https://github.com/c2480098091-jpg/ai-robot-chenpuchang",
+      "repo_exists": true,
+      "repo_name": "ai-robot-chenpuchang",
+      "repo_description": "",
+      "stars": 0,
+      "forks": 0,
+      "default_branch": "main",
+      "pages_url": "https://c2480098091-jpg.github.io/ai-robot-chenpuchang/",
+      "pages_enabled": true,
+      "pages_audit": {
+        "total_images": 0,
+        "broken_images": [],
+        "broken_links": [],
+        "has_title": true,
+        "has_style": true,
+        "has_content": true,
+        "word_count": 3339,
+        "issues": [],
+        "suggestions": [
+          "添加运行截图和效果图能让作业更加生动"
+        ],
+        "score": 90
+      },
+      "total_files": 221,
+      "total_commits": 0,
+      "weeks": {
+        "week2": {
+          "submitted": true,
+          "actual_path": "作业/week2",
+          "content_score": 49,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 6,
+            "meaningful_images": 6,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 7
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week2）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 丰富截图（6张, 6张有效，+18）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 59,
+          "final_score": 2.95,
+          "is_past": true
+        },
+        "week3": {
+          "submitted": true,
+          "actual_path": "作业/week3",
+          "content_score": 59,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 7,
+            "meaningful_images": 7,
+            "images_in_subdir": 0,
+            "code_count": 3,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 12
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week3）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 丰富截图（7张, 7张有效，+18）",
+            "💻 多个代码文件（3个，+10）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 69,
+          "final_score": 3.45,
+          "is_past": true
+        },
+        "week4": {
+          "submitted": true,
+          "actual_path": "作业/week4",
+          "content_score": 46,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 4,
+            "meaningful_images": 4,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 5
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week4）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 较多截图（4张，+15）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 56,
+          "final_score": 4.48,
+          "is_past": true
+        },
+        "week5": {
+          "submitted": true,
+          "actual_path": "作业/week5",
+          "content_score": 47,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 1,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 3
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week5）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 有截图（1张，+12）",
+            "🎬 包含视频演示 (+4)",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 57,
+          "final_score": 4.56,
+          "is_past": true
+        },
+        "week6": {
+          "submitted": true,
+          "actual_path": "作业/week6",
+          "content_score": 43,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 3
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week6）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 有截图（2张，+12）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 53,
+          "final_score": 4.24,
+          "is_past": true
+        },
+        "week7": {
+          "submitted": true,
+          "actual_path": "作业/week7",
+          "content_score": 43,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 3
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week7）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 有截图（2张，+12）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 53,
+          "final_score": 2.65,
+          "is_past": true
+        },
+        "week8": {
+          "submitted": true,
+          "actual_path": "作业/week8",
+          "content_score": 43,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 1,
+            "meaningful_images": 1,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 2
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week8）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 有截图（1张，+12）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 53,
+          "final_score": 4.24,
+          "is_past": true
+        },
+        "week9": {
+          "submitted": true,
+          "actual_path": "作业/week9",
+          "content_score": 49,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 5,
+            "meaningful_images": 5,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 6
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week9）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 丰富截图（5张, 5张有效，+18）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 59,
+          "final_score": 4.72,
+          "is_past": true
+        },
+        "week10": {
+          "submitted": true,
+          "actual_path": "作业/week10",
+          "content_score": 43,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 2,
+            "meaningful_images": 2,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 3
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week10）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 有截图（2张，+12）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 53,
+          "final_score": 5.3,
+          "is_past": true
+        },
+        "week11": {
+          "submitted": true,
+          "actual_path": "作业/week11",
+          "content_score": 46,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 4,
+            "meaningful_images": 4,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 5
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week11）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 有简短README (+6)",
+            "📷 较多截图（4张，+15）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 56,
+          "final_score": 5.6,
+          "is_past": true
+        },
+        "week12": {
+          "submitted": true,
+          "actual_path": "作业/week12",
+          "content_score": 70,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 8183,
+            "total_images": 9,
+            "meaningful_images": 9,
+            "images_in_subdir": 0,
+            "code_count": 8,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 21
+          },
+          "comments": [
+            "✅ 已提交（路径: 作业/week12）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "📝 README非常详细 (+20)",
+            "📷 丰富截图（9张, 9张有效，+18）",
+            "💻 完整代码（8个，+12）",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 80,
+          "final_score": 8.0,
+          "is_past": true
+        },
+        "week13": {
+          "submitted": true,
+          "actual_path": "reports/week13_report.md",
+          "content_score": 25,
+          "attitude_score": 10,
+          "details": {
+            "readme_size": 0,
+            "total_images": 0,
+            "meaningful_images": 0,
+            "images_in_subdir": 0,
+            "code_count": 0,
+            "video_count": 0,
+            "doc_count": 0,
+            "commit_count": 0,
+            "total_files": 1
+          },
+          "comments": [
+            "✅ 已提交（路径: reports/week13_report.md）",
+            "✅ 完成本周作业 (+25 基础分)",
+            "⚠️  缺少 README",
+            "✅ 完成作业的态度分 (+10)"
+          ],
+          "raw_score": 35,
+          "final_score": 5.25,
+          "is_past": true
+        }
+      },
+      "total_score": 60.4,
+      "weighted_sum": 55.4,
+      "completed_weight": 100.0,
+      "grade": "C+",
+      "evaluation_date": "2026-06-23T01:04:19.750666"
+    },
+    {
+      "github_id": "ruilongchen27",
+      "repo_url": "https://github.com/ruilongchen27/ai-robot--",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:19.814663"
+    },
+    {
+      "github_id": "123lkr",
+      "repo_url": "https://github.com/123lkr/ai-robot-LI-KAIRONG",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:19.874905"
+    },
+    {
+      "github_id": "zmtqzl-sys",
+      "repo_url": "https://github.com/zmtqzl-sys/Project",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.020979"
+    },
+    {
+      "github_id": "xiaozhuaichigua",
+      "repo_url": "https://github.com/xiaozhuaichigua/homework",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.081773"
+    },
+    {
+      "github_id": "Yves-Caiy",
+      "repo_url": "https://github.com/Yves-Caiy/ai-robot--",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.143003"
+    },
+    {
+      "github_id": "srttttt",
+      "repo_url": "https://github.com/srttttt/ai-robot--",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.205638"
+    },
+    {
+      "github_id": "zone57",
+      "repo_url": "https://github.com/zone57/ai-robot--",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.275511"
+    },
+    {
+      "github_id": "rushijie666",
+      "repo_url": "https://github.com/rushijie666/1",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.349418"
+    },
+    {
+      "github_id": "xiaoxinwaishi",
+      "repo_url": "https://github.com/xiaoxinwaishi/ai-robot",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.425144"
+    },
+    {
+      "github_id": "testerwm",
+      "repo_url": "https://github.com/testerwm/ai-robot-wm",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.496977"
+    },
+    {
+      "github_id": "Nanami-MIO",
+      "repo_url": "https://github.com/Nanami-MIO/AI-Robot-baixia",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.568665"
+    },
+    {
+      "github_id": "chaofanguo70-boop",
+      "repo_url": "https://github.com/chaofanguo70-boop/ai-robot-frank",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.629812"
+    },
+    {
+      "github_id": "yyf20041207",
+      "repo_url": "https://github.com/yyf20041207/ai-robot-YANG-YIFENG",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.688551"
+    },
+    {
+      "github_id": "ZhangXiao163",
+      "repo_url": "https://github.com/ZhangXiao163/ai-robot-zhangxiao",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.746436"
+    },
+    {
+      "github_id": "shizhuanjun",
+      "repo_url": "https://github.com/shizhuanjun/ai-robot-JIN-JIAHAO",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.807208"
+    },
+    {
+      "github_id": "1783680315",
+      "repo_url": "https://github.com/1783680315/20221772",
+      "repo_exists": false,
+      "error": "HTTP 403: API rate limit exceeded for 118.36.138.50. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.871936"
+    },
+    {
+      "github_id": "2107294955c-collab",
+      "repo_url": "https://github.com/2107294955c-collab/-",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.934031"
+    },
+    {
+      "github_id": "liuyiyuan168-hub",
+      "repo_url": "https://github.com/liuyiyuan168-hub/liuyiyuan",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:20.995476"
+    },
+    {
+      "github_id": "phantom8888888",
+      "repo_url": "https://github.com/phantom8888888/zhanglinghe18",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.056846"
+    },
+    {
+      "github_id": "15688506062-coder",
+      "repo_url": "https://github.com/15688506062-coder/zzk",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.124018"
+    },
+    {
+      "github_id": "zhaoyu20030813-dotcom",
+      "repo_url": "https://github.com/zhaoyu20030813-dotcom/zhaoyu",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.188027"
+    },
+    {
+      "github_id": "duzening",
+      "repo_url": "https://github.com/duzening/robot---class-d",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.250557"
+    },
+    {
+      "github_id": "lucaswilliamlightbringer-dev",
+      "repo_url": "https://github.com/lucaswilliamlightbringer-dev/asdfa",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.320075"
+    },
+    {
+      "github_id": "kkura121138",
+      "repo_url": "https://github.com/kkura121138/ai-robot-DING-XINGYI",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.386542"
+    },
+    {
+      "github_id": "zaofanchishenme111-maker",
+      "repo_url": "https://github.com/zaofanchishenme111-maker/ai-robot-LI-WENXUAN",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.448825"
+    },
+    {
+      "github_id": "wangqiuzhuang",
+      "repo_url": "https://github.com/wangqiuzhuang/ai-robot-wangqiuzhuang",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.512091"
+    },
+    {
+      "github_id": "shizhuoyuan39-droid",
+      "repo_url": "https://github.com/shizhuoyuan39-droid/shizhuoyuan-",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.580835"
+    },
+    {
+      "github_id": "liu20040831",
+      "repo_url": "https://github.com/liu20040831/1",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.648263"
+    },
+    {
+      "github_id": "yaojia662-lgtm",
+      "repo_url": "https://github.com/yaojia662-lgtm/aiProject",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.719278"
+    },
+    {
+      "github_id": "ctrlCvsix",
+      "repo_url": "https://github.com/ctrlCvsix/ai-robot-wangjiaxiong",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.782454"
+    },
+    {
+      "github_id": "yaokai0928-glitch",
+      "repo_url": "https://github.com/yaokai0928-glitch/333",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.844034"
+    },
+    {
+      "github_id": "wasser316",
+      "repo_url": "https://github.com/wasser316/airobot",
+      "repo_exists": false,
+      "error": "HTTP 429: You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.",
+      "weeks": {},
+      "total_score": 0,
+      "grade": "N/A",
+      "evaluation_date": "2026-06-23T01:04:21.905407"
+    }
+  ]
+}

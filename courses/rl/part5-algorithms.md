@@ -301,5 +301,7 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 > 强化学习的魅力在于：我们不教智能体“怎么做”，只告诉它“做得好不好”，
 > 它便能在试错中，自己长出智慧。愿你带着这套思维，去解决真正有趣的问题。🚀
 
+📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book)（TensorFlow 2 / PyTorch 双实现）第 6 章 `MountainCar`·DQN、第 7 章 `CartPole`·策略梯度、第 8 章 `Acrobot`·Actor-Critic/PPO/TRPO、第 9 章 `Pendulum`·DDPG/TD3、第 10 章 `LunarLander`·SAC、第 12 章 `Pong`·分布式 DQN、第 14 章 `TicTacToe`·AlphaZero
+
 ⬅️ 上一部分：[第四部分 · 应用环境示例](part4-environments.md)
 🏠 返回：[强化学习课程首页](README.md) · [Frank Zhao 主页](/README.md)

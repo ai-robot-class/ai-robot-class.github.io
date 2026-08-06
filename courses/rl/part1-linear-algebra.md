@@ -182,4 +182,6 @@ print(Q)
 
 ---
 
+📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book) 第 1 章（Gym 入门与环境使用）
+
 ➡️ 下一部分：[第二部分 · 马尔可夫决策过程 (MDP)](part2-mdp.md)

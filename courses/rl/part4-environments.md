@@ -181,5 +181,7 @@ env = gym.wrappers.RecordEpisodeStatistics(env)            # 自动统计回报
 
 ---
 
+📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book) 全书涵盖 `FrozenLake`、`Taxi`、`MountainCar`、`CartPole`、`Pendulum`、`LunarLander` 等 Gym 环境实例
+
 ⬅️ 上一部分：[第三部分 · 强化学习基础概念](part3-rl-basics.md)
 ➡️ 下一部分：[第五部分 · 各式各样的强化学习算法](part5-algorithms.md)
