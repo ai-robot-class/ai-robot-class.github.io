@@ -164,6 +164,25 @@ env = gym.wrappers.RecordEpisodeStatistics(env)            # 自动统计回报
 
 ---
 
+## 4.7 从玩具环境到真实环境：开悟《王者荣耀》
+
+上面的环境都很"小"。但你学到的接口——`reset / step / 观测 / 动作 / 奖励 / done`——
+是**通用**的。第六部分我们会用同一套接口去驾驭一个**真实工业级 MOBA 环境**：
+腾讯 [开悟](https://aiarena.tencent.com/) 的《王者荣耀》离线仿真。
+
+| 概念 | Gymnasium（本部分） | 开悟 1v1（第六部分） |
+| --- | --- | --- |
+| 观测 | `Box(4,)`（CartPole） | 几百维战场向量 `observation` |
+| 动作 | `Discrete(2)` | **复合动作** + `legal_action` 合法掩码 |
+| 奖励 | 标量 | 多维可塑形（击杀/推塔/补刀/经济…） |
+| 一步 | `env.step(action)` | `env.step(actions)`（经 ZMQ 与 gamecore 通信） |
+| 复现 | `pip install` | **Docker 一键**（含 Wine 运行 gamecore） |
+
+> 换句话说：**接口不变，难度升级**。先在本部分把接口吃透，第六部分自然水到渠成。
+> 👉 [第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
+
+---
+
 ## ✅ 小结
 
 - 环境是 RL 的“训练场”，**Gymnasium** 提供统一接口：`reset / step / spaces`；
@@ -185,3 +204,4 @@ env = gym.wrappers.RecordEpisodeStatistics(env)            # 自动统计回报
 
 ⬅️ 上一部分：[第三部分 · 强化学习基础概念](part3-rl-basics.md)
 ➡️ 下一部分：[第五部分 · 各式各样的强化学习算法](part5-algorithms.md)
+🎮 旗舰实战：[第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)

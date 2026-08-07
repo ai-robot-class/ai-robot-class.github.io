@@ -1,0 +1,33 @@
+# 开悟 1v1 · 纯 CPU 环境
+#
+# 使用前请设置 gamecore 路径（把开悟 gamecore 目录挂载进容器）：
+#   export KAIWU_GAMECORE=/绝对路径/hok_env_gamecore/gamecore
+# 该目录下需已放好从开悟平台申请的 license.dat（core_assets/license.dat）。
+
+services:
+  kaiwu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kaiwu-rl-cpu:latest
+    container_name: kaiwu-rl-cpu
+    # host 网络便于本机脚本直接连 127.0.0.1:23432
+    network_mode: host
+    environment:
+      - SIMULATOR_USE_WINE=1
+      - GAMECORE_PATH=/rl_framework/gamecore
+      - GAMECORE_SERVER_BIND_ADDR=:23432
+      - GAMECORE_SERVER_ADDR=127.0.0.1:23432
+      - AI_SERVER_ADDR=127.0.0.1
+    volumes:
+      # 挂载 gamecore 本体（不打进镜像，避免体积过大与授权外泄）
+      - ${KAIWU_GAMECORE:?请先 export KAIWU_GAMECORE=/path/to/hok_env_gamecore/gamecore}:/rl_framework/gamecore
+      # 对局回放/日志输出到宿主机，方便用 replay_tool 查看
+      - ./simulator_output:/rl_framework/gamecore/simulator_output
+      - ./logs:/aiarena/logs
+    # 纯 CPU：限制核数可按机器调整
+    # cpus: "8"
+    stdin_open: true
+    tty: true
+    # 默认前台起 gamecore server；改成 ["test"] 可直接跑随机智能体冒烟测试
+    command: ["serve"]

@@ -1,6 +1,16 @@
 # 本地考试卷（不上传 GitHub）
 exam/
 
+# 开悟 gamecore / license / 对局输出（受授权约束，禁止公开）
+hok_env_gamecore/
+**/hok_env_gamecore*
+*.abs
+license.dat
+**/gamecore/
+courses/rl/kaiwu_env/simulator_output/
+courses/rl/kaiwu_env/logs/
+.wine/
+
 # 本地密钥
 .env
 .env.local

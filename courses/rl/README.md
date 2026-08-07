@@ -27,15 +27,27 @@ Python 示例。
 
 ## 🛠️ 环境准备
 
+**第一~五部分（理论与经典环境）**——本机装个 Python 虚拟环境即可：
+
 ```bash
 # 推荐使用虚拟环境
 python -m venv rl-env
 # Windows: rl-env\Scripts\activate
 source rl-env/bin/activate
 
-# 安装依赖
+# 安装依赖（纯 CPU 即可）
 pip install numpy matplotlib gymnasium torch
 ```
+
+**第六部分（开悟 MOBA 实战）**——用 Docker 一键复现，纯 CPU 起步：
+
+```bash
+cd courses/rl/kaiwu_env
+docker compose build
+KAIWU_GAMECORE=/path/to/hok_env_gamecore/gamecore docker compose up
+```
+
+> 详见 [`kaiwu_env/README.md`](kaiwu_env/README.md)（含 WSL2、license 申请、Wine 运行、冒烟测试）。
 
 ---
 
@@ -50,12 +62,29 @@ pip install numpy matplotlib gymnasium torch
 | **第三部分** | [强化学习基础概念](part3-rl-basics.md) | Agent-环境交互、策略、价值函数、探索与利用、GPI |
 | **第四部分** | [应用环境示例](part4-environments.md) | Gymnasium、经典控制/网格世界、自定义环境 |
 | **第五部分** | [各式各样的强化学习算法](part5-algorithms.md) | Q-Learning、Sarsa、DQN、策略梯度、Actor-Critic、PPO |
+| **第六部分** | [开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md) | 用腾讯开悟离线仿真，把前五部分的理论用到真实工业级 MOBA 环境；纯 CPU、Docker 一键复现 |
 
 ```
-第一部分            第二部分           第三部分            第四部分            第五部分
-线性代数    ──►    MDP 建模   ──►   RL 核心概念   ──►    环境与实验   ──►   RL 算法家族
-(数学语言)         (问题建模)        (思想框架)          (动手平台)          (求解方法)
+第一部分          第二部分         第三部分          第四部分         第五部分          第六部分
+线性代数   ──►   MDP 建模  ──►  RL 核心概念  ──►  环境与实验  ──►  RL 算法家族  ──►  开悟 MOBA 实战
+(数学语言)       (问题建模)      (思想框架)        (动手平台)       (求解方法)        (真实大环境)
 ```
+
+---
+
+## 🎮 旗舰实战：用「开悟」在真实 MOBA 里学强化学习
+
+本课程的落脚点是一个让人兴奋的真实环境——腾讯 [**开悟（Kaiwu）**](https://aiarena.tencent.com/)
+开放的《王者荣耀》**离线本地仿真**。它把前五部分的抽象概念（状态、动作、奖励、策略、价值、PPO）
+一次性落到一个亿级玩家验证过的 MOBA 游戏上：
+
+- **无需真机、不连线上服务器、无封号风险**：gamecore 在本地跑完整游戏逻辑，合规用于教学/科研；
+- **标准 RL 接口**：环境给出 `observation / legal_action / reward / done`，和你在第四部分学的 Gym 接口同构；
+- **纯 CPU 起步**：游戏逻辑本身跑在 CPU，先用 CPU 跑通环境与小规模训练，再按需上 GPU；
+- **Docker 一键复现**：环境封装在 [`kaiwu_env/`](kaiwu_env/README.md)，`docker compose up` 即可。
+
+> 教学定位：**跑通环境 → 读懂 baseline → 改奖励/超参做实验 → 小规模自对弈**。
+> 我们不追求从零训出顶尖 AI，而是让你在真实复杂环境里**把 RL 概念用起来、看得见**。
 
 ---
 
@@ -96,4 +125,5 @@ pip install numpy matplotlib gymnasium torch
 > 💡 强化学习最迷人的地方在于：你不告诉智能体“怎么做”，只告诉它“做得好不好”，
 > 它就能自己摸索出策略。让我们开始吧！
 
-👉 从 [第一部分：Python 与线性代数基础](part1-linear-algebra.md) 开始。
+👉 从 [第一部分：Python 与线性代数基础](part1-linear-algebra.md) 开始，
+最终在 [第六部分：开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md) 把所学用到真实游戏 AI 上。

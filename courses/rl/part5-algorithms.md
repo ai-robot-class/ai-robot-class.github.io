@@ -293,10 +293,26 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 
 ---
 
+## 5.x 迈向真实环境：PPO + 自对弈打 MOBA
+
+上面这些算法在玩具环境里已经够用。但当**动作是复合的、状态是高维的、还有对手**时
+（正是《王者荣耀》1v1 的情形），最合适的就是 **PPO**——它稳定、能处理复杂动作分布，
+配合**自对弈(self-play)** 让智能体和"过去的自己"对打、螺旋上升。
+
+第六部分我们就用 **PPO 思路 + 开悟离线仿真**，把这些算法用到真实 MOBA 上：
+
+- 策略网络对每个**子动作头**输出分布，用 `legal_action` 掩码屏蔽非法动作；
+- 用多进程在 gamecore 里并行采样（**纯 CPU 也能跑通**），再做 PPO 更新；
+- 官方 [hok_env](https://github.com/tencent-ailab/hok_env) 提供现成 PPO baseline，先跑通再改。
+
+👉 [第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
+
+---
+
 ## 🎓 课程结语
 
-从**线性代数**到 **PPO**，你已经走完了强化学习的完整入门路径：
-数学语言 → MDP 建模 → 核心概念 → 交互环境 → 算法实现。
+从**线性代数**到 **PPO**，再到**开悟 MOBA 实战**，你已经走完了强化学习的完整路径：
+数学语言 → MDP 建模 → 核心概念 → 交互环境 → 算法实现 → 真实大环境落地。
 
 > 强化学习的魅力在于：我们不教智能体“怎么做”，只告诉它“做得好不好”，
 > 它便能在试错中，自己长出智慧。愿你带着这套思维，去解决真正有趣的问题。🚀
@@ -304,4 +320,5 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book)（TensorFlow 2 / PyTorch 双实现）第 6 章 `MountainCar`·DQN、第 7 章 `CartPole`·策略梯度、第 8 章 `Acrobot`·Actor-Critic/PPO/TRPO、第 9 章 `Pendulum`·DDPG/TD3、第 10 章 `LunarLander`·SAC、第 12 章 `Pong`·分布式 DQN、第 14 章 `TicTacToe`·AlphaZero
 
 ⬅️ 上一部分：[第四部分 · 应用环境示例](part4-environments.md)
+➡️ 下一部分：[第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
 🏠 返回：[强化学习课程首页](README.md) · [Frank Zhao 主页](/README.md)

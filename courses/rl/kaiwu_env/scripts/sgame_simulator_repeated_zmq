@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+# 用 Wine 运行 Windows 版 repeated_zmq 模拟器（供 gamecore-server 调度调用）
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+conf=$1
+new_conf=${conf}.new
+work_dir=$(pwd)
+
+set -ex
+
+python3 ${SCRIPT_DIR}/process.py $conf $new_conf ${work_dir}
+
+GAMECORE_PATH=${GAMECORE_PATH:-"/rl_framework/gamecore/"}
+export WINEPATH="${GAMECORE_PATH}/lib/;${GAMECORE_PATH}/bin/"
+
+# 使用镜像内已预初始化的共享 wine prefix（首开更快）；可用环境变量覆盖
+export WINEPREFIX=${WINEPREFIX:-/.wine}
+mkdir -p "$WINEPREFIX"
+
+wine ${GAMECORE_PATH}/bin/sgame_simulator_repeated_zmq.exe $new_conf
