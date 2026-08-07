@@ -1,207 +1,231 @@
-# 第四部分 · 应用环境示例
+# 第四部分 · 环境与接口：亲手写一个王者子任务
 
-> 目标：学会使用 **Gymnasium** 标准接口，跑通经典环境，并**自己动手写一个环境**。
+> 目标：理解强化学习环境的**统一接口**（`reset / step / 观测 / 动作 / 奖励 / done`），
+> 并**亲手写一个可训练的《王者荣耀》子任务环境**——「鲁班瞄准」。
 
-有了理论，就该动手了。强化学习需要一个能**交互**的“世界”——即**环境 (Environment)**。
-业界标准是 **Gymnasium**（OpenAI Gym 的社区维护版），本部分带你把它用熟。
-
----
-
-## 4.1 Gymnasium 是什么？
-
-Gymnasium 提供了一套**统一的环境接口**，让你的算法可以无缝切换不同任务。
-
-```bash
-pip install gymnasium
-```
-
-核心就五个成员：
-
-| 成员 | 作用 |
-|------|------|
-| `env.reset()` | 重置环境，返回初始观测 `obs` |
-| `env.step(action)` | 执行动作，返回 `(obs, reward, terminated, truncated, info)` |
-| `env.action_space` | 动作空间（能做哪些动作） |
-| `env.observation_space` | 观测空间（状态长什么样） |
-| `env.render()` | 可视化 |
+有了理论，就该动手了。强化学习需要一个能**交互**的"世界"——即**环境 (Environment)**。
+业界的通用接口只有几个函数，**开悟的 1v1 环境和我们下面要写的子任务，遵循的是同一套接口**。
+所以只要把接口吃透，从小任务到大环境都一通百通。
 
 ---
 
-## 4.2 第一个环境：CartPole（倒立摆）
+## 4.1 强化学习环境的统一接口
 
-目标：左右移动小车，让杆子**不要倒下**。是入门 RL 的“Hello World”。
+无论是我们自己写的小任务，还是开悟的完整 1v1，核心都是这几个成员：
 
-```python
-import gymnasium as gym
+| 成员 | 作用 | 在王者里 |
+|------|------|---------|
+| `env.reset()` | 重置环境，返回初始观测 `obs` | 开一局新对战，返回开局战场 |
+| `env.step(action)` | 执行动作，返回 `(obs, reward, done, info)` | 走一帧：给出新战场、这步奖励、是否结束 |
+| 动作空间 | 能做哪些动作 | 移动方向 / 技能 / 目标… |
+| 观测空间 | 状态长什么样 | 战场快照向量 `s` |
 
-env = gym.make("CartPole-v1")
-
-print("动作空间:", env.action_space)          # Discrete(2)  -> 0=左, 1=右
-print("观测空间:", env.observation_space)     # Box(4,) -> [位置, 速度, 角度, 角速度]
-
-obs, info = env.reset(seed=42)
-total_reward = 0
-for step in range(500):
-    action = env.action_space.sample()        # 先用随机策略
-    obs, reward, terminated, truncated, info = env.step(action)
-    total_reward += reward
-    if terminated or truncated:               # 杆子倒了 或 到达步数上限
-        break
-env.close()
-print("随机策略坚持了", total_reward, "步")
-```
-
-> 随机策略通常只能坚持 10~30 步。第五部分我们会训练算法，让它坚持满 500 步！
-
-**关键区分**：
-
-- `terminated=True`：任务**自然结束**（杆子倒了、到达目标）；
-- `truncated=True`：**外部截断**（达到最大步数）。
+> 📌 这套接口是[第一课](part0-setup.md)交互循环的代码化。开悟官方 SDK（`HoK1v1`）也是
+> `reset()/step()`，业界标准库 Gymnasium 亦然——**接口通用，我们只用王者场景来学它**。
 
 ---
 
-## 4.3 常见经典环境一览
+## 4.2 第一个可训练任务：亲手写「鲁班瞄准」环境
 
-| 环境 | 类型 | 目标 | 特点 |
-|------|------|------|------|
-| `CartPole-v1` | 离散动作 | 平衡杆子 | 入门首选 |
-| `MountainCar-v0` | 离散动作 | 小车冲上山顶 | 奖励稀疏，需探索 |
-| `FrozenLake-v1` | 离散/网格 | 走到终点不掉冰洞 | 适合表格法 |
-| `Pendulum-v1` | 连续动作 | 摆杆立起来 | 连续控制入门 |
-| `LunarLander-v2` | 离散/连续 | 平稳着陆 | 综合难度 |
+回忆[第一课 0.45](part0-setup.md)：我们把大任务拆成小任务，第一个就是**鲁班瞄准**——
+鲁班站桩不动，地图上有个会移动的目标，训练它**朝正确方向发射炮弹命中目标**。
 
-```python
-# FrozenLake：最适合配合 Q-Learning（第五部分）
-env = gym.make("FrozenLake-v1", is_slippery=False)
-print(env.observation_space)   # Discrete(16) -> 4x4 网格共16个格子
-print(env.action_space)        # Discrete(4)  -> 左/下/右/上
-```
-
----
-
-## 4.4 动作空间与观测空间
-
-Gymnasium 用 `space` 描述“合法的动作/状态长什么样”：
-
-- **`Discrete(n)`**：离散，取值 `0 ~ n-1`（如上下左右）；
-- **`Box(low, high, shape)`**：连续，取值在区间内的实数向量（如速度、角度）。
-
-```python
-import gymnasium as gym
-env = gym.make("Pendulum-v1")
-print(env.action_space)        # Box(-2.0, 2.0, (1,))  连续力矩
-print(env.observation_space)   # Box(3,) 连续状态
-a = env.action_space.sample()  # 采样一个合法动作
-```
-
-算法设计要看**动作空间是离散还是连续**：离散常用 Q-Learning/DQN，连续常用策略梯度/PPO。
-
----
-
-## 4.5 自己动手写一个环境：GridWorld
-
-理解环境最好的方式是**自己写一个**。我们实现一个 `4×4` 网格世界：
-从左上角出发，走到右下角终点（奖励 +1），其余每步小惩罚（-0.01）。
+这个任务小到可以用**几十行纯 Python** 写出来，却五脏俱全（状态/动作/奖励/结束齐全），
+是我们后面训练算法的"练兵场"：
 
 ```python
 import numpy as np
 
-class GridWorld:
-    def __init__(self, size=4):
-        self.size = size
-        self.goal = (size - 1, size - 1)
-        self.reset()
+class LubanAimEnv:
+    """《王者荣耀》子任务：鲁班站桩，在有限步数里尽量多地命中目标。
+    命中一个 +1 并立刻刷新下一个目标；未命中 -0.1，目标继续移动。回合到步数上限结束。
+    - 观测 s: [dx, dz, vx, vz, cd] —— 目标相对位置、目标速度、炮弹是否就绪（5 维）
+    - 动作 a: Discrete(16) —— 发射方向（把 360° 离散成 16 个扇区，朝扇区中心打）
+    - 奖励 r: 命中 +1；未命中 -0.1（鼓励又快又准）
+    """
+    N_DIR = 16
+
+    def __init__(self, max_steps=20, target_speed=0.05, seed=None):
+        self.max_steps = max_steps
+        self.target_speed = target_speed
+        self.rng = np.random.default_rng(seed)
+
+    def _new_target(self):
+        ang = self.rng.uniform(0, 2 * np.pi)          # 目标方向
+        r = self.rng.uniform(0.3, 1.0)                # 目标距离
+        self.target = np.array([r * np.cos(ang), r * np.sin(ang)])
+        v_ang = self.rng.uniform(0, 2 * np.pi)        # 目标移动方向
+        self.vel = self.target_speed * np.array([np.cos(v_ang), np.sin(v_ang)])
 
     def reset(self):
-        self.pos = (0, 0)
-        return self._state()
+        self.t = 0
+        self._new_target()
+        return self._obs()
 
-    def _state(self):
-        # 把二维坐标编码成一个整数状态
-        return self.pos[0] * self.size + self.pos[1]
+    def _obs(self):
+        return np.array([*self.target, *self.vel, 1.0], dtype=np.float32)
 
     def step(self, action):
-        r, c = self.pos
-        if   action == 0: r = max(0, r - 1)            # 上
-        elif action == 1: r = min(self.size - 1, r + 1) # 下
-        elif action == 2: c = max(0, c - 1)            # 左
-        elif action == 3: c = min(self.size - 1, c + 1) # 右
-        self.pos = (r, c)
-
-        if self.pos == self.goal:
-            return self._state(), 1.0, True, {}        # 到达终点
-        return self._state(), -0.01, False, {}         # 每走一步小惩罚
-
-    def render(self):
-        grid = [["." for _ in range(self.size)] for _ in range(self.size)]
-        gr, gc = self.goal; grid[gr][gc] = "G"
-        r, c = self.pos;    grid[r][c] = "A"
-        print("\n".join(" ".join(row) for row in grid), "\n")
-
-# 试玩
-env = GridWorld()
-env.reset(); env.render()
-for a in [1, 1, 1, 3, 3, 3]:      # 向下三步、向右三步
-    s, reward, done, _ = env.step(a)
-    print(f"动作={a} 状态={s} 奖励={reward} 结束={done}")
-env.render()
+        fire_ang = 2 * np.pi * (action + 0.5) / self.N_DIR         # 朝扇区中心发射
+        tgt_ang = np.arctan2(self.target[1], self.target[0]) % (2 * np.pi)
+        diff = abs((fire_ang - tgt_ang + np.pi) % (2 * np.pi) - np.pi)  # 环形角差
+        hit = diff < (np.pi / self.N_DIR)                          # 命中容差=半个扇区
+        self.t += 1
+        if hit:
+            reward = 1.0
+            self._new_target()                                     # 命中→刷新下一个目标
+        else:
+            reward = -0.1
+            self.target = self.target + self.vel                   # 未命中→目标继续移动
+            if np.linalg.norm(self.target) > 1.2:                  # 简化：撞到边界反弹
+                self.vel = -self.vel
+        done = self.t >= self.max_steps
+        return self._obs(), reward, done, {"hit": hit}
 ```
 
-> 🎯 这个 `GridWorld` 会在第五部分被 Q-Learning 学会“最短路径”。
-
----
-
-## 4.6 环境包装器 (Wrappers)
-
-Wrapper 可以在**不改动原环境**的情况下增加功能，如限制步数、缩放奖励、记录视频：
+先用**随机策略**试玩，感受一下"零基础的鲁班"有多菜（我们统计每回合平均命中数与平均回报）：
 
 ```python
-import gymnasium as gym
-env = gym.make("CartPole-v1")
-env = gym.wrappers.TimeLimit(env, max_episode_steps=200)   # 限制每局步数
-env = gym.wrappers.RecordEpisodeStatistics(env)            # 自动统计回报
+env = LubanAimEnv(seed=0)
+total_hits = total_return = 0
+for episode in range(200):
+    obs = env.reset()
+    done = False
+    while not done:
+        action = np.random.randint(env.N_DIR)     # 随机乱打
+        obs, reward, done, info = env.step(action)
+        total_hits += info["hit"]
+        total_return += reward
+print(f"随机策略：平均每回合命中 {total_hits/200:.2f} 次，平均回报 {total_return/200:.2f}")
+# 随机策略：平均每回合命中 1.39 次，平均回报 -0.48  ——20 步里基本靠蒙
 ```
+
+> 随机策略每回合才蒙中 1 次左右、回报是负的。**第五课我们训练它后，能做到 20 步命中 20 个、回报 +20！**
 
 ---
 
-## 4.7 从玩具环境到真实环境：开悟《王者荣耀》
+## 4.3 王者子任务阶梯（我们的"训练场"清单）
 
-上面的环境都很"小"。但你学到的接口——`reset / step / 观测 / 动作 / 奖励 / done`——
-是**通用**的。第六部分我们会用同一套接口去驾驭一个**真实工业级 MOBA 环境**：
-腾讯 [开悟](https://aiarena.tencent.com/) 的《王者荣耀》离线仿真。
+「鲁班瞄准」只是第一级。把 1v1 拆开，可以得到一串**由易到难、都能在 CPU 上训**的子任务：
 
-| 概念 | Gymnasium（本部分） | 开悟 1v1（第六部分） |
+| 子任务 | 状态（示意） | 动作 | 学到的能力 | 难度 |
+|--------|------------|------|-----------|------|
+| **鲁班瞄准** | 目标相对位置+速度 | 发射方向(离散) | 打得准 | ⭐ |
+| **补刀最后一击** | 小兵血量、我方攻击力、弹道时间 | 何时平A(离散) | 拿经济 | ⭐⭐ |
+| **残血风筝** | 我/敌血量、距离、技能CD | 移动方向+攻击(复合) | 边打边退不被抓 | ⭐⭐⭐ |
+| **塔下生存** | 到塔距离、塔攻击计时、我方血量 | 进/退(离散) | 懂威胁、不越塔送 | ⭐⭐⭐ |
+| **完整 1v1** | 491 维战场向量 | 三元组复合动作 | 综合博弈 | ⭐⭐⭐⭐⭐ |
+
+> 💡 每一行都是一个独立的强化学习问题。**学会最上面几个简单的，就理解了下面复杂的。**
+> 完整 1v1（最后一行）就是[第七课](part6-kaiwu-moba.md)的开悟环境。
+
+---
+
+## 4.4 动作空间与观测空间（都用王者场景理解）
+
+设计算法前，先看清两件事：**状态长什么样、动作能选什么**。
+
+- **离散动作 `Discrete(n)`**：取值 `0 ~ n-1`。
+  - 鲁班瞄准：`Discrete(16)`（16 个发射方向）；
+  - 补刀：`Discrete(2)`（平A / 不平A）。
+- **连续/向量观测 `Box(shape)`**：实数向量。
+  - 鲁班瞄准：`Box(5,)`（相对位置+速度+CD）；
+  - 完整 1v1：`Box(491,)`。
+- **复合动作**：完整 1v1 的动作不是一个数，而是"按钮 + 方向 + 目标"的**多个子动作头**（见[第七课 6.4](part6-kaiwu-moba.md)）。
+
+```python
+env = LubanAimEnv()
+print("动作数量:", env.N_DIR)          # 16 个离散发射方向
+print("观测维度:", env.reset().shape)  # (5,)
+```
+
+> 📌 选型口诀（第五课细讲）：**离散动作 → Q-Learning/DQN；复合/大动作空间 → PPO**。
+> 鲁班瞄准是离散动作，正好用来练 Q-Learning 和 DQN。
+
+---
+
+## 4.5 进阶：把子任务变难一点
+
+理解环境最好的方式是**动手改它**。给「鲁班瞄准」加点花样，就得到更难的任务：
+
+- **目标闪现**：每隔几步，目标以一定概率瞬间"闪现"到随机位置（模拟敌方交闪现）；
+- **提前量**：目标移动更快时，必须**预判提前量**（朝目标"将要到"的位置打，而不是当前位置）；
+- **限定弹药/冷却**：炮弹有冷却，逼迫智能体挑好时机再发射。
+
+```python
+def step(self, action):
+    # ...命中判定同上...
+    if not hit and self.rng.random() < 0.1:        # 10% 概率触发"闪现"
+        ang = self.rng.uniform(0, 2 * np.pi)
+        r = self.rng.uniform(0.3, 1.0)
+        self.target = np.array([r * np.cos(ang), r * np.sin(ang)])
+    # ...
+```
+
+> 🎯 目标一旦会移动/闪现，**只看当前位置就不够了**——必须用上"速度"信息做预判。
+> 这正是为什么我们的观测里放了 `vx, vz`：**状态要足够，才能支撑好决策**（呼应第二部分马尔可夫性）。
+
+---
+
+## 4.6 环境包装 (Wrappers)：不改原环境地加功能
+
+有时想在**不动原环境代码**的前提下加点功能，比如限制每局步数、缩放奖励、统计命中率。
+可以写一个"包装器"套在外面：
+
+```python
+class ScaleReward:
+    """把奖励乘一个系数（奖励缩放常能稳定训练）——包装我们的鲁班环境"""
+    def __init__(self, env, scale=1.0):
+        self.env, self.scale = env, scale
+    def reset(self):
+        return self.env.reset()
+    def step(self, action):
+        obs, r, done, info = self.env.step(action)
+        return obs, r * self.scale, done, info
+
+env = ScaleReward(LubanAimEnv(), scale=0.5)   # 奖励缩小一半
+```
+
+> 开悟环境同样支持在外层自定义观测/奖励的处理（见[第七课 6.5](part6-kaiwu-moba.md)的奖励塑形）。
+
+---
+
+## 4.7 从子任务到完整开悟：接口不变，难度升级
+
+我们自己写的「鲁班瞄准」和开悟的完整 1v1，**用的是同一套接口**，只是规模不同：
+
+| 概念 | 鲁班瞄准（本部分自写） | 开悟 1v1（[第七课](part6-kaiwu-moba.md)） |
 | --- | --- | --- |
-| 观测 | `Box(4,)`（CartPole） | 几百维战场向量 `observation` |
-| 动作 | `Discrete(2)` | **复合动作** + `legal_action` 合法掩码 |
-| 奖励 | 标量 | 多维可塑形（击杀/推塔/补刀/经济…） |
-| 一步 | `env.step(action)` | `env.step(actions)`（经 ZMQ 与 gamecore 通信） |
-| 复现 | `pip install` | **Docker 一键**（含 Wine 运行 gamecore） |
+| 观测 | `Box(5,)` | `Box(491,)` 战场向量 |
+| 动作 | `Discrete(16)` 发射方向 | **三元组复合动作** + `legal_action` 合法掩码 |
+| 奖励 | 命中 +1 / 未命中 -0.1 | 5 类多维可塑形（击杀/推塔/补刀/经济…） |
+| 一步 | `env.step(action)`（纯 Python） | `env.step(actions)`（经 ZMQ 与 gamecore 通信） |
+| 复现 | 几十行代码 | **Docker 一键**（含 Wine 运行 gamecore） |
 
-> 换句话说：**接口不变，难度升级**。先在本部分把接口吃透，第六部分自然水到渠成。
-> 👉 [第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
+> 换句话说：**接口不变，难度升级**。先在鲁班瞄准上把接口和算法吃透，
+> 第七课去驾驭真实开悟环境自然水到渠成。
+> 👉 [第七课 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
 
 ---
 
 ## ✅ 小结
 
-- 环境是 RL 的“训练场”，**Gymnasium** 提供统一接口：`reset / step / spaces`；
-- 分清 `terminated`（自然结束）与 `truncated`（截断）；
-- **动作空间**决定算法选型：离散 → Q-Learning/DQN，连续 → 策略梯度/PPO；
-- 会读别人的环境，也要会**自己写环境**（GridWorld）；
-- **Wrapper** 用来灵活扩展环境功能。
+- 环境是 RL 的"训练场"，核心接口只有 `reset / step / 动作空间 / 观测空间`；
+- 我们**亲手写了「鲁班瞄准」**——一个五脏俱全、纯 CPU 可训的王者子任务；
+- 把 1v1 拆成一串**子任务阶梯**：鲁班瞄准 → 补刀 → 风筝 → 塔下生存 → 完整 1v1；
+- **动作空间**决定算法选型：离散 → Q-Learning/DQN，复合/大空间 → PPO；
+- 会写、会改环境（加闪现/提前量），才算真正理解它；开悟用的是同一套接口。
 
 ## 📝 练习
 
-1. 跑通 `CartPole-v1` 的随机策略，统计 20 局的平均坚持步数。
-2. 把 `GridWorld` 改成 `5×5`，并在某个格子加一个“陷阱”（奖励 -1 且结束）。
-3. 打印 `MountainCar-v0` 的动作空间与观测空间，说说它为什么“难探索”。
-4. 用 `RecordEpisodeStatistics` 包装任一环境，读取并打印每局回报。
+1. 跑通 `LubanAimEnv` 的随机策略，统计 200 回合的**平均命中数与平均回报**（应该很低，为第五课做对照）。
+2. 把 `target_speed` 设为 `0`（目标站桩），再统计随机的平均命中数——和会动时相比差别大吗？为什么？（提示：随机策略根本没用到位置信息）
+3. 按 4.5 给环境加上"闪现"，观察随机策略的平均回报如何变化，说说为什么变难。
+4. 仿照 `ScaleReward`，写一个 `TimeLimit` 包装器，把每局最多步数限制到 20。
+5. 思考题：如果把观测里的 `vx, vz`（目标速度）去掉，只留位置，智能体还能学会打**移动**目标吗？为什么？（提示：马尔可夫性）
 
 ---
 
-📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book) 全书涵盖 `FrozenLake`、`Taxi`、`MountainCar`、`CartPole`、`Pendulum`、`LunarLander` 等 Gym 环境实例
-
 ⬅️ 上一部分：[第三部分 · 强化学习基础概念](part3-rl-basics.md)
 ➡️ 下一部分：[第五部分 · 各式各样的强化学习算法](part5-algorithms.md)
-🎮 旗舰实战：[第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
+🎮 旗舰实战：[第七课 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)

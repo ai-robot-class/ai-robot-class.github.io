@@ -40,43 +40,53 @@ Q(s,a) ← Q(s,a) + α [ r + γ·max_{a'} Q(s',a') − Q(s,a) ]
 
 注意目标里用的是 `max`（下一步的最优动作），而不是实际执行的动作——所以 Q-Learning 是**异策略**的。
 
-用第四部分的 `GridWorld` 训练：
+用[第四部分](part4-environments.md)写的「鲁班瞄准」训练。表格法需要**离散状态**，
+我们把"目标所在方向"离散成 16 个扇区，先让目标**站桩**（`target_speed=0`）以便用表格学：
 
 ```python
 import numpy as np
-from gridworld import GridWorld   # 用第四部分写的环境
+from luban_aim import LubanAimEnv   # 第四部分写的鲁班瞄准环境
 
-env = GridWorld(size=4)
-n_states, n_actions = env.size * env.size, 4
+def discretize(obs):
+    """把连续观测压成离散状态：目标当前所在的方向扇区(0..15)"""
+    ang = np.arctan2(obs[1], obs[0]) % (2 * np.pi)
+    return int(ang / (2 * np.pi) * 16) % 16
+
+env = LubanAimEnv(target_speed=0.0, seed=0)   # 站桩目标，适合表格法
+n_states, n_actions = 16, 16
 Q = np.zeros((n_states, n_actions))
+alpha, gamma, epsilon = 0.1, 0.9, 1.0
 
-alpha, gamma = 0.1, 0.95
-epsilon = 1.0
-
-for episode in range(2000):
-    s = env.reset()
+for episode in range(5000):
+    s = discretize(env.reset())
     done = False
     while not done:
-        # ε-贪心选动作
+        # ε-贪心选发射方向
         if np.random.rand() < epsilon:
             a = np.random.randint(n_actions)
         else:
             a = int(np.argmax(Q[s]))
 
-        s_next, r, done, _ = env.step(a)
+        obs, r, done, info = env.step(a)
+        s_next = discretize(obs)
         # Q-Learning 更新
         Q[s, a] += alpha * (r + gamma * np.max(Q[s_next]) - Q[s, a])
         s = s_next
 
-    epsilon = max(0.05, epsilon * 0.999)   # 探索率衰减
+    epsilon = max(0.05, epsilon * 0.999)      # 探索率衰减
 
-# 输出每个状态学到的最优动作
-policy = np.argmax(Q, axis=1)
-print("学到的策略(每格最优动作):")
-print(policy.reshape(env.size, env.size))
+# 学到的瞄准策略：每个方向扇区应朝哪个方向发射
+print("学到的瞄准策略:", np.argmax(Q, axis=1))
+# [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15]  ——完美的"目标在哪打哪"
 ```
 
-训练后，智能体会学到从起点走向终点的**最短路径**。
+训练后，鲁班学到了**"目标在哪个方向就朝哪个方向开炮"**的完美映射（策略正好是 `0..15`）：
+每回合 20 步能命中 20 个目标、回报 +20，而随机策略每回合才蒙中 1 次左右（回报约 -0.5）。
+
+> 🎮 **为什么完整的王者 1v1 不能用这张表？** 表格 `Q` 要为"每个状态 × 每个动作"存一个数。
+> 鲁班瞄准我们把状态硬压成 16 个扇区才能用表格；可完整 1v1 的状态是 **491 维连续量**（血量、坐标、CD…），
+> 组合数是天文数字——表格根本存不下，也永远采样不全。**这正是必须换成神经网络（DQN/PPO）的原因**：
+> 用一个函数去"压缩"这张无穷大的表。
 
 ---
 
@@ -90,25 +100,28 @@ Q(s,a) ← Q(s,a) + α [ r + γ·Q(s',a') − Q(s,a) ]
 ```
 
 ```python
-s = env.reset()
+s = discretize(env.reset())
 a = epsilon_greedy(Q[s], epsilon)
 done = False
 while not done:
-    s_next, r, done, _ = env.step(a)
+    obs, r, done, info = env.step(a)
+    s_next = discretize(obs)
     a_next = epsilon_greedy(Q[s_next], epsilon)   # 先按策略选出 a'
     Q[s, a] += alpha * (r + gamma * Q[s_next, a_next] - Q[s, a])
     s, a = s_next, a_next
 ```
 
-> **Q-Learning vs Sarsa**：Q-Learning 学“最优”策略但更激进（异策略）；
-> Sarsa 学“当前实际执行”的策略，更**保守/安全**（同策略）。经典的“悬崖行走”实验中，
-> Sarsa 会绕开悬崖，Q-Learning 会贴着悬崖走。
+> **Q-Learning vs Sarsa**：Q-Learning 学"最优"策略但更激进（异策略）；
+> Sarsa 学"当前实际执行"的策略，更**保守/安全**（同策略）。
+> 🎮 放到王者里体会：学**越塔强杀**时，Q-Learning 倾向按"理想情况下能成功"去激进走位，
+> Sarsa 则会把"我这个 ε 探索有时会乱走、可能被塔打死"也算进去，从而更**保守、留安全余量**。
 
 ---
 
 ## 5.4 DQN（深度 Q 网络）
 
-当状态太多（如图像）无法用表格时，用**神经网络**近似 `Q(s,a; θ)`。这就是 **DQN**（2015, DeepMind）。
+表格法要求把状态离散化。可一旦目标会**移动**、还得算**提前量**，只用"方向扇区"就不够了——
+我们想直接把 5 维连续观测（含速度 `vx, vz`）喂进去。这时用**神经网络**近似 `Q(s,a; θ)`，就是 **DQN**（2015, DeepMind）。
 
 **两大关键技巧**：
 
@@ -138,7 +151,7 @@ class QNet(nn.Module):
     def forward(self, x):
         return self.net(x)
 
-q_net, target_net = QNet(4, 2), QNet(4, 2)
+q_net, target_net = QNet(5, 16), QNet(5, 16)   # 鲁班瞄准：5 维观测 → 16 个发射方向
 target_net.load_state_dict(q_net.state_dict())
 optim = torch.optim.Adam(q_net.parameters(), lr=1e-3)
 buffer = deque(maxlen=10000)
@@ -157,13 +170,19 @@ def train_step(batch_size=64):
 ```
 
 主循环里：ε-贪心采样 → 存入 buffer → `train_step()` → 定期把 `q_net` 权重同步给 `target_net`。
-用它可以让 CartPole 稳稳坚持满 500 步。
+在**会移动的鲁班瞄准任务**上，训练后每回合命中数会从随机的约 1 次大幅提升：
+网络直接吃进连续观测（含速度 `vx, vz`），学会从目标速度**预判提前量**，朝"目标将要到的位置"开炮。
+
+> 🎮 **DQN 从子任务到完整王者的难点**：DQN 天生适合"**一个**离散动作头"（如鲁班的 16 个发射方向）。
+> 但完整 1v1 的动作是**复合的**——同一帧要同时决定"移动方向 + 用哪个技能 + 打谁"。
+> 硬把所有组合列成一个巨大的离散动作空间会爆炸。所以工业级 MOBA 更常用 **PPO + 多动作头**（见 5.x）。
 
 ---
 
 ## 5.5 策略梯度：REINFORCE
 
 不学价值，**直接优化策略** `π(a|s; θ)`。思想：让**带来高回报**的动作，出现概率变大。
+（放到鲁班瞄准里：命中那一发对应的"发射方向"概率被调高，乱打的方向被调低。）
 
 **目标与梯度**：
 
@@ -235,13 +254,29 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 - 当优势为负时，降低概率，但**最多降到 1−ε 倍**；
 - 从而实现**稳定、样本高效**的更新。
 
-> 实践建议：初学时**不必从零实现 PPO**，可用成熟库 `stable-baselines3`：
+> 实践建议：初学时**不必从零实现 PPO**，可用成熟库 `stable-baselines3`。
+> 只要把我们的「鲁班瞄准」套一层标准 `gymnasium.Env` 接口，就能直接用 SB3 的 PPO 训练：
 >
 > ```python
+> import gymnasium as gym, numpy as np
+> from gymnasium import spaces
 > from stable_baselines3 import PPO
-> import gymnasium as gym
-> model = PPO("MlpPolicy", gym.make("CartPole-v1"), verbose=1)
-> model.learn(total_timesteps=50_000)
+> from luban_aim import LubanAimEnv
+>
+> class LubanGym(gym.Env):
+>     """把第四部分的鲁班瞄准包装成标准 Gym 接口，供 SB3 使用"""
+>     def __init__(self):
+>         self.env = LubanAimEnv(target_speed=0.05)
+>         self.action_space = spaces.Discrete(16)
+>         self.observation_space = spaces.Box(-2, 2, shape=(5,), dtype=np.float32)
+>     def reset(self, seed=None, options=None):
+>         return self.env.reset(), {}
+>     def step(self, action):
+>         obs, r, done, info = self.env.step(int(action))
+>         return obs, r, done, False, info      # terminated, truncated
+>
+> model = PPO("MlpPolicy", LubanGym(), verbose=1)
+> model.learn(total_timesteps=100_000)          # 纯 CPU 几分钟，鲁班学会瞄准
 > ```
 
 ---
@@ -257,11 +292,11 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 | A2C | 演员-评论家 | 离散/连续 | 同策略 | 是 | 降方差、可并行 |
 | **PPO** | 演员-评论家 | 离散/连续 | 同策略 | 是 | **稳定、通用、首选** |
 
-**选型建议**：
+**选型建议**（用王者子任务对照）：
 
-- 状态少、离散 → **Q-Learning / Sarsa**（表格）；
-- 状态高维、离散动作 → **DQN**；
-- 连续动作 / 追求稳定通用 → **PPO**（或 SAC、DDPG）。
+- 状态少、离散 → **Q-Learning / Sarsa**（表格）：如把鲁班瞄准的目标方向离散成扇区；
+- 状态高维、离散动作 → **DQN**：如鲁班瞄准的连续观测（含速度、要算提前量）；
+- 复合动作 / 大动作空间 / 追求稳定通用 → **PPO**：如完整 1v1 的"按钮+方向+目标"复合动作。
 
 ---
 
@@ -285,11 +320,12 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 
 ## 📝 练习
 
-1. 用 Q-Learning 训练 `FrozenLake-v1`(`is_slippery=False`)，打印学到的策略网格。
-2. 在“悬崖行走”场景中对比 Q-Learning 与 Sarsa 的路径差异，解释原因。
-3. 用 PyTorch 补全 5.4 的 DQN 主循环，让 `CartPole-v1` 平均回报 > 400。
-4. 用 `stable-baselines3` 的 PPO 训练 `LunarLander-v2`，记录学习曲线。
-5. 综合题：为你自己第四部分的 `GridWorld`（加了陷阱的版本）选择并实现一个合适算法。
+1. 用 Q-Learning 训练站桩版「鲁班瞄准」（`target_speed=0`），打印 `np.argmax(Q,axis=1)`，验证它是否≈"朝目标扇区开炮"。
+2. 把目标改成会移动（`target_speed=0.05`），观察表格版 Q-Learning 命中率为何下降，解释原因（提示：只用方向扇区丢了速度信息）。
+3. 用 PyTorch 补全 5.4 的 DQN 主循环，在会移动的「鲁班瞄准」上把命中率训到 90%+。
+4. 用 `stable-baselines3` 的 PPO（5.7 的 `LubanGym`）训练鲁班瞄准，记录命中率随训练步数的曲线。
+5. 对比题：在「鲁班瞄准」上分别跑 Q-Learning（表格）与 DQN，说说各自的适用边界。
+6. **完整王者题**：解释为什么完整 1v1 选 **PPO + 多动作头** 而不是 DQN；再说说去掉 `legal_action` 掩码后，训练初期会出现什么问题（可参考[第七课](part6-kaiwu-moba.md)论文 H.2 的消融结论）。
 
 ---
 
@@ -299,11 +335,42 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 （正是《王者荣耀》1v1 的情形），最合适的就是 **PPO**——它稳定、能处理复杂动作分布，
 配合**自对弈(self-play)** 让智能体和"过去的自己"对打、螺旋上升。
 
-第六部分我们就用 **PPO 思路 + 开悟离线仿真**，把这些算法用到真实 MOBA 上：
+第六部分我们就用 **PPO 思路 + 开悟离线仿真**，把这些算法用到真实 MOBA 上。
 
-- 策略网络对每个**子动作头**输出分布，用 `legal_action` 掩码屏蔽非法动作；
-- 用多进程在 gamecore 里并行采样（**纯 CPU 也能跑通**），再做 PPO 更新；
-- 官方 [hok_env](https://github.com/tencent-ailab/hok_env) 提供现成 PPO baseline，先跑通再改。
+### 复合动作 = 多个动作头（对应第一课说的“动作是向量”）
+
+王者一帧的动作不是一个数，而是好几个决定同时做。策略网络因此长出**多个头**，
+每个头输出一个子动作的分布，并各自用 `legal_action` 掩码屏蔽非法选择：
+
+```python
+import torch, torch.nn as nn
+
+class KingPolicy(nn.Module):
+    """把几百维局势向量 → 多个子动作头的打分（对应第一部分的 y = W·s + b）"""
+    def __init__(self, n_obs, dims=(8, 4, 8)):   # (移动方向, 用哪个技能, 打谁)
+        super().__init__()
+        self.body  = nn.Sequential(nn.Linear(n_obs, 256), nn.ReLU())
+        self.heads = nn.ModuleList([nn.Linear(256, d) for d in dims])
+
+    def forward(self, s, legal_masks):
+        h = self.body(s)
+        dists = []
+        for head, mask in zip(self.heads, legal_masks):
+            logits = head(h)
+            logits = logits.masked_fill(mask == 0, -1e9)   # 非法动作打分压到极小
+            dists.append(torch.distributions.Categorical(logits=logits))
+        return dists   # 每个子动作各采一个，合成这一帧的复合动作
+```
+
+- **PPO** 分别对每个头用 5.7 的裁剪目标更新，各头的 `log π` 相加即整个复合动作的对数概率；
+- 用多进程在 gamecore 里并行采样（**纯 CPU 也能跑通**），再做 PPO 更新。
+
+### 自对弈 (self-play)：和“过去的自己”对打
+
+王者 1v1 有对手，环境不再固定。做法：**让 AI 的对面坐着它自己（或历史版本）**——
+自己越强，对手也越强，形成螺旋上升。这正是 AlphaGo/OpenAI Five 的思路。
+
+> 官方 [hok_env](https://github.com/tencent-ailab/hok_env) 提供现成 PPO + 自对弈 baseline，**先跑通再改**。
 
 👉 [第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
 
@@ -317,7 +384,7 @@ L_CLIP(θ) = E[ min( r_t·A_t ,  clip(r_t, 1−ε, 1+ε)·A_t ) ]
 > 强化学习的魅力在于：我们不教智能体“怎么做”，只告诉它“做得好不好”，
 > 它便能在试错中，自己长出智慧。愿你带着这套思维，去解决真正有趣的问题。🚀
 
-📗 参考代码：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book)（TensorFlow 2 / PyTorch 双实现）第 6 章 `MountainCar`·DQN、第 7 章 `CartPole`·策略梯度、第 8 章 `Acrobot`·Actor-Critic/PPO/TRPO、第 9 章 `Pendulum`·DDPG/TD3、第 10 章 `LunarLander`·SAC、第 12 章 `Pong`·分布式 DQN、第 14 章 `TicTacToe`·AlphaZero
+📗 延伸参考：[ZhiqingXiao/rl-book](https://github.com/zhiqingxiao/rl-book)（各算法的 TensorFlow 2 / PyTorch 双实现，可对照阅读；本课程统一用「鲁班瞄准」与开悟 1v1 作为运行实例）
 
 ⬅️ 上一部分：[第四部分 · 应用环境示例](part4-environments.md)
 ➡️ 下一部分：[第六部分 · 开悟《王者荣耀》MOBA 实战](part6-kaiwu-moba.md)
